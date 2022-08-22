@@ -84,6 +84,24 @@ set(PROJECT_SOURCES
 	images/logo.rc
 )
 
+set(ICON_FILES
+	images/bc.svg
+	images/bl.svg
+	images/br.svg
+	images/cancel.svg
+	images/clear.svg
+	images/copy.svg
+	images/crosshair.svg
+	images/mc.svg
+	images/ml.svg
+	images/mr.svg
+	images/ok.svg
+	images/tc.svg
+	images/tl.svg
+	images/tr.svg
+	images/update.svg
+)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 	qt_add_executable(${PROJECT_NAME}
 		MANUAL_FINALIZATION
@@ -159,25 +177,7 @@ add_subdirectory(libs/nlopt)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
 # install
-set(ICON_FILES
-	images/bc.svg
-	images/bl.svg
-	images/br.svg
-	images/cancel.svg
-	images/clear.svg
-	images/copy.svg
-	images/crosshair.svg
-	images/mc.svg
-	images/ml.svg
-	images/mr.svg
-	images/ok.svg
-	images/tc.svg
-	images/tl.svg
-	images/tr.svg
-	images/update.svg
-)
 install(FILES ${ICON_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/images)
-#install(DIRECTORY ${CMAKE_SOURCE_DIR}/images DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/databases
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
@@ -190,7 +190,6 @@ install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 if(DEFINED QT_QMAKE_EXECUTABLE)
 	message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
 	file(COPY ${ICON_FILES} DESTINATION ${CMAKE_BINARY_DIR}/images)
-#	file(COPY ${CMAKE_SOURCE_DIR}/images/ DESTINATION ${CMAKE_BINARY_DIR}/images/)
 	file(COPY ${CMAKE_SOURCE_DIR}/databases/
 		 DESTINATION ${CMAKE_BINARY_DIR}/databases/)
 endif()
