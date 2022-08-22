@@ -37,15 +37,15 @@ struct PositionIcon {
 	QIcon icon;
 };
 static std::array position_icons{
-	PositionIcon{(Qt::AlignTop | Qt::AlignLeft),		QStringLiteral("Top left"),			QStringLiteral("images/tl.png"), QIcon{}},
-	PositionIcon{(Qt::AlignTop | Qt::AlignHCenter),		QStringLiteral("Top center"),		QStringLiteral("images/tc.png"), QIcon{}},
-	PositionIcon{(Qt::AlignTop | Qt::AlignRight),		QStringLiteral("Top right"),		QStringLiteral("images/tr.png"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignLeft),	QStringLiteral("Middle left"),		QStringLiteral("images/ml.png"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignHCenter),	QStringLiteral("Middle center"),	QStringLiteral("images/mc.png"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignRight),	QStringLiteral("Middle right"),		QStringLiteral("images/mr.png"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignLeft),		QStringLiteral("Bottom left"),		QStringLiteral("images/bl.png"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignHCenter),	QStringLiteral("Bottom center"),	QStringLiteral("images/bc.png"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignRight),	QStringLiteral("Bottom right"),		QStringLiteral("images/br.png"), QIcon{}}
+	PositionIcon{(Qt::AlignTop | Qt::AlignLeft),		QStringLiteral("Top left"),			QStringLiteral("images/tl.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignTop | Qt::AlignHCenter),		QStringLiteral("Top center"),		QStringLiteral("images/tc.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignTop | Qt::AlignRight),		QStringLiteral("Top right"),		QStringLiteral("images/tr.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignVCenter | Qt::AlignLeft),	QStringLiteral("Middle left"),		QStringLiteral("images/ml.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignVCenter | Qt::AlignHCenter),	QStringLiteral("Middle center"),	QStringLiteral("images/mc.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignVCenter | Qt::AlignRight),	QStringLiteral("Middle right"),		QStringLiteral("images/mr.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignBottom | Qt::AlignLeft),		QStringLiteral("Bottom left"),		QStringLiteral("images/bl.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignBottom | Qt::AlignHCenter),	QStringLiteral("Bottom center"),	QStringLiteral("images/bc.svg"), QIcon{}},
+	PositionIcon{(Qt::AlignBottom | Qt::AlignRight),	QStringLiteral("Bottom right"),		QStringLiteral("images/br.svg"), QIcon{}}
 };
 static void MakePositionIcons();
 }
@@ -102,7 +102,7 @@ void Plot2DGraph::SetupActions()
 	a_legend_show = new QAction(tr("Show legend"), this);
 	connect(a_legend_show, &QAction::triggered, this, &Plot2DGraph::ShowLegend);
 
-	a_legend_hide = new QAction(QIcon("images/clear.png"), tr("Hide legend"), this);
+	a_legend_hide = new QAction(QIcon("images/clear.svg"), tr("Hide legend"), this);
 	connect(a_legend_hide, &QAction::triggered, this, &Plot2DGraph::HideLegend);
 
 	a_remove_all_graphs = new QAction(tr("Remove all graphs"), this);

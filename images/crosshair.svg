@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="SVGRoot" width="16px" height="16px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <path d="m6 0v6h-6v1h6v9h1v-9h9v-1h-9v-6h-1z"/>
+  <rect x="8" y="4" width="1" height="1"/>
+  <rect x="8" y="2" width="1" height="1"/>
+  <rect x="10" y="2" width="1" height="1"/>
+  <rect x="12" y="2" width="1" height="1"/>
+  <rect x="10" y="4" width="1" height="1"/>
+  <rect x="12" y="4" width="1" height="1"/>
+ </g>
+</svg>

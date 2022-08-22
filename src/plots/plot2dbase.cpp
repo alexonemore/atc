@@ -207,14 +207,14 @@ void Plot2DBase::UpdateTracerPosition(QMouseEvent* event)
 
 void Plot2DBase::SetupActionsBase()
 {
-	a_replot = new QAction(QIcon("images/update.png"), tr("Replot"), this);
+	a_replot = new QAction(QIcon("images/update.svg"), tr("Replot"), this);
 	connect(a_replot, &QAction::triggered, this, &Plot2DBase::Replot);
 
-	a_tracer_show = new QAction(QIcon("images/crosshair.png"),
+	a_tracer_show = new QAction(QIcon("images/crosshair.svg"),
 								tr("Show crosshair"), this);
 	connect(a_tracer_show, &QAction::triggered, this, &Plot2DBase::ShowTracer);
 
-	a_tracer_hide = new QAction(QIcon("images/crosshair.png"),
+	a_tracer_hide = new QAction(QIcon("images/crosshair.svg"),
 								tr("Hide crosshair"), this);
 	connect(a_tracer_hide, &QAction::triggered, this, &Plot2DBase::HideTracer);
 
