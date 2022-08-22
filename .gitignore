@@ -1,0 +1,61 @@
+databases/
+
+# Visual Studio files
+.vs/
+out/
+
+# OS Related:
+*~
+Thumbs.db
+desktop.ini
+
+# Qt Related:
+build-*/
+*.pro.user*
+CMakeLists.txt.user*
+Makefile*
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.log
+*.qch
+*.qm
+*.ts
+*.autosave
+*.moc
+.qmake.stash
+object_script.*
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
