@@ -1,8 +1,9 @@
 # ATC - Adiabatic Temperature Calculator
+![atc logo](images/logo.ico)
 
 ## Description
 
-_ATC_ is a high quality, visual, open source tool for thermodynamic calculations.
+ATC is a high quality, visual, open source tool for thermodynamic calculations.
 
 ## Features
 
