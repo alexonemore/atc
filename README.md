@@ -100,7 +100,6 @@ TODO
 	cd atc
 	git remote add nlopt git@github.com:stevengj/nlopt.git
 	git subtree pull --prefix=libs/nlopt nlopt master --squash
-	cd ..
 	```
 
 + Compiling on Windows by MSVC
