@@ -35,7 +35,7 @@ Plotting is provided by the [QCustomPlot](https://www.qcustomplot.com/) library.
 
 All data is stored in the sqlite3 database, which has the following structure:
 
-1. Structre of Free Enthalpy Function database
+*. Structre of Free Enthalpy Function database
 
 	1. Element compositions of substances
 
@@ -83,7 +83,7 @@ All data is stored in the sqlite3 database, which has the following structure:
 
 	Thermodynamic data are taken from the old program [Thermo](http://www.ism.ac.ru/). Atomic weight and density are taken from [Wikipedia 1](https://en.wikipedia.org/wiki/List_of_chemical_elements) and [Wikipedia 2](https://en.wikipedia.org/wiki/Standard_atomic_weight).
 
-2. Structre of Heat Capacity database
+*. Structre of Heat Capacity database
 
 	1. TODO
 
