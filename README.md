@@ -1,5 +1,3 @@
-![atc logo](images/logo_atc.svg) 
-
 # ![atc logo](images/logo_atc.svg) ATC - Adiabatic Temperature Calculator
 
 ## Description
