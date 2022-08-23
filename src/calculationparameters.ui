@@ -197,7 +197,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="QLineEdit" name="var1_temp_start">
+                <widget class="QLineEdit" name="var1_temperature_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -210,7 +210,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var1_temp_stop">
+                <widget class="QLineEdit" name="var1_temperature_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -223,7 +223,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var1_temp_step">
+                <widget class="QLineEdit" name="var1_temperature_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -249,7 +249,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="var1_temp_units"/>
+              <widget class="QComboBox" name="var1_temperature_units"/>
              </item>
             </layout>
            </item>
@@ -298,7 +298,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_14">
                <item>
-                <widget class="QLineEdit" name="var1_cmp_start">
+                <widget class="QLineEdit" name="var1_composition_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -311,7 +311,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var1_cmp_stop">
+                <widget class="QLineEdit" name="var1_composition_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -324,7 +324,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var1_cmp_step">
+                <widget class="QLineEdit" name="var1_composition_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -350,7 +350,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="var1_cmp_units"/>
+              <widget class="QComboBox" name="var1_composition_units"/>
              </item>
             </layout>
            </item>
@@ -417,7 +417,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QLineEdit" name="var2_pres_step">
+                <widget class="QLineEdit" name="var2_pressure_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -430,7 +430,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var2_pres_stop">
+                <widget class="QLineEdit" name="var2_pressure_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -443,7 +443,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var2_pres_step_2">
+                <widget class="QLineEdit" name="var2_pressure_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -469,7 +469,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="var2_pres_units"/>
+              <widget class="QComboBox" name="var2_pressure_units"/>
              </item>
             </layout>
            </item>
@@ -518,7 +518,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QLineEdit" name="var2_cmp_start">
+                <widget class="QLineEdit" name="var2_composition_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -531,7 +531,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var2_cmp_stop">
+                <widget class="QLineEdit" name="var2_composition_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -544,7 +544,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="var2_cmp_step">
+                <widget class="QLineEdit" name="var2_composition_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -570,7 +570,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="var2_cmp_units"/>
+              <widget class="QComboBox" name="var2_composition_units"/>
              </item>
             </layout>
            </item>
