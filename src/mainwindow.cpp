@@ -241,8 +241,8 @@ void MainWindow::SlotLoadDatabase()
 void MainWindow::MenuShowAbout()
 {
 	LOG()
-	QMessageBox::about(this, tr("About mta"),
-					   tr("Text about <b>mta</b> program"));
+	QMessageBox::about(this, tr("About ATC"),
+					   tr("Text about <b>ATC</b> program"));
 }
 
 void MainWindow::MenuOpenDatabase()

@@ -43,6 +43,9 @@ set(PROJECT_SOURCES
 	src/mainwindow.ui
 	src/coreapplication.h
 	src/coreapplication.cpp
+	src/calculationparameters.h
+	src/calculationparameters.cpp
+	src/calculationparameters.ui
 
 	# tmp
 	src/heavycontainer.h
