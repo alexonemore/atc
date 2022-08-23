@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	thread.setObjectName(QStringLiteral("<< CORE APP THREAD >>"));
 
 	MainWindow main_window;	
-	CoreApplication core_app(&main_window);	
+	CoreApplication core_app(&main_window);
 
 	main_window.show();
 	core_app.moveToThread(&thread);
