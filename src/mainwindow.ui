@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
+    <width>642</width>
     <height>420</height>
    </rect>
   </property>
@@ -289,19 +289,15 @@
            </widget>
           </item>
           <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
+           <widget class="QTextEdit" name="textEdit_3"/>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEdit"/>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEdit_2"/>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -327,7 +323,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>536</width>
+     <width>642</width>
      <height>21</height>
     </rect>
    </property>
