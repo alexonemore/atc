@@ -9,6 +9,7 @@ namespace ParametersNS {
 enum class Workmode {
 	SinglePoint,
 	TemperatureRange,
+//	PressureRange, TODO
 	CompositionRange,
 	DoubleCompositionRange,
 	TemperatureCompositionRange

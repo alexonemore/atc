@@ -9,12 +9,11 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->setupUi(this);
 	setTitle(QStringLiteral("Calculation parameters"));
 
-	auto to_list = [](QMetaEnum&& me) {
+	auto to_list = [](QMetaEnum&& me) -> QStringList {
 		auto max = me.keyCount();
 		QStringList list;
 		for(int i = 0; i != max; ++i) {
-			auto str = me.valueToKey(me.value(i));
-			list.append(str);
+			list.append(me.valueToKey(me.value(i)));
 		}
 		return list;
 	};
