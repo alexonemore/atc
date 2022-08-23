@@ -1,4 +1,4 @@
-![atc logo](images/logo.ico) 
+![atc logo](images/logo_atc.svg) 
 
 # ATC - Adiabatic Temperature Calculator
 

@@ -43,30 +43,39 @@ class MainWindow : public QMainWindow
 
 private:
 	Ui::MainWindow *ui;
-	QProgressDialog* dialog;
-	QString database_path;
+	QProgressDialog* dialog;	
 	QFutureWatcher<void>* fw;
+	QString database_path;
 
 public:
 	MainWindow(QWidget *parent = nullptr);
 	virtual ~MainWindow() override;
 
-	QProgressDialog* GetProgressDialog() { return dialog; }
+public:
 	void SetModel_1(QAbstractItemModel* model);
 	void SetModel_2(QAbstractItemModel* model);
 	void SetSelectonModel(QItemSelectionModel* selection);
 
 public slots:
 	void SlotHeavyComputations(QVector<HeavyContainer>& ho);
+
+public slots:
+	void SlotAdd2DGraph(const GraphId& id, QVector<double>& x,
+						QVector<double>& y);
+	void SlotAddHeatMap(const QString& name, QVector<double>& x,
+						QVector<double>& y, QVector<QVector<double>>& z);
+	void SlotAdd3DGraph(QSurfaceDataArray* data);
+
+public slots:
 	void SlotShowResponse(const QString& text);
 	void SlotShowRequest(const QString& text);
 	void SlotShowError(const QString& text);
 	void SlotShowStatusBarText(const QString& text);
-	void SlotAdd2DGraph(const GraphId& id, QVector<double>& x, QVector<double>& y);
-	void SlotAddHeatMap(const QString& name, QVector<double>& x,
-						QVector<double>& y, QVector<QVector<double>>& z);
-	void SlotAdd3DGraph(QSurfaceDataArray* data);
 	void SlotLoadDatabase();
+
+private slots:
+	void MenuOpenDatabase();
+	void MenuShowAbout();
 
 signals:
 	void SignalSendRequest(int);
@@ -75,10 +84,6 @@ signals:
 	void SignalNeed2DGraphData();
 	void SignalNeedHeatMapData();
 	void SignalNeed3DGraphData();
-
-private slots:
-	void MenuOpenDatabase();
-	void MenuShowAbout();
 
 private:
 	void SetupMenu();
