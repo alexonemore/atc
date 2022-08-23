@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>652</width>
-    <height>439</height>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,7 +64,7 @@
             <item>
              <widget class="QLabel" name="label_28">
               <property name="text">
-               <string>Choose substanses</string>
+               <string>Choose substances</string>
               </property>
              </widget>
             </item>
@@ -94,35 +94,48 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_23">
             <item>
-             <widget class="QComboBox" name="comboBox_15"/>
+             <widget class="QComboBox" name="workmode"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_9"/>
+             <widget class="QComboBox" name="target"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_10"/>
+             <widget class="QComboBox" name="liquid_solution"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_11"/>
+             <widget class="QComboBox" name="minimization_function"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_12"/>
+             <widget class="QComboBox" name="database"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_13"/>
+             <widget class="QComboBox" name="choose_substances"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_14"/>
+             <widget class="QComboBox" name="extrapolation"/>
             </item>
             <item>
-             <widget class="QSpinBox" name="spinBox"/>
+             <widget class="QSpinBox" name="at_accuracy"/>
             </item>
             <item>
-             <widget class="QSpinBox" name="spinBox_2"/>
+             <widget class="QSpinBox" name="threads"/>
             </item>
            </layout>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -184,7 +197,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
-                <widget class="QLineEdit" name="lineEdit">
+                <widget class="QLineEdit" name="var1_temp_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -197,7 +210,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_2">
+                <widget class="QLineEdit" name="var1_temp_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -210,7 +223,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_3">
+                <widget class="QLineEdit" name="var1_temp_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -236,7 +249,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_7"/>
+              <widget class="QComboBox" name="var1_temp_units"/>
              </item>
             </layout>
            </item>
@@ -285,7 +298,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_14">
                <item>
-                <widget class="QLineEdit" name="lineEdit_10">
+                <widget class="QLineEdit" name="var1_cmp_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -298,7 +311,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_11">
+                <widget class="QLineEdit" name="var1_cmp_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -311,7 +324,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_12">
+                <widget class="QLineEdit" name="var1_cmp_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -337,7 +350,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox"/>
+              <widget class="QComboBox" name="var1_cmp_units"/>
              </item>
             </layout>
            </item>
@@ -404,7 +417,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QLineEdit" name="lineEdit_4">
+                <widget class="QLineEdit" name="var2_pres_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -417,7 +430,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_5">
+                <widget class="QLineEdit" name="var2_pres_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -430,7 +443,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_6">
+                <widget class="QLineEdit" name="var2_pres_step_2">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -456,7 +469,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_8"/>
+              <widget class="QComboBox" name="var2_pres_units"/>
              </item>
             </layout>
            </item>
@@ -505,7 +518,7 @@
              <item>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QLineEdit" name="lineEdit_7">
+                <widget class="QLineEdit" name="var2_cmp_start">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -518,7 +531,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_8">
+                <widget class="QLineEdit" name="var2_cmp_stop">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -531,7 +544,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_9">
+                <widget class="QLineEdit" name="var2_cmp_step">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -557,7 +570,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_2"/>
+              <widget class="QComboBox" name="var2_cmp_units"/>
              </item>
             </layout>
            </item>
@@ -603,7 +616,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_18">
             <item>
-             <widget class="QLineEdit" name="lineEdit_13">
+             <widget class="QLineEdit" name="temperature_initial">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -616,7 +629,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_14">
+             <widget class="QLineEdit" name="pressure_initial">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -636,10 +649,10 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_19">
             <item>
-             <widget class="QComboBox" name="comboBox_5"/>
+             <widget class="QComboBox" name="temperature_initial_units"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_6"/>
+             <widget class="QComboBox" name="pressure_initial_units"/>
             </item>
            </layout>
           </item>
@@ -677,10 +690,10 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_21">
             <item>
-             <widget class="QComboBox" name="comboBox_4"/>
+             <widget class="QComboBox" name="group1_units"/>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox_3"/>
+             <widget class="QComboBox" name="group2_units"/>
             </item>
            </layout>
           </item>
@@ -696,23 +709,32 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_26">
         <item>
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QCheckBox" name="show_solid">
           <property name="text">
            <string>Sollid</string>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_2">
-          <property name="text">
-           <string>Liquid</string>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_3">
+         <widget class="QCheckBox" name="show_liquid">
+          <property name="text">
+           <string>Liquid</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="show_gas">
           <property name="text">
            <string>Gas</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -722,14 +744,26 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_25">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="update">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Update</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="calculate">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Calculate</string>
          </property>
@@ -738,6 +772,19 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
