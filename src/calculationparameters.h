@@ -21,6 +21,7 @@
 #define CALCULATIONPARAMETERS_H
 
 #include <QWidget>
+#include "parameters.h"
 
 namespace Ui {
 class CalculationParameters;
@@ -34,12 +35,19 @@ public:
 	explicit CalculationParameters(QWidget *parent = nullptr);
 	~CalculationParameters() override;
 
-
 private:
 	Ui::CalculationParameters *ui;
 
 private:
 	void SetupInitialParameters();
+
+private slots:
+	void GetParametersFromGUI();
+
+signals:
+	void ChangeParameters(ParametersNS::Parameters parameters);
+	void UpdateParemeters();
+	void ClickedCalculate();
 };
 
 #endif // CALCULATIONPARAMETERS_H
