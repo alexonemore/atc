@@ -70,6 +70,9 @@ const QStringList minimization_function{
 	QT_TR_NOOP("Entropy")
 };
 
+constexpr int at_accuracy_min = 0;
+constexpr int at_accuracy_max = 4;
+
 Parameters::Parameters()
 	: threads{QThread::idealThreadCount()}
 {

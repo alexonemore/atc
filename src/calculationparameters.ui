@@ -128,7 +128,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>300</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -147,7 +147,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>0.1</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -286,7 +286,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>100</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -312,7 +312,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>10</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -328,7 +328,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>1</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -341,7 +341,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>300</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -357,7 +357,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>0.1</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -373,7 +373,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>0.1</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -386,7 +386,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>0</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -399,7 +399,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>1000</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -415,7 +415,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>10</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -438,7 +438,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>100</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -451,7 +451,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>10</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -494,7 +494,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>0</string>
+           <string/>
           </property>
           <property name="frame">
            <bool>true</bool>

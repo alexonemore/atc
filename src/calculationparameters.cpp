@@ -72,6 +72,26 @@ void CalculationParameters::SetupInitialParameters()
 	ui->temperature_units->setCurrentIndex(static_cast<int>(p.temperature_range_unit));
 	ui->pressure_units->setCurrentIndex(static_cast<int>(p.pressure_range_unit));
 
+	ui->at_accuracy->setRange(ParametersNS::at_accuracy_min,
+							  ParametersNS::at_accuracy_max);
+	ui->at_accuracy->setValue(p.at_accuracy);
+	ui->threads->setRange(1, p.threads);
+	ui->threads->setValue(p.threads);
+
+	ui->temperature_initial->setText(QString::number(p.temperature_initial));
+	ui->pressure_initial->setText(QString::number(p.pressure_initial));
+	ui->composition1_start->setText(QString::number(p.composition1_range.start));
+	ui->composition1_stop->setText(QString::number(p.composition1_range.stop));
+	ui->composition1_step->setText(QString::number(p.composition1_range.step));
+	ui->composition2_start->setText(QString::number(p.composition2_range.start));
+	ui->composition2_stop->setText(QString::number(p.composition2_range.stop));
+	ui->composition2_step->setText(QString::number(p.composition2_range.step));
+	ui->temperature_start->setText(QString::number(p.temperature_range.start));
+	ui->temperature_stop->setText(QString::number(p.temperature_range.stop));
+	ui->temperature_step->setText(QString::number(p.temperature_range.step));
+	ui->pressure_start->setText(QString::number(p.pressure_range.start));
+	ui->pressure_stop->setText(QString::number(p.pressure_range.stop));
+	ui->pressure_step->setText(QString::number(p.pressure_range.step));
 
 
 

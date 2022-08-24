@@ -103,6 +103,9 @@ struct ShowPhases {
 //	bool ions{false}; TODO
 };
 
+extern const int at_accuracy_min; // digits after the
+extern const int at_accuracy_max; // decimal point
+
 struct Parameters
 {
 	Workmode		workmode			{Workmode::SinglePoint};
