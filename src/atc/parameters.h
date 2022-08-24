@@ -31,32 +31,19 @@ enum class Workmode {
 	DoubleCompositionRange,
 	TemperatureCompositionRange
 };
-const QStringList workmode{
-	QT_TR_NOOP("Single point"),
-	QT_TR_NOOP("Temperature range"),
-//	QT_TR_NOOP("PressureRange"), TODO
-	QT_TR_NOOP("Composition range"),
-	QT_TR_NOOP("Double composition range"),
-	QT_TR_NOOP("Temperature-composition range")
-};
+extern const QStringList workmode;
 
 enum class Target {
 	AdiabaticTemperature,
 	Equilibrium
 };
-const QStringList target{
-	QT_TR_NOOP("Adibatic temperature"),
-	QT_TR_NOOP("Equilibrium")
-};
+extern const QStringList target;
 
 enum class LiquidSolution {
 	No,
 	One
 };
-const QStringList liquid_solution{
-	QT_TR_NOOP("No"),
-	QT_TR_NOOP("One")
-};
+extern const QStringList liquid_solution;
 
 enum class CompositionUnit {
 	AtomicPercent,
@@ -64,83 +51,86 @@ enum class CompositionUnit {
 	Mol,
 	Gram
 };
-const QStringList composition_units{
-	QT_TR_NOOP("at. %"),
-	QT_TR_NOOP("wt. %"),
-	QT_TR_NOOP("mol"),
-	QT_TR_NOOP("gram")
-};
+extern const QStringList composition_units;
 
 enum class TemperatureUnit {
 	Kelvin,
 	Celsius,
 	Fahrenheit
 };
-const QStringList temperature_units{
-	QT_TR_NOOP("K"),
-	QT_TR_NOOP("C"),
-	QT_TR_NOOP("F")
-};
+extern const QStringList temperature_units;
 
 enum class PressureUnit {
 	MPa,
 	atm,
 	bar
 };
-const QStringList pressure_units{
-	QT_TR_NOOP("MPa"),
-	QT_TR_NOOP("atm"),
-	QT_TR_NOOP("bar")
-};
+extern const QStringList pressure_units;
 
-enum class Databases {
+enum class Database {
 	Thermo,
 	HSC
 };
-const QStringList datebases{
-	QT_TR_NOOP("Thermo"),
-	QT_TR_NOOP("HSC")
-};
+extern const QStringList datebases;
 
 enum class ChooseSubstances {
 	AsChecked,
 	ByMinimumGibbsEnergy
 };
-const QStringList choose_substances{
-	QT_TR_NOOP("As checked"),
-	QT_TR_NOOP("By minimum Gibbs")
-};
+extern const QStringList choose_substances;
 
 enum class Extrapolation {
 	Enable,
 	Disable
 };
-const QStringList extrapolation{
-	QT_TR_NOOP("Enable"),
-	QT_TR_NOOP("Disable")
-};
+extern const QStringList extrapolation;
 
-enum class MinimizationFunction{
+enum class MinimizationFunction {
 	GibbsEnergy,
 	Entropy
 };
-const QStringList minimization_function{
-	QT_TR_NOOP("Gibbs energy"),
-	QT_TR_NOOP("Entropy")
-};
-
-}
+extern const QStringList minimization_function;
 
 struct Range {
 	double start, stop, step;
 };
 
+struct ShowPhases {
+	bool gas{true};
+	bool liquid{true};
+	bool solid{true};
+//	bool aqueous{false};
+//	bool ions{false};
+};
+
 class Parameters
 {
-
+	Workmode		workmode			{Workmode::SinglePoint};
+	Target			target				{Target::AdiabaticTemperature};
+	LiquidSolution	liquid_solution		{LiquidSolution::One};
+	ChooseSubstances choose_substances	{ChooseSubstances::AsChecked};
+	Database		database			{Database::Thermo};
+	MinimizationFunction minimization_function {MinimizationFunction::GibbsEnergy};
+	Extrapolation	extrapolation		{Extrapolation::Enable};
+	CompositionUnit group1_unit			{CompositionUnit::AtomicPercent};
+	CompositionUnit group2_unit			{CompositionUnit::AtomicPercent};
+	CompositionUnit composition1_unit	{CompositionUnit::AtomicPercent};
+	CompositionUnit composition2_unit	{CompositionUnit::AtomicPercent};
+	TemperatureUnit	temperature_initial_unit {TemperatureUnit::Kelvin};
+	TemperatureUnit temperature_range_unit {TemperatureUnit::Kelvin};
+	PressureUnit	pressure_initial_unit {PressureUnit::MPa};
+	PressureUnit	pressure_range_unit {PressureUnit::MPa};
+	double			temperature_initial	{300.0};
+	double			pressure_initial	{0.1};
+	Range			composition1_range	{  0.0,  100.0,  1.0};
+	Range			composition2_range	{  0.0,  100.0,  1.0};
+	Range			temperature_range	{300.0, 1000.0, 10.0};
+	Range			pressure_range		{  0.1,    1.0,  0.1};
+	int				threads				{1};
+	int				at_accuracy			{1}; // digits after the decimal point
 public:
 	Parameters();
 
 };
-
+} // namespace ParametersNS
 #endif // PARAMETERS_H

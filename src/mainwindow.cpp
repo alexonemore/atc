@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
 	LOG()
 
 	ui->setupUi(this);
+	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator"));
 
 	std::vector<QAbstractButton*> check_butons{
 		ui->check_button_1,
