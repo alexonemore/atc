@@ -481,9 +481,6 @@
         <property name="text">
          <string>Gas</string>
         </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
       <item>
@@ -491,18 +488,12 @@
         <property name="text">
          <string>Liquid</string>
         </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="show_solid">
         <property name="text">
          <string>Sollid</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
