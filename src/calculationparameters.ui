@@ -20,6 +20,9 @@
    <string>GroupBox</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
    <property name="topMargin">
     <number>0</number>
    </property>
