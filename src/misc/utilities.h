@@ -24,6 +24,7 @@
 #include <QString>
 #include <QObject>
 #include <QThread>
+#include <QMetaEnum>
 #include <type_traits>
 #include <random>
 #ifndef NDEBUG
@@ -118,33 +119,41 @@ constexpr bool EqualsAllOf(const T1& t1, const T2& t2, const TN& ...tN)
 	return ((t1 == t2) && ... && (t1 == tN));
 }
 
-class RandomInt
-{
-	std::default_random_engine re;
-	std::uniform_int_distribution<> dist;
-public:
-	RandomInt(const int low, const int high,
-			  const unsigned int random_number = std::random_device{}())
-		: re{random_number}, dist{low, high}
-	{}
-	int operator()() {return dist(re);}
-	void seed(const unsigned int s = std::random_device{}()) {re.seed(s);}
-};
 
-class RandomDouble
+template<typename Distribution>
+class RandomNumber
 {
+	using Type = typename Distribution::result_type;
 	std::default_random_engine re;
-	std::uniform_real_distribution<> dist;
+	Distribution dist;
 public:
-	RandomDouble(const double low, const double high,
+	explicit RandomNumber(const Type low, const Type high,
 				 const unsigned int random_number = std::random_device{}())
 		: re{random_number}, dist{low, high}
 	{}
-	double operator()() {return dist(re);}
-	void seed(const unsigned int s = std::random_device{}()) {re.seed(s);}
+	Type operator()() { return dist(re); }
+	void seed(const unsigned int random_number = std::random_device{}()) {
+		re.seed(random_number);
+	}
 };
+
+using RandomInt = RandomNumber<std::uniform_int_distribution<>>;
+using RandomDouble = RandomNumber<std::uniform_real_distribution<>>;
+
 
 class QColor;
 QColor GetRandomColor();
+
+
+template<typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
+QStringList MetaEnumToQStringList() {
+	auto me = QMetaEnum::fromType<T>();
+	auto max = me.keyCount();
+	QStringList list;
+	for(int i = 0; i != max; ++i) {
+		list.append(me.valueToKey(me.value(i)));
+	}
+	return list;
+}
 
 #endif // UTILITIES_H

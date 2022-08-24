@@ -21,7 +21,7 @@
 #include "ui_calculationparameters.h"
 #include "parameters.h"
 
-template<typename T>
+template<typename T, typename = std::enable_if_t<std::is_enum_v<T>>>
 QStringList to_list() {
 	auto me = QMetaEnum::fromType<T>();
 	auto max = me.keyCount();
