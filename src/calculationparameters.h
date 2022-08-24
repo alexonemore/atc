@@ -20,13 +20,13 @@
 #ifndef CALCULATIONPARAMETERS_H
 #define CALCULATIONPARAMETERS_H
 
-#include <QGroupBox>
+#include <QWidget>
 
 namespace Ui {
 class CalculationParameters;
 }
 
-class CalculationParameters : public QGroupBox
+class CalculationParameters : public QWidget
 {
 	Q_OBJECT
 

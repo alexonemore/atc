@@ -22,11 +22,10 @@
 #include "parameters.h"
 
 CalculationParameters::CalculationParameters(QWidget *parent) :
-	QGroupBox(parent),
+	QWidget(parent),
 	ui(new Ui::CalculationParameters)
 {
 	ui->setupUi(this);
-	setTitle(QStringLiteral("Calculation parameters"));
 
 	ui->workmode->addItems(ParametersNS::workmode);
 	ui->target->addItems(ParametersNS::target);
