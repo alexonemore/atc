@@ -49,7 +49,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	auto choose_substances = to_list<ParametersNS::ChooseSubstances>();
 	auto extrapolation = to_list<ParametersNS::Extrapolation>();
 
-	ui->composition1_units->set
+	ui->composition1_units->insertItems(0, composition_units);
 
 
 
