@@ -120,14 +120,14 @@ constexpr bool EqualsAllOf(const T1& t1, const T2& t2, const TN& ...tN)
 }
 
 
-template<typename Distribution>
-class RandomNumber
+template<typename Distribution,
+		 typename Type = typename Distribution::result_type>
+class RandomNumberImpl
 {
-	using Type = typename Distribution::result_type;
 	std::default_random_engine re;
 	Distribution dist;
 public:
-	explicit RandomNumber(const Type low, const Type high,
+	explicit RandomNumberImpl(const Type low, const Type high,
 				 const unsigned int random_number = std::random_device{}())
 		: re{random_number}, dist{low, high}
 	{}
@@ -137,8 +137,8 @@ public:
 	}
 };
 
-using RandomInt = RandomNumber<std::uniform_int_distribution<>>;
-using RandomDouble = RandomNumber<std::uniform_real_distribution<>>;
+using RandomInt = RandomNumberImpl<std::uniform_int_distribution<>>;
+using RandomDouble = RandomNumberImpl<std::uniform_real_distribution<>>;
 
 
 class QColor;

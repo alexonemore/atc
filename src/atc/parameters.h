@@ -120,6 +120,15 @@ const QStringList extrapolation{
 	QT_TR_NOOP("Disable")
 };
 
+enum class MinimizationFunction{
+	GibbsEnergy,
+	Entropy
+};
+const QStringList minimization_function{
+	QT_TR_NOOP("Gibbs energy"),
+	QT_TR_NOOP("Entropy")
+};
+
 }
 
 struct Range {

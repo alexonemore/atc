@@ -28,8 +28,14 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->setupUi(this);
 	setTitle(QStringLiteral("Calculation parameters"));
 
-	ui->workmode->insertItems(0, ParametersNS::workmode);
-	ui->target->insertItems(1, ParametersNS::target);
+	ui->workmode->addItems(ParametersNS::workmode);
+	ui->target->addItems(ParametersNS::target);
+	ui->liquid_solution->addItems(ParametersNS::liquid_solution);
+	ui->database->addItems(ParametersNS::datebases);
+	ui->choose_substances->addItems(ParametersNS::choose_substances);
+	ui->extrapolation->addItems(ParametersNS::extrapolation);
+
+
 
 
 }
