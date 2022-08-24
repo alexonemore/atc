@@ -21,6 +21,17 @@
 #include "ui_calculationparameters.h"
 #include "parameters.h"
 
+template<typename T>
+QStringList to_list() {
+	auto me = QMetaEnum::fromType<T>();
+	auto max = me.keyCount();
+	QStringList list;
+	for(int i = 0; i != max; ++i) {
+		list.append(me.valueToKey(me.value(i)));
+	}
+	return list;
+}
+
 CalculationParameters::CalculationParameters(QWidget *parent) :
 	QGroupBox(parent),
 	ui(new Ui::CalculationParameters)
@@ -28,21 +39,18 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->setupUi(this);
 	setTitle(QStringLiteral("Calculation parameters"));
 
-	auto to_list = [](QMetaEnum&& me) -> QStringList {
-		auto max = me.keyCount();
-		QStringList list;
-		for(int i = 0; i != max; ++i) {
-			list.append(me.valueToKey(me.value(i)));
-		}
-		return list;
-	};
+	auto workmodes = to_list<ParametersNS::Workmode>();
+	auto targets = to_list<ParametersNS::Target>();
+	auto liquid_solutions = to_list<ParametersNS::LiquidSolution>();
+	auto composition_units = to_list<ParametersNS::CompositionUnit>();
+	auto temperature_units = to_list<ParametersNS::TemperatureUnit>();
+	auto pressure_units = to_list<ParametersNS::PressureUnit>();
+	auto databases = to_list<ParametersNS::Databases>();
+	auto choose_substances = to_list<ParametersNS::ChooseSubstances>();
+	auto extrapolation = to_list<ParametersNS::Extrapolation>();
 
-	auto workmodes = to_list(QMetaEnum::fromType<ParametersNS::Workmode>());
-	auto targets = to_list(QMetaEnum::fromType<ParametersNS::Target>());
-	auto liquid_solutions = to_list(QMetaEnum::fromType<ParametersNS::LiquidSolution>());
-	auto composition_units = to_list(QMetaEnum::fromType<ParametersNS::CompositionUnit>());
-	auto temperature_units = to_list(QMetaEnum::fromType<ParametersNS::TemperatureUnit>());
-	auto pressure_units = to_list(QMetaEnum::fromType<ParametersNS::PressureUnit>());
+	ui->composition1_units->set
+
 
 
 }

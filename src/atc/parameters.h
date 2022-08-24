@@ -63,6 +63,21 @@ enum class PressureUnit {
 	bar
 };
 Q_ENUM_NS(PressureUnit)
+enum class Databases {
+	Thermo,
+	HSC
+};
+Q_ENUM_NS(Databases)
+enum class ChooseSubstances {
+	AsChecked,
+	ByMinimumGibbsEnergy
+};
+Q_ENUM_NS(ChooseSubstances)
+enum class Extrapolation {
+	Enable,
+	Disable
+};
+Q_ENUM_NS(Extrapolation)
 }
 
 struct Range {
