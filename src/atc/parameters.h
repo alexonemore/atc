@@ -103,8 +103,8 @@ struct ShowPhases {
 //	bool ions{false}; TODO
 };
 
-extern const int at_accuracy_min; // digits after the
-extern const int at_accuracy_max; // decimal point
+constexpr int at_accuracy_min{0}; // digits after the
+constexpr int at_accuracy_max{4}; // decimal point
 
 struct Parameters
 {
