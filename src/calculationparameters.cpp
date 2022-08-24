@@ -92,6 +92,10 @@ void CalculationParameters::SetupInitialParameters()
 	ui->pressure_stop->setText(QString::number(p.pressure_range.stop));
 	ui->pressure_step->setText(QString::number(p.pressure_range.step));
 
-
+	ui->show_gas->setChecked(p.show_phases.gas);
+	ui->show_liquid->setChecked(p.show_phases.liquid);
+	ui->show_solid->setChecked(p.show_phases.solid);
+	ui->show_aqueous->setDisabled(true);
+	ui->show_ions->setDisabled(true);
 
 }
