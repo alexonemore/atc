@@ -563,7 +563,7 @@
       <item>
        <widget class="QCheckBox" name="show_aqueous">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string>Aqueous</string>
@@ -573,7 +573,7 @@
       <item>
        <widget class="QCheckBox" name="show_ions">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string>Ions</string>
