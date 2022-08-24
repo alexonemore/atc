@@ -118,9 +118,32 @@ void CalculationParameters::GetParametersFromGUI()
 	p.temperature_range_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_units->currentIndex());
 	p.pressure_range_unit = static_cast<ParametersNS::PressureUnit>(ui->pressure_units->currentIndex());
 
+	p.temperature_initial = ui->temperature_initial->text().toDouble();
+	p.pressure_initial = ui->pressure_initial->text().toDouble();
 
+	p.composition1_range.start = ui->composition1_start->text().toDouble();
+	p.composition1_range.stop = ui->composition1_stop->text().toDouble();
+	p.composition1_range.step = ui->composition1_step->text().toDouble();
+	p.composition2_range.start = ui->composition2_start->text().toDouble();
+	p.composition2_range.stop = ui->composition2_stop->text().toDouble();
+	p.composition2_range.step = ui->composition2_step->text().toDouble();
 
+	p.temperature_range.start = ui->temperature_start->text().toDouble();
+	p.temperature_range.stop = ui->temperature_stop->text().toDouble();
+	p.temperature_range.step = ui->temperature_step->text().toDouble();
 
+	p.pressure_range.start = ui->pressure_start->text().toDouble();
+	p.pressure_range.stop = ui->pressure_stop->text().toDouble();
+	p.pressure_range.step = ui->pressure_step->text().toDouble();
 
+	p.threads = ui->threads->value();
+	p.at_accuracy = ui->at_accuracy->value();
 
+	p.show_phases.gas = ui->show_gas->isChecked();
+	p.show_phases.liquid = ui->show_liquid->isChecked();
+	p.show_phases.solid = ui->show_solid->isChecked();
+	p.show_phases.aqueous = ui->show_aqueous->isChecked();
+	p.show_phases.ions = ui->show_ions->isChecked();
+
+	emit ChangeParameters(p);
 }
