@@ -20,11 +20,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <QObject>
-#include <QMetaEnum>
+#include <QStringList>
 
 namespace ParametersNS {
-	Q_NAMESPACE
 enum class Workmode {
 	SinglePoint,
 	TemperatureRange,
@@ -33,51 +31,95 @@ enum class Workmode {
 	DoubleCompositionRange,
 	TemperatureCompositionRange
 };
-Q_ENUM_NS(Workmode)
+const QStringList workmode{
+	QT_TR_NOOP("Single point"),
+	QT_TR_NOOP("Temperature range"),
+//	QT_TR_NOOP("PressureRange"), TODO
+	QT_TR_NOOP("Composition range"),
+	QT_TR_NOOP("Double composition range"),
+	QT_TR_NOOP("Temperature-composition range")
+};
+
 enum class Target {
 	AdiabaticTemperature,
 	Equilibrium
 };
-Q_ENUM_NS(Target)
-enum class LiquidSolution {
-	NoLiquidSolution,
-	OneLiquidSolution
+const QStringList target{
+	QT_TR_NOOP("Adibatic temperature"),
+	QT_TR_NOOP("Equilibrium")
 };
-Q_ENUM_NS(LiquidSolution)
+
+enum class LiquidSolution {
+	No,
+	One
+};
+const QStringList liquid_solution{
+	QT_TR_NOOP("No"),
+	QT_TR_NOOP("One")
+};
+
 enum class CompositionUnit {
 	AtomicPercent,
 	WeightPercent,
 	Mol,
 	Gram
 };
-Q_ENUM_NS(CompositionUnit)
+const QStringList composition_units{
+	QT_TR_NOOP("at. %"),
+	QT_TR_NOOP("wt. %"),
+	QT_TR_NOOP("mol"),
+	QT_TR_NOOP("gram")
+};
+
 enum class TemperatureUnit {
 	Kelvin,
 	Celsius,
 	Fahrenheit
 };
-Q_ENUM_NS(TemperatureUnit)
+const QStringList temperature_units{
+	QT_TR_NOOP("K"),
+	QT_TR_NOOP("C"),
+	QT_TR_NOOP("F")
+};
+
 enum class PressureUnit {
 	MPa,
 	atm,
 	bar
 };
-Q_ENUM_NS(PressureUnit)
+const QStringList pressure_units{
+	QT_TR_NOOP("MPa"),
+	QT_TR_NOOP("atm"),
+	QT_TR_NOOP("bar")
+};
+
 enum class Databases {
 	Thermo,
 	HSC
 };
-Q_ENUM_NS(Databases)
+const QStringList datebases{
+	QT_TR_NOOP("Thermo"),
+	QT_TR_NOOP("HSC")
+};
+
 enum class ChooseSubstances {
 	AsChecked,
 	ByMinimumGibbsEnergy
 };
-Q_ENUM_NS(ChooseSubstances)
+const QStringList choose_substances{
+	QT_TR_NOOP("As checked"),
+	QT_TR_NOOP("By minimum Gibbs")
+};
+
 enum class Extrapolation {
 	Enable,
 	Disable
 };
-Q_ENUM_NS(Extrapolation)
+const QStringList extrapolation{
+	QT_TR_NOOP("Enable"),
+	QT_TR_NOOP("Disable")
+};
+
 }
 
 struct Range {
