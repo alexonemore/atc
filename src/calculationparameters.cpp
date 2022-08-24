@@ -34,7 +34,15 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->database->addItems(ParametersNS::datebases);
 	ui->choose_substances->addItems(ParametersNS::choose_substances);
 	ui->extrapolation->addItems(ParametersNS::extrapolation);
-
+	ui->minimization_function->addItems(ParametersNS::minimization_function);
+	ui->composition1_units->addItems(ParametersNS::composition_units);
+	ui->composition2_units->addItems(ParametersNS::composition_units);
+	ui->group1_units->addItems(ParametersNS::composition_units);
+	ui->group2_units->addItems(ParametersNS::composition_units);
+	ui->temperature_initial_units->addItems(ParametersNS::temperature_units);
+	ui->temperature_units->addItems(ParametersNS::temperature_units);
+	ui->pressure_initial_units->addItems(ParametersNS::pressure_units);
+	ui->pressure_units->addItems(ParametersNS::pressure_units);
 
 
 
