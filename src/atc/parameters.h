@@ -99,8 +99,8 @@ struct ShowPhases {
 	bool gas{true};
 	bool liquid{true};
 	bool solid{true};
-//	bool aqueous{false}; TODO
-//	bool ions{false}; TODO
+	bool aqueous{false}; // TODO
+	bool ions{false}; // TODO
 };
 
 constexpr int at_accuracy_min{0}; // digits after the

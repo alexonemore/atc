@@ -95,7 +95,7 @@ void CalculationParameters::SetupInitialParameters()
 	ui->show_gas->setChecked(p.show_phases.gas);
 	ui->show_liquid->setChecked(p.show_phases.liquid);
 	ui->show_solid->setChecked(p.show_phases.solid);
-	ui->show_aqueous->setChecked(false); // TODO
-	ui->show_ions->setChecked(false); // TODO
+	ui->show_aqueous->setChecked(p.show_phases.aqueous);
+	ui->show_ions->setChecked(p.show_phases.ions);
 
 }
