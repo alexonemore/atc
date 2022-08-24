@@ -44,11 +44,35 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->pressure_initial_units->addItems(ParametersNS::pressure_units);
 	ui->pressure_units->addItems(ParametersNS::pressure_units);
 
-
+	SetupInitialParameters();
 
 }
 
 CalculationParameters::~CalculationParameters()
 {
 	delete ui;
+}
+
+void CalculationParameters::SetupInitialParameters()
+{
+	ParametersNS::Parameters p;
+	ui->workmode->setCurrentIndex(static_cast<int>(p.workmode));
+	ui->target->setCurrentIndex(static_cast<int>(p.target));
+	ui->liquid_solution->setCurrentIndex(static_cast<int>(p.liquid_solution));
+	ui->choose_substances->setCurrentIndex(static_cast<int>(p.choose_substances));
+	ui->database->setCurrentIndex(static_cast<int>(p.database));
+	ui->minimization_function->setCurrentIndex(static_cast<int>(p.minimization_function));
+	ui->extrapolation->setCurrentIndex(static_cast<int>(p.extrapolation));
+	ui->group1_units->setCurrentIndex(static_cast<int>(p.group1_unit));
+	ui->group2_units->setCurrentIndex(static_cast<int>(p.group2_unit));
+	ui->temperature_initial_units->setCurrentIndex(static_cast<int>(p.temperature_initial_unit));
+	ui->pressure_initial_units->setCurrentIndex(static_cast<int>(p.pressure_initial_unit));
+	ui->composition1_units->setCurrentIndex(static_cast<int>(p.composition1_unit));
+	ui->composition2_units->setCurrentIndex(static_cast<int>(p.composition2_unit));
+	ui->temperature_units->setCurrentIndex(static_cast<int>(p.temperature_range_unit));
+	ui->pressure_units->setCurrentIndex(static_cast<int>(p.pressure_range_unit));
+
+
+
+
 }

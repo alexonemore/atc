@@ -99,11 +99,11 @@ struct ShowPhases {
 	bool gas{true};
 	bool liquid{true};
 	bool solid{true};
-//	bool aqueous{false};
-//	bool ions{false};
+//	bool aqueous{false}; TODO
+//	bool ions{false}; TODO
 };
 
-class Parameters
+struct Parameters
 {
 	Workmode		workmode			{Workmode::SinglePoint};
 	Target			target				{Target::AdiabaticTemperature};
@@ -128,7 +128,8 @@ class Parameters
 	Range			pressure_range		{  0.1,    1.0,  0.1};
 	int				threads				{1};
 	int				at_accuracy			{1}; // digits after the decimal point
-public:
+	ShowPhases		show_phases			{};
+
 	Parameters();
 
 };

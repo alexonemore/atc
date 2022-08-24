@@ -34,8 +34,12 @@ public:
 	explicit CalculationParameters(QWidget *parent = nullptr);
 	~CalculationParameters() override;
 
+
 private:
 	Ui::CalculationParameters *ui;
+
+private:
+	void SetupInitialParameters();
 };
 
 #endif // CALCULATIONPARAMETERS_H
