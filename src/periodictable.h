@@ -45,7 +45,7 @@ private:
 
 public:
 	QStringList GetCheckedElements() const;
-	void EnableButtons(const QStringList& elements);
+	void SetEnabledElements(const QStringList& elements);
 
 };
 

@@ -56,6 +56,11 @@ CalculationParameters::~CalculationParameters()
 	delete ui;
 }
 
+void CalculationParameters::SetEnabledElements(const QStringList& elements)
+{
+	ui->periodic_table->SetEnabledElements(elements);
+}
+
 void CalculationParameters::SetupInitialParameters()
 {
 	ParametersNS::Parameters p;

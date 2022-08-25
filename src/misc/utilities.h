@@ -41,7 +41,7 @@
 	#endif
 #endif
 #ifndef NDEBUG
-	#if __GNUC__
+	#ifdef __GNUC__
 		#define LOG(...) {DebugLog(FUNCTIONNAME, QThread::currentThread(), #__VA_ARGS__, ##__VA_ARGS__);}
 	#else
 		#define LOG(...) {DebugLog(FUNCTIONNAME, QThread::currentThread(), ##__VA_ARGS__);}

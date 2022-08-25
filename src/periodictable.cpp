@@ -148,11 +148,11 @@ QStringList PeriodicTable::GetCheckedElements() const
 			checked_elements.push_back(button->text());
 		}
 	}
-	qDebug() << checked_elements;
+	LOG(checked_elements)
 	return checked_elements;
 }
 
-void PeriodicTable::EnableButtons(const QStringList& elements)
+void PeriodicTable::SetEnabledElements(const QStringList& elements)
 {
 	for(auto&& button : buttons) {
 		button->setChecked(false);
