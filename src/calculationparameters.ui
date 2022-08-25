@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>321</width>
-    <height>571</height>
+    <width>442</width>
+    <height>378</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>GroupBox</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -33,59 +33,17 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Main parameters</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string/>
+       </property>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="9" column="2">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Group 2 units</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="3">
-         <widget class="QComboBox" name="group1_units"/>
-        </item>
-        <item row="8" column="1">
-         <widget class="QSpinBox" name="at_accuracy"/>
-        </item>
-        <item row="9" column="1">
-         <widget class="QSpinBox" name="threads"/>
-        </item>
-        <item row="7" column="0" colspan="2">
-         <widget class="QComboBox" name="minimization_function"/>
-        </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QLabel" name="label_19">
-          <property name="text">
-           <string>Target</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="2">
+        <item row="5" column="0">
          <widget class="QComboBox" name="choose_substances"/>
         </item>
-        <item row="6" column="0" colspan="2">
-         <widget class="QLabel" name="label_23">
-          <property name="text">
-           <string>Minimization function</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="2">
+        <item row="4" column="0">
          <widget class="QLabel" name="label_28">
           <property name="text">
            <string>Choose substances</string>
@@ -95,43 +53,97 @@
           </property>
          </widget>
         </item>
-        <item row="9" column="0">
-         <widget class="QLabel" name="label_27">
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_23">
           <property name="text">
-           <string>Threads</string>
+           <string>Minimization function</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="8" column="2">
-         <widget class="QLabel" name="label_7">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_19">
           <property name="text">
-           <string>Group 1 units</string>
+           <string>Target</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
-        <item row="8" column="0">
-         <widget class="QLabel" name="label_26">
-          <property name="text">
-           <string>AT accuracy</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
+        <item row="7" column="0">
+         <widget class="QComboBox" name="minimization_function"/>
         </item>
-        <item row="9" column="3">
-         <widget class="QComboBox" name="group2_units"/>
-        </item>
-        <item row="3" column="0" colspan="2">
+        <item row="3" column="0">
          <widget class="QComboBox" name="target"/>
         </item>
-        <item row="11" column="0">
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_22">
+          <property name="text">
+           <string>Liquid solution</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="liquid_solution"/>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QComboBox" name="workmode"/>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QLabel" name="label_29">
+          <property name="text">
+           <string>Workmode</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>Database</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QComboBox" name="database"/>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="label_25">
+          <property name="text">
+           <string>Extrapolation</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QComboBox" name="extrapolation"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string/>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="at_accuracy"/>
+        </item>
+        <item row="5" column="0">
          <widget class="QLineEdit" name="temperature_initial">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
@@ -141,10 +153,69 @@
           </property>
          </widget>
         </item>
-        <item row="11" column="1">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_27">
+          <property name="text">
+           <string>Threads</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="threads"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Group 2 units</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
          <widget class="QComboBox" name="temperature_initial_units"/>
         </item>
-        <item row="11" column="2">
+        <item row="4" column="0" colspan="2">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Temperature initial</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>AT accuracy</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="group1_units"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Group 1 units</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="group2_units"/>
+        </item>
+        <item row="7" column="0">
          <widget class="QLineEdit" name="pressure_initial">
           <property name="enabled">
            <bool>false</bool>
@@ -157,24 +228,14 @@
           </property>
          </widget>
         </item>
-        <item row="11" column="3">
+        <item row="7" column="1">
          <widget class="QComboBox" name="pressure_initial_units">
           <property name="enabled">
            <bool>false</bool>
           </property>
          </widget>
         </item>
-        <item row="10" column="0" colspan="2">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Temperature initial</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="2" colspan="2">
+        <item row="6" column="0" colspan="2">
          <widget class="QLabel" name="label_6">
           <property name="enabled">
            <bool>false</bool>
@@ -187,112 +248,25 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="2" colspan="2">
-         <widget class="QLabel" name="label_25">
-          <property name="text">
-           <string>Extrapolation</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="2" colspan="2">
-         <widget class="QComboBox" name="extrapolation"/>
-        </item>
-        <item row="5" column="2" colspan="2">
-         <widget class="QComboBox" name="database"/>
-        </item>
-        <item row="4" column="2" colspan="2">
-         <widget class="QLabel" name="label_24">
-          <property name="text">
-           <string>Database</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2" colspan="2">
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string>Liquid solution</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2" colspan="2">
-         <widget class="QComboBox" name="liquid_solution"/>
-        </item>
-        <item row="0" column="0" colspan="4">
-         <widget class="QLabel" name="label_29">
-          <property name="text">
-           <string>Workmode</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="4">
-         <widget class="QComboBox" name="workmode"/>
-        </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Ranges</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="2" column="4">
-         <widget class="QComboBox" name="composition2_units"/>
-        </item>
-        <item row="4" column="4">
-         <widget class="QComboBox" name="pressure_units">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QLabel" name="label_42">
-          <property name="text">
-           <string>Units</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_40">
-          <property name="text">
-           <string>Stop</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_41">
-          <property name="text">
-           <string>Step</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="composition1_stop">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>10</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
         <item row="4" column="0">
          <widget class="QLabel" name="label_43">
           <property name="enabled">
@@ -300,29 +274,6 @@
           </property>
           <property name="text">
            <string>Pressure</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="composition1_step">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLineEdit" name="pressure_stop">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
           </property>
          </widget>
         </item>
@@ -336,11 +287,99 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="3">
-         <widget class="QLineEdit" name="pressure_step">
-          <property name="enabled">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_37">
+          <property name="text">
+           <string>Composition 2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_41">
+          <property name="text">
+           <string>Step</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLineEdit" name="temperature_step">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="composition2_start">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLineEdit" name="composition1_step">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_39">
+          <property name="text">
+           <string>Start</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLineEdit" name="composition1_stop">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Temperature</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Ranges</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="composition1_start">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <property name="clearButtonEnabled">
            <bool>false</bool>
           </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLineEdit" name="composition2_step">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -362,16 +401,6 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="composition2_start">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="2">
          <widget class="QLineEdit" name="temperature_stop">
           <property name="sizePolicy">
@@ -382,11 +411,34 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="4">
-         <widget class="QComboBox" name="temperature_units"/>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="composition2_stop">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
-        <item row="3" column="3">
-         <widget class="QLineEdit" name="temperature_step">
+        <item row="4" column="2">
+         <widget class="QLineEdit" name="pressure_stop">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLineEdit" name="pressure_step">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -402,154 +454,124 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="composition2_stop">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="0" column="2">
+         <widget class="QLabel" name="label_40">
+          <property name="text">
+           <string>Stop</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QLineEdit" name="composition2_step">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_42">
+          <property name="text">
+           <string>Units</string>
           </property>
          </widget>
         </item>
         <item row="1" column="4">
          <widget class="QComboBox" name="composition1_units"/>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_37">
-          <property name="text">
-           <string>Composition 2</string>
-          </property>
-         </widget>
+        <item row="2" column="4">
+         <widget class="QComboBox" name="composition2_units"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_39">
-          <property name="text">
-           <string>Start</string>
-          </property>
-         </widget>
+        <item row="3" column="4">
+         <widget class="QComboBox" name="temperature_units"/>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Temperature</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="composition1_start">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frame">
-           <bool>true</bool>
-          </property>
-          <property name="clearButtonEnabled">
+        <item row="4" column="4">
+         <widget class="QComboBox" name="pressure_units">
+          <property name="enabled">
            <bool>false</bool>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_10">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Show phases</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="show_gas">
-        <property name="text">
-         <string>Gas</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="show_liquid">
-        <property name="text">
-         <string>Liquid</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="show_solid">
-        <property name="text">
-         <string>Sollid</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="show_aqueous">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Aqueous</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="show_ions">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Ions</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="update">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Update</string>
-       </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="calculate">
+      <widget class="QGroupBox" name="groupBox_10">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>1</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text">
-        <string>Calculate</string>
+       <property name="title">
+        <string>Show phases</string>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QCheckBox" name="show_gas">
+          <property name="text">
+           <string>Gas</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="show_liquid">
+          <property name="text">
+           <string>Liquid</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="show_solid">
+          <property name="text">
+           <string>Sollid</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="show_aqueous">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Aqueous</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="show_ions">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Ions</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="update">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Update</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="calculate">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Calculate</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

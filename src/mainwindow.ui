@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>642</width>
-    <height>420</height>
+    <width>1138</width>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,17 +279,34 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <widget class="CalculationParameters" name="widget" native="true">
+           <widget class="PeriodicTable" name="widget_2" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
+              <verstretch>1</verstretch>
              </sizepolicy>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QTextEdit" name="textEdit_3"/>
+           <widget class="CalculationParameters" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="textEdit_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>2</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -323,7 +340,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>642</width>
+     <width>1138</width>
      <height>21</height>
     </rect>
    </property>
@@ -353,6 +370,12 @@
    <class>CalculationParameters</class>
    <extends>QWidget</extends>
    <header>calculationparameters.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PeriodicTable</class>
+   <extends>QWidget</extends>
+   <header>periodictable.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

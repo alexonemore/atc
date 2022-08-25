@@ -38,14 +38,19 @@ message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 set(PROJECT_SOURCES
 	# core
 	src/main.cpp
-	src/mainwindow.h
-	src/mainwindow.cpp
-	src/mainwindow.ui
 	src/coreapplication.h
 	src/coreapplication.cpp
+
+	# GUI
+	src/mainwindow.h
+	src/mainwindow.cpp
+	src/mainwindow.ui	
 	src/calculationparameters.h
 	src/calculationparameters.cpp
 	src/calculationparameters.ui
+	src/periodictable.h
+	src/periodictable.cpp
+	src/periodictable.ui
 
 	# tmp
 	src/heavycontainer.h
