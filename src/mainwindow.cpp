@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->add_3d_graph, &QPushButton::clicked,
 			this, &MainWindow::SignalNeed3DGraphData);
 
+
 }
 
 MainWindow::~MainWindow()

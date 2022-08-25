@@ -61,6 +61,8 @@ set(PROJECT_SOURCES
 	src/atc/thermodynamics.cpp
 	src/atc/parameters.h
 	src/atc/parameters.cpp
+	src/atc/database.h
+	src/atc/database.cpp
 
 	# plots
 	src/plots/plots.h
