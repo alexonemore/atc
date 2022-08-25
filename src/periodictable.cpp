@@ -162,3 +162,10 @@ void PeriodicTable::SetEnabledElements(const QStringList& elements)
 		buttons_map.at(el)->setEnabled(true);
 	}
 }
+
+void PeriodicTable::Clear()
+{
+	for(auto&& button : buttons) {
+		button->setChecked(false);
+	}
+}

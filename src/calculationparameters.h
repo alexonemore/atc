@@ -36,17 +36,16 @@ public:
 	explicit CalculationParameters(QWidget *parent = nullptr);
 	~CalculationParameters() override;
 
-public slots:
-	void SetEnabledElements(const QStringList& elements);
-
 private:
 	Ui::CalculationParameters *ui;
 
-private:
-	void SetupInitialParameters();
+public slots:
+	void SetEnabledElements(const QStringList& elements);
 
 private slots:
-	void GetParametersFromGUI();
+	void SetupInitialParameters();
+	void Update();
+	void Clear();
 
 signals:
 	void UpdateParameters(ParametersNS::Parameters parameters);

@@ -43,10 +43,13 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->pressure_units->addItems(ParametersNS::pressure_units);
 
 	connect(ui->update, &QPushButton::clicked,
-			this, &CalculationParameters::GetParametersFromGUI);
+			this, &CalculationParameters::Update);
 
 	connect(ui->calculate, &QPushButton::clicked,
 			this, &CalculationParameters::StartCalculate);
+
+	connect(ui->clear, &QPushButton::clicked,
+			this, &CalculationParameters::Clear);
 
 	SetupInitialParameters();
 }
@@ -108,7 +111,7 @@ void CalculationParameters::SetupInitialParameters()
 	ui->show_ions->setChecked(p.show_phases.ions);
 }
 
-void CalculationParameters::GetParametersFromGUI()
+void CalculationParameters::Update()
 {
 	ParametersNS::Parameters p;
 
@@ -158,4 +161,11 @@ void CalculationParameters::GetParametersFromGUI()
 	p.checked_elements = ui->periodic_table->GetCheckedElements();
 
 	emit UpdateParameters(p);
+}
+
+void CalculationParameters::Clear()
+{
+	SetupInitialParameters();
+	ui->periodic_table->Clear();
+	emit UpdateParameters(ParametersNS::Parameters{});
 }
