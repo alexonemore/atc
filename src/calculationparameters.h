@@ -48,7 +48,7 @@ private slots:
 	void Clear();
 
 signals:
-	void UpdateParameters(ParametersNS::Parameters parameters);
+	void UpdateParameters(const ParametersNS::Parameters parameters);
 	void StartCalculate();
 };
 
