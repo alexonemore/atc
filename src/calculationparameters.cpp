@@ -42,8 +42,13 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->pressure_initial_units->addItems(ParametersNS::pressure_units);
 	ui->pressure_units->addItems(ParametersNS::pressure_units);
 
-	SetupInitialParameters();
+	connect(ui->update, &QPushButton::clicked,
+			this, &CalculationParameters::GetParametersFromGUI);
 
+	connect(ui->calculate, &QPushButton::clicked,
+			this, &CalculationParameters::StartCalculate);
+
+	SetupInitialParameters();
 }
 
 CalculationParameters::~CalculationParameters()
@@ -145,5 +150,5 @@ void CalculationParameters::GetParametersFromGUI()
 	p.show_phases.aqueous = ui->show_aqueous->isChecked();
 	p.show_phases.ions = ui->show_ions->isChecked();
 
-	emit ChangeParameters(p);
+	emit UpdateParameters(p);
 }

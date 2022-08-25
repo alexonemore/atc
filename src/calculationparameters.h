@@ -30,6 +30,7 @@ class CalculationParameters;
 class CalculationParameters : public QWidget
 {
 	Q_OBJECT
+	Q_DISABLE_COPY_MOVE(CalculationParameters)
 
 public:
 	explicit CalculationParameters(QWidget *parent = nullptr);
@@ -45,9 +46,8 @@ private slots:
 	void GetParametersFromGUI();
 
 signals:
-	void ChangeParameters(ParametersNS::Parameters parameters);
-	void UpdateParemeters();
-	void ClickedCalculate();
+	void UpdateParameters(ParametersNS::Parameters parameters);
+	void StartCalculate();
 };
 
 #endif // CALCULATIONPARAMETERS_H
