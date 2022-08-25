@@ -150,5 +150,7 @@ void CalculationParameters::GetParametersFromGUI()
 	p.show_phases.aqueous = ui->show_aqueous->isChecked();
 	p.show_phases.ions = ui->show_ions->isChecked();
 
+	p.checked_elements = ui->periodic_table->GetCheckedElements();
+
 	emit UpdateParameters(p);
 }

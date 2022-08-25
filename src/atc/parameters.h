@@ -21,6 +21,7 @@
 #define PARAMETERS_H
 
 #include <QStringList>
+#include <QVector>
 
 namespace ParametersNS {
 enum class Workmode {
@@ -132,6 +133,7 @@ struct Parameters
 	int				threads				{1};
 	int				at_accuracy			{1}; // digits after the decimal point
 	ShowPhases		show_phases			{};
+	QStringList		checked_elements;
 
 	Parameters();
 

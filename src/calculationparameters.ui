@@ -33,7 +33,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="PeriodicTable" name="widget" native="true"/>
+    <widget class="PeriodicTable" name="periodic_table" native="true"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

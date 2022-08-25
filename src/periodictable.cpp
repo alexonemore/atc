@@ -12,3 +12,12 @@ PeriodicTable::~PeriodicTable()
 {
 	delete ui;
 }
+
+QStringList PeriodicTable::GetCheckedElements() const
+{
+	QStringList checked_elements;
+
+
+
+	return checked_elements;
+}
