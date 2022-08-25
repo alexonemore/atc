@@ -130,6 +130,9 @@ PeriodicTable::PeriodicTable(QWidget *parent) :
 			ui->pushButton_101,
 			ui->pushButton_102,
 			ui->pushButton_103};
+	for(auto&& button : buttons) {
+		buttons_map[button->text()] = button;
+	}
 }
 
 PeriodicTable::~PeriodicTable()
@@ -151,11 +154,11 @@ QStringList PeriodicTable::GetCheckedElements() const
 
 void PeriodicTable::EnableButtons(const QStringList& elements)
 {
-	QStringList all;
 	for(auto&& button : buttons) {
 		button->setChecked(false);
-		all.push_back(button->text());
+		button->setEnabled(false);
 	}
-
-
+	for(const auto& el : elements) {
+		buttons_map.at(el)->setEnabled(true);
+	}
 }

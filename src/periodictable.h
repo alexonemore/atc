@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QVector>
+#include <unordered_map>
 
 namespace Ui {
 class PeriodicTable;
@@ -40,6 +41,7 @@ public:
 private:
 	Ui::PeriodicTable *ui;
 	QVector<QPushButton*> buttons;
+	std::unordered_map<QString, QPushButton*> buttons_map;
 
 public:
 	QStringList GetCheckedElements() const;
