@@ -2,6 +2,8 @@
 #define PERIODICTABLE_H
 
 #include <QWidget>
+#include <QPushButton>
+#include <QVector>
 
 namespace Ui {
 class PeriodicTable;
@@ -18,9 +20,11 @@ public:
 
 private:
 	Ui::PeriodicTable *ui;
+	QVector<QPushButton*> buttons;
 
 public:
 	QStringList GetCheckedElements() const;
+	void EnableButtons(const QStringList& elements);
 
 };
 
