@@ -279,16 +279,6 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <widget class="PeriodicTable" name="widget_2" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>1</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="CalculationParameters" name="widget" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -370,12 +360,6 @@
    <class>CalculationParameters</class>
    <extends>QWidget</extends>
    <header>calculationparameters.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PeriodicTable</class>
-   <extends>QWidget</extends>
-   <header>periodictable.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
