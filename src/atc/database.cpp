@@ -68,8 +68,10 @@ Database::~Database()
 DatabaseThermo::DatabaseThermo(const QString& filename)
 	: Database(filename)
 {
-	sql.exec(SQLQueries::thermo_available_elements);
+	auto q = sql.exec(SQLQueries::thermo_available_elements);
+	while(q.next()) {
 
+	}
 }
 
 SubstancesData DatabaseThermo::GetData(const QStringList& elements)

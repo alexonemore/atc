@@ -27,11 +27,9 @@
 
 class Database
 {
-private:
-	QStringList available_elements;
 protected:
 	QSqlDatabase sql;
-
+	QStringList available_elements;
 public:
 	Database(const QString& filename);
 	virtual ~Database();
