@@ -25,10 +25,10 @@ SubstancesTable::SubstancesTable(QObject *parent)
 
 }
 
-void SubstancesTable::SetNewData(Data&& new_data) {
+void SubstancesTable::SetNewData(SubstancesData&& new_data) {
 	data_ = std::move(new_data);
-	col_count = data_.size();
-	row_count = col_count < 1 ? 0 : data_.at(0).size();
+	col_count = data_.Cols();
+	row_count = data_.Rows();
 	emit dataChanged(index(0, 0), index(row_count, col_count));
 }
 
@@ -53,11 +53,12 @@ int SubstancesTable::columnCount(const QModelIndex& parent) const
 QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 {
 	if(role == Qt::DisplayRole) {
-		if(row_count < 1) {
+#ifndef NDEBUG
+		if(!data_.CheckIndex(index)) {
 			return QVariant{};
-		} else {
-			return data_.at(index.row()).at(index.column());
 		}
+#endif
+		return data_.AtIndex(index);
 	} else {
 		return QVariant{};
 	}

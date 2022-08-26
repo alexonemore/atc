@@ -20,11 +20,32 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
+#include <QVector>
+#include <QVariant>
+#include <QModelIndex>
 
-class DataTypes
+class SubstancesData : public QVector<QVector<QVariant>>
 {
 public:
-	DataTypes();
+	SubstancesData() = default;
+	~SubstancesData() = default;
+
+	int Rows() const {
+		return size();
+	}
+	int Cols() const {
+		return size() < 1 ? 0 : at(0).size();
+	}
+	QVariant AtIndex(const QModelIndex& index) const {
+		return at(index.row()).at(index.column());
+	}
+	bool CheckIndex(const QModelIndex& index) const {
+		if(index.row() >= Rows() || index.column() >= Cols()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 };
 
 #endif // DATATYPES_H

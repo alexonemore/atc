@@ -19,7 +19,3 @@
 
 #include "datatypes.h"
 
-DataTypes::DataTypes()
-{
-
-}

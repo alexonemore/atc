@@ -22,8 +22,7 @@
 
 #include <QAbstractTableModel>
 #include <QObject>
-
-using Data = QVector<QVector<QVariant>>;
+#include "datatypes.h"
 
 class SubstancesTable : public QAbstractTableModel
 {
@@ -31,14 +30,14 @@ class SubstancesTable : public QAbstractTableModel
 	Q_DISABLE_COPY_MOVE(SubstancesTable)
 
 private:
-	Data data_;
+	SubstancesData data_;
 	int row_count;
 	int col_count;
 
 public:
 	explicit SubstancesTable(QObject *parent = nullptr);
 
-	void SetNewData(Data&& new_data);
+	void SetNewData(SubstancesData&& new_data);
 
 	// QAbstractItemModel interface
 public:

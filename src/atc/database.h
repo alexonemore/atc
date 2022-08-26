@@ -23,6 +23,7 @@
 #include <QString>
 #include <QSqlDatabase>
 #include "parameters.h"
+#include "datatypes.h"
 
 class Database
 {
@@ -32,7 +33,7 @@ class Database
 public:
 	Database(const QString& filename);
 	virtual ~Database();
-	virtual void GetData(const QStringList& elements) = 0;
+	virtual SubstancesData GetData(const QStringList& elements) = 0;
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
@@ -48,7 +49,7 @@ class DatabaseThermo : public Database
 {
 public:
 	DatabaseThermo(const QString& filename);
-	void GetData(const QStringList& elements) override;
+	SubstancesData GetData(const QStringList& elements) override;
 
 private:
 	void QueryAvailableElements() override;
@@ -59,7 +60,7 @@ class DatabaseHSC : public Database
 {
 public:
 	DatabaseHSC(const QString& filename);
-	void GetData(const QStringList& elements) override;
+	SubstancesData GetData(const QStringList& elements) override;
 
 private:
 	void QueryAvailableElements() override;
