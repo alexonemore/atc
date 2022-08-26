@@ -26,11 +26,18 @@
 #include <QProgressDialog>
 
 #include "utilities.h"
+#include "parameters.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}
 {
 	LOG()
+
+	// Databases
+	databases.reserve(ParametersNS::database_filenames.size());
+	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
+	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
+
 
 	// GUI methods should be called only in this constructor,
 	// but not in any other CoreApplication methods,

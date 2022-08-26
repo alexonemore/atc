@@ -26,6 +26,7 @@
 #include <QtDataVisualization>
 #include "mainwindow.h"
 #include "heavycontainer.h"
+#include "database.h"
 
 class CoreApplication : public QObject
 {
@@ -33,6 +34,7 @@ class CoreApplication : public QObject
 	Q_DISABLE_COPY_MOVE(CoreApplication)
 
 private:
+	QVector<Database*> databases;
 	QAbstractItemModel* table_1;
 
 public:

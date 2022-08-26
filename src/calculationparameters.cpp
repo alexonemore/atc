@@ -29,7 +29,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->workmode->addItems(ParametersNS::workmode);
 	ui->target->addItems(ParametersNS::target);
 	ui->liquid_solution->addItems(ParametersNS::liquid_solution);
-	ui->database->addItems(ParametersNS::datebases);
+	ui->database->addItems(ParametersNS::databases);
 	ui->choose_substances->addItems(ParametersNS::choose_substances);
 	ui->extrapolation->addItems(ParametersNS::extrapolation);
 	ui->minimization_function->addItems(ParametersNS::minimization_function);

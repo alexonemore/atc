@@ -53,9 +53,13 @@ const QStringList pressure_units{
 	QT_TR_NOOP("atm"),
 	QT_TR_NOOP("bar")
 };
-const QStringList datebases{
+const QStringList databases{
 	QT_TR_NOOP("Thermo"),
 	QT_TR_NOOP("HSC")
+};
+const QStringList database_filenames{
+	"databases/thermo_database.db",
+	"databases/hsc_database.db"
 };
 const QStringList choose_substances{
 	QT_TR_NOOP("As checked"),

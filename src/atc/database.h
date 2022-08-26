@@ -20,11 +20,49 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <QString>
+#include <QSqlDatabase>
+#include "parameters.h"
 
 class Database
 {
+	QString filename_;
+	QSqlDatabase sql;
+	QStringList available_elements;
 public:
-	Database();
+	Database(const QString& filename);
+	virtual ~Database();
+	virtual void GetData(const QStringList& elements) = 0;
+	const QStringList& GetAvailableElements() const {
+		return available_elements;
+	}
+private:
+	QSqlDatabase GetDatabase() {
+		return QSqlDatabase::database(filename_);
+	}
+	virtual void QueryAvailableElements() = 0;
+};
+
+
+class DatabaseThermo : public Database
+{
+public:
+	DatabaseThermo(const QString& filename);
+	void GetData(const QStringList& elements) override;
+
+private:
+	void QueryAvailableElements() override;
+};
+
+
+class DatabaseHSC : public Database
+{
+public:
+	DatabaseHSC(const QString& filename);
+	void GetData(const QStringList& elements) override;
+
+private:
+	void QueryAvailableElements() override;
 };
 
 #endif // DATABASE_H

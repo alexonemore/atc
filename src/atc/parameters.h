@@ -72,7 +72,8 @@ enum class Database {
 	Thermo,
 	HSC
 };
-extern const QStringList datebases;
+extern const QStringList databases;
+extern const QStringList database_filenames;
 
 enum class ChooseSubstances {
 	AsChecked,

@@ -18,8 +18,76 @@
  */
 
 #include "database.h"
+#include "utilities.h"
+#include <stdexcept>
+#include <QtSql>
 
-Database::Database()
+namespace SQLQueries {
+const QString hsc_available_elements = QStringLiteral(
+"SELECT Elements.Symbol "
+"FROM Elements "
+"WHERE Elements.element_id IN ("
+"SELECT CompositionsOfSpecies.element_id "
+"FROM CompositionsOfSpecies "
+"GROUP BY CompositionsOfSpecies.element_id);");
+
+
+}
+
+Database::Database(const QString& filename)
+	: filename_(filename)
+{
+	sql = QSqlDatabase::addDatabase("QSQLITE", filename_);
+	if(!sql.open()) {
+		QString str("Cannot open Database file: ");
+		str += filename_ + "\n" + sql.lastError().text();
+		LOG(str)
+		throw std::runtime_error(str.toStdString().c_str());
+	} else {
+		LOG(filename_)
+	}
+
+}
+
+Database::~Database()
+{
+	sql.close();
+}
+
+
+/* **********************************************************************
+ * *************************** Thermo ***********************************
+ * ********************************************************************** */
+
+DatabaseThermo::DatabaseThermo(const QString& filename)
+	: Database(filename)
 {
 
 }
+
+void DatabaseThermo::GetData(const QStringList& elements)
+{
+}
+
+void DatabaseThermo::QueryAvailableElements()
+{
+}
+
+/* **********************************************************************
+ * *************************** HSC **************************************
+ * ********************************************************************** */
+
+DatabaseHSC::DatabaseHSC(const QString& filename)
+	: Database(filename)
+{
+
+}
+
+void DatabaseHSC::GetData(const QStringList& elements)
+{
+}
+
+void DatabaseHSC::QueryAvailableElements()
+{
+}
+
