@@ -27,9 +27,11 @@
 
 class Database
 {
-	QString filename_;
-	QSqlDatabase sql;
+private:
 	QStringList available_elements;
+protected:
+	QSqlDatabase sql;
+
 public:
 	Database(const QString& filename);
 	virtual ~Database();
@@ -37,11 +39,6 @@ public:
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
-private:
-	QSqlDatabase GetDatabase() {
-		return QSqlDatabase::database(filename_);
-	}
-	virtual void QueryAvailableElements() = 0;
 };
 
 
@@ -51,8 +48,6 @@ public:
 	DatabaseThermo(const QString& filename);
 	SubstancesData GetData(const QStringList& elements) override;
 
-private:
-	void QueryAvailableElements() override;
 };
 
 
@@ -62,8 +57,6 @@ public:
 	DatabaseHSC(const QString& filename);
 	SubstancesData GetData(const QStringList& elements) override;
 
-private:
-	void QueryAvailableElements() override;
 };
 
 #endif // DATABASE_H

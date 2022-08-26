@@ -31,22 +31,28 @@ const QString hsc_available_elements = QStringLiteral(
 "FROM CompositionsOfSpecies "
 "GROUP BY CompositionsOfSpecies.element_id);");
 
+const QString thermo_available_elements = QStringLiteral(
+"SELECT elements.symbol "
+"FROM elements "
+"WHERE elements.element_id IN ("
+"SELECT composition.element_id "
+"FROM composition "
+"GROUP BY composition.element_id);");
+
 
 }
 
 Database::Database(const QString& filename)
-	: filename_(filename)
 {
-	sql = QSqlDatabase::addDatabase("QSQLITE", filename_);
+	sql = QSqlDatabase::addDatabase("QSQLITE", filename);
 	if(!sql.open()) {
 		QString str("Cannot open Database file: ");
-		str += filename_ + "\n" + sql.lastError().text();
+		str += filename + "\n" + sql.lastError().text();
 		LOG(str)
 		throw std::runtime_error(str.toStdString().c_str());
 	} else {
-		LOG(filename_)
+		LOG(filename)
 	}
-
 }
 
 Database::~Database()
@@ -62,6 +68,7 @@ Database::~Database()
 DatabaseThermo::DatabaseThermo(const QString& filename)
 	: Database(filename)
 {
+	sql.exec(SQLQueries::thermo_available_elements);
 
 }
 
@@ -71,9 +78,6 @@ SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 	return SubstancesData{};
 }
 
-void DatabaseThermo::QueryAvailableElements()
-{
-}
 
 /* **********************************************************************
  * *************************** HSC **************************************
@@ -82,6 +86,7 @@ void DatabaseThermo::QueryAvailableElements()
 DatabaseHSC::DatabaseHSC(const QString& filename)
 	: Database(filename)
 {
+	sql.exec(SQLQueries::hsc_available_elements);
 
 }
 
@@ -91,7 +96,4 @@ SubstancesData DatabaseHSC::GetData(const QStringList& elements)
 	return SubstancesData{};
 }
 
-void DatabaseHSC::QueryAvailableElements()
-{
-}
 
