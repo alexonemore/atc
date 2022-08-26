@@ -27,9 +27,6 @@
 class SubstancesData : public QVector<QVector<QVariant>>
 {
 public:
-	SubstancesData() = default;
-	~SubstancesData() = default;
-
 	int Rows() const {
 		return size();
 	}

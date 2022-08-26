@@ -67,6 +67,8 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 
 SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 {
+
+	return SubstancesData{};
 }
 
 void DatabaseThermo::QueryAvailableElements()
@@ -85,6 +87,8 @@ DatabaseHSC::DatabaseHSC(const QString& filename)
 
 SubstancesData DatabaseHSC::GetData(const QStringList& elements)
 {
+
+	return SubstancesData{};
 }
 
 void DatabaseHSC::QueryAvailableElements()

@@ -199,8 +199,6 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	auto&& db = databases.at(static_cast<int>(parameters.database));
-	db->GetData(parameters.checked_elements);
-
-
+	model_substances->SetNewData(db->GetData(parameters.checked_elements));
 }
 

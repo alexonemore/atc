@@ -45,7 +45,7 @@ private:
 };
 
 
-class DatabaseThermo : public Database
+class DatabaseThermo final : public Database
 {
 public:
 	DatabaseThermo(const QString& filename);
@@ -56,7 +56,7 @@ private:
 };
 
 
-class DatabaseHSC : public Database
+class DatabaseHSC final : public Database
 {
 public:
 	DatabaseHSC(const QString& filename);

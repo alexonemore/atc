@@ -27,6 +27,7 @@
 #include "mainwindow.h"
 #include "heavycontainer.h"
 #include "database.h"
+#include "substancestable.h"
 
 class CoreApplication : public QObject
 {
@@ -35,7 +36,7 @@ class CoreApplication : public QObject
 
 private:
 	QVector<Database*> databases;
-	QAbstractItemModel* model_substances;
+	SubstancesTable* model_substances;
 
 	// demo
 	QAbstractItemModel* table_1;
