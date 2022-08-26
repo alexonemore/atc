@@ -35,6 +35,9 @@ class CoreApplication : public QObject
 
 private:
 	QVector<Database*> databases;
+	QAbstractItemModel* model_substances;
+
+	// demo
 	QAbstractItemModel* table_1;
 
 public:
@@ -53,6 +56,8 @@ signals:
 	void SignalStartHeavyComputations(QVector<HeavyContainer>& ho);
 
 public slots:
+	void SlotUpdate(const ParametersNS::Parameters parameters);
+	//demo
 	void SlotRequestHandler(int i);
 	void SlotPushButtonHandler(const QString& text);
 	void SlotHeavyCalculations();

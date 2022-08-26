@@ -27,6 +27,7 @@
 #include <QtDataVisualization/QSurfaceDataArray>
 #include "plots.h"
 #include "heavycontainer.h"
+#include "parameters.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 using namespace QtDataVisualization;
@@ -52,6 +53,7 @@ public:
 	virtual ~MainWindow() override;
 
 public:
+	void SetSubstancesModel(QAbstractItemModel* model);
 	void SetModel_1(QAbstractItemModel* model);
 	void SetModel_2(QAbstractItemModel* model);
 	void SetSelectonModel(QItemSelectionModel* selection);
@@ -78,6 +80,8 @@ private slots:
 	void MenuShowAbout();
 
 signals:
+	void SignalUpdate(const ParametersNS::Parameters parameters);
+	//demo
 	void SignalSendRequest(int);
 	void SignalPushButtonClicked(QString);
 	void SignalHeavyCalculationsStart();
@@ -87,6 +91,8 @@ signals:
 
 private:
 	void SetupMenu();
+	void UpdateButtonHandler(const ParametersNS::Parameters parameters);
+	//demo
 	void CheckButtonHandler();
 	void PushButtonHandler();
 	void PushButtonHeavyHandler();

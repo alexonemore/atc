@@ -27,6 +27,7 @@
 
 #include "utilities.h"
 #include "parameters.h"
+#include "substancestable.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}
@@ -44,16 +45,24 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// because after construct this object will be moved to another thread.
 	// All communication with the GUI must be done through signals.
 
-	// create model
+	// create models
+	model_substances = new SubstancesTable(this);
 	table_1 = new QStringListModel(this);
 
+
+
 	// set model
+	gui->SetSubstancesModel(model_substances);
+	// demo
 	gui->SetModel_1(table_1);
 	gui->SetModel_2(table_1);
 	auto sel = new QItemSelectionModel(table_1);
 	gui->SetSelectonModel(sel);
 
 	// connects
+	connect(gui, &MainWindow::SignalUpdate,
+			this, &CoreApplication::SlotUpdate);
+	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
 			this, &CoreApplication::SlotRequestHandler);
 	connect(gui, &MainWindow::SignalPushButtonClicked,
@@ -185,5 +194,13 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 	LOG()
 	QVector<HeavyContainer> vec(10);
 	return vec;
+}
+
+void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
+{
+	auto&& db = databases.at(static_cast<int>(parameters.database));
+	db->GetData(parameters.checked_elements);
+
+
 }
 

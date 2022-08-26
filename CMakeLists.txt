@@ -63,6 +63,8 @@ set(PROJECT_SOURCES
 	src/atc/parameters.cpp
 	src/atc/database.h
 	src/atc/database.cpp
+	src/atc/datatypes.h
+	src/atc/datatypes.cpp
 
 	# plots
 	src/plots/plots.h
@@ -85,6 +87,8 @@ set(PROJECT_SOURCES
 	src/plots/dialogchangegraphsettings.ui
 
 	# models
+	src/models/substancestable.h
+	src/models/substancestable.cpp
 
 	# views
 

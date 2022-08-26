@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->setupUi(this);
 	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator"));
 
+	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
+			this, &MainWindow::UpdateButtonHandler);
+	//demo
 	std::vector<QAbstractButton*> check_butons{
 		ui->check_button_1,
 		ui->check_button_2,
@@ -103,6 +106,12 @@ MainWindow::~MainWindow()
 {
 	LOG()
 	delete ui;
+}
+
+void MainWindow::SetSubstancesModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->view_substances->setModel(model);
 }
 
 void MainWindow::SetModel_1(QAbstractItemModel* model)
@@ -286,6 +295,13 @@ void MainWindow::SetupMenu()
 
 	help_menu->addAction(a_about);
 
+}
+
+void MainWindow::UpdateButtonHandler(const ParametersNS::Parameters parameters)
+{
+	// TODO update mainwindow for new parameters
+	// I don't know what to update in the mainwindow yet.
+	emit SignalUpdate(parameters);
 }
 
 
