@@ -34,6 +34,13 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 {
 	LOG()
 
+	qRegisterMetaType<QVector<int>>("QVector<int>");
+	qRegisterMetaType<ParametersNS::Parameters>("ParametersNS::Parameters");
+	qRegisterMetaType<GraphId>("GraphId");
+	qRegisterMetaType<QVector<double>>("QVector<double>&");
+	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
+	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
+
 	// Databases
 	databases.reserve(ParametersNS::database_filenames.size());
 	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
@@ -62,6 +69,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// connects
 	connect(gui, &MainWindow::SignalUpdate,
 			this, &CoreApplication::SlotUpdate);
+	connect(this, &CoreApplication::SignalSetAvailableElements,
+			gui, &MainWindow::SlotSetAvailableElements);
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
 			this, &CoreApplication::SlotRequestHandler);
@@ -76,11 +85,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalShowTime,
 			gui, &MainWindow::SlotShowStatusBarText);
 
-	qRegisterMetaType<GraphId>("GraphId");
-	qRegisterMetaType<QVector<double>>("QVector<double>&");
-	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
-	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
-
+	// plots
 	connect(gui, &MainWindow::SignalNeed2DGraphData,
 			this, &CoreApplication::SlotMake2DGraphData);
 	connect(gui, &MainWindow::SignalNeedHeatMapData,
@@ -97,6 +102,11 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 
 	connect(this, &CoreApplication::SignalStartHeavyComputations,
 			gui, &MainWindow::SlotHeavyComputations);
+
+	// initial parameters
+	ParametersNS::Parameters initial;
+	auto db = databases.at(static_cast<int>(initial.database));
+	gui->SlotSetAvailableElements(db->GetAvailableElements());
 
 }
 
@@ -198,7 +208,12 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
+	LOG("START")
 	auto&& db = databases.at(static_cast<int>(parameters.database));
-	model_substances->SetNewData(db->GetData(parameters.checked_elements));
+	auto&& data = db->GetData(parameters.checked_elements);
+	model_substances->SetNewData(std::move(data));
+	LOG("BEFORE EMIT")
+	emit SignalSetAvailableElements(db->GetAvailableElements());
+	LOG("END")
 }
 

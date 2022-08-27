@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow
 
 private:
 	Ui::MainWindow *ui;
-	QProgressDialog* dialog;	
+	QProgressDialog* dialog;
 	QFutureWatcher<void>* fw;
 	QString database_path;
 
@@ -69,6 +69,8 @@ public slots:
 	void SlotAdd3DGraph(QSurfaceDataArray* data);
 
 public slots:
+	void SlotSetAvailableElements(const QStringList& elements);
+	// demo
 	void SlotShowResponse(const QString& text);
 	void SlotShowRequest(const QString& text);
 	void SlotShowError(const QString& text);

@@ -24,17 +24,18 @@
 #include <QVariant>
 #include <QModelIndex>
 
-class SubstancesData : public QVector<QVector<QVariant>>
+class SubstancesData
 {
+	QVector<QVector<QVariant>> data;
 public:
 	int Rows() const {
-		return size();
+		return data.size();
 	}
 	int Cols() const {
-		return size() < 1 ? 0 : at(0).size();
+		return data.size() < 1 ? 0 : data.at(0).size();
 	}
 	QVariant AtIndex(const QModelIndex& index) const {
-		return at(index.row()).at(index.column());
+		return data.at(index.row()).at(index.column());
 	}
 	bool CheckIndex(const QModelIndex& index) const {
 		if(index.row() >= Rows() || index.column() >= Cols()) {

@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 	LOG()
-	delete ui;
+			delete ui;
 }
 
 void MainWindow::SetSubstancesModel(QAbstractItemModel* model)
@@ -229,6 +229,11 @@ void MainWindow::SlotAdd3DGraph(QSurfaceDataArray* data)
 {
 	LOG()
 	ui->plot3d->AddGraph(data);
+}
+
+void MainWindow::SlotSetAvailableElements(const QStringList& elements)
+{
+	ui->calculation_parameters->SetEnabledElements(elements);
 }
 
 void MainWindow::SlotLoadDatabase()

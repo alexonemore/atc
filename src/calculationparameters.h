@@ -39,8 +39,11 @@ public:
 private:
 	Ui::CalculationParameters *ui;
 
-public slots:
+public:
 	void SetEnabledElements(const QStringList& elements);
+
+private:
+	ParametersNS::Parameters GetCurrentParameters() const;
 
 private slots:
 	void SetupInitialParameters();

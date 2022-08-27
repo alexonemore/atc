@@ -29,7 +29,9 @@ void SubstancesTable::SetNewData(SubstancesData&& new_data) {
 	data_ = std::move(new_data);
 	col_count = data_.Cols();
 	row_count = data_.Rows();
-	emit dataChanged(index(0, 0), index(row_count, col_count));
+	auto tl = index(0, 0);
+	auto br = index(row_count, col_count);
+	emit dataChanged(tl, br);
 }
 
 int SubstancesTable::rowCount(const QModelIndex& parent) const

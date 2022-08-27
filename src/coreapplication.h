@@ -46,6 +46,8 @@ public:
 	virtual ~CoreApplication() override;
 
 signals:
+	void SignalSetAvailableElements(const QStringList elements);
+	//demo
 	void SignalShowResponse(const QString&);
 	void SignalShowTime(const QString&);
 	void SignalShowError(const QString&);

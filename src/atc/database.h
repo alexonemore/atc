@@ -28,7 +28,7 @@
 class Database
 {
 protected:
-	QSqlDatabase sql;
+	QString filename_;
 	QStringList available_elements;
 public:
 	Database(const QString& filename);
