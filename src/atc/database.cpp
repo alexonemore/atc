@@ -85,9 +85,13 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 {
 	auto elements_str = elements.join(QStringLiteral(","));
-	auto q = Query(SQLQueries::thermo_substances);
+	auto q = Query(SQLQueries::thermo_substances.arg(elements_str));
+
+	while(q.next()) {
 
 
+
+	}
 
 	return SubstancesData{};
 }
