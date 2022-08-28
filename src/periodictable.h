@@ -43,8 +43,10 @@ private:
 	QVector<QPushButton*> buttons;
 	std::unordered_map<QString, QPushButton*> buttons_map;
 
-public slots:
+public:
 	QStringList GetCheckedElements() const;
+
+public slots:
 	void SetEnabledElements(const QStringList& elements);
 	void Clear();
 

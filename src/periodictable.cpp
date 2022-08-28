@@ -155,11 +155,18 @@ QStringList PeriodicTable::GetCheckedElements() const
 void PeriodicTable::SetEnabledElements(const QStringList& elements)
 {
 	for(auto&& button : buttons) {
-		button->setChecked(false);
 		button->setEnabled(false);
 	}
 	for(const auto& el : elements) {
-		buttons_map.at(el)->setEnabled(true);
+		auto f = buttons_map.find(el);
+		if(f != buttons_map.end()) {
+			f->second->setEnabled(true);
+		}
+	}
+	for(auto&& button : buttons) {
+		if(!button->isEnabled()) {
+			button->setChecked(false);
+		}
 	}
 }
 

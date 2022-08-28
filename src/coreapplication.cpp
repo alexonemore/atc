@@ -208,12 +208,9 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
-	LOG("START")
 	auto&& db = databases.at(static_cast<int>(parameters.database));
 	auto&& data = db->GetData(parameters.checked_elements);
 	model_substances->SetNewData(std::move(data));
-	LOG("BEFORE EMIT")
 	emit SignalSetAvailableElements(db->GetAvailableElements());
-	LOG("END")
 }
 
