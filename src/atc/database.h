@@ -37,6 +37,8 @@ public:
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
+protected:
+	QSqlQuery Query(const QString& query);
 };
 
 

@@ -27,17 +27,18 @@ const QString hsc_available_elements = QStringLiteral(
 "SELECT Elements.Symbol "
 "FROM Elements "
 "WHERE Elements.element_id IN ("
-"SELECT CompositionsOfSpecies.element_id "
-"FROM CompositionsOfSpecies "
-"GROUP BY CompositionsOfSpecies.element_id);");
+"SELECT DISTINCT CompositionsOfSpecies.element_id "
+"FROM CompositionsOfSpecies);");
 
 const QString thermo_available_elements = QStringLiteral(
 "SELECT elements.symbol "
 "FROM elements "
 "WHERE elements.element_id IN ("
-"SELECT composition.element_id "
-"FROM composition "
-"GROUP BY composition.element_id);");
+"SELECT DISTINCT composition.element_id "
+"FROM composition);");
+
+const QString thermo_substances = QStringLiteral(
+"");
 
 
 }
@@ -61,6 +62,11 @@ Database::~Database()
 {
 }
 
+QSqlQuery Database::Query(const QString& query)
+{
+	return QSqlQuery(query, QSqlDatabase::database(filename_));
+}
+
 
 /* **********************************************************************
  * *************************** Thermo ***********************************
@@ -69,8 +75,7 @@ Database::~Database()
 DatabaseThermo::DatabaseThermo(const QString& filename)
 	: Database(filename)
 {
-	QSqlQuery q(SQLQueries::thermo_available_elements,
-				QSqlDatabase::database(filename_));
+	auto q = Query(SQLQueries::thermo_available_elements);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
@@ -79,6 +84,10 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 
 SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 {
+	auto elements_str = elements.join(QStringLiteral(","));
+	auto q = Query(SQLQueries::thermo_substances);
+
+
 
 	return SubstancesData{};
 }
@@ -91,8 +100,7 @@ SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 DatabaseHSC::DatabaseHSC(const QString& filename)
 	: Database(filename)
 {
-	QSqlQuery q(SQLQueries::hsc_available_elements,
-				QSqlDatabase::database(filename_));
+	auto q = Query(SQLQueries::hsc_available_elements);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
