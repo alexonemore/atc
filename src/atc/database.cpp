@@ -59,7 +59,23 @@ const QString hsc_substances = QStringLiteral(
 "");
 
 const QString thermo_substances = QStringLiteral(""
-"");
+"SELECT "
+"substances.sub_id AS id, "
+"substances.name || ' [' || state.symbol || '] ' || substances.alt_name "
+"AS 'Name', "
+"state.name AS State, "
+"substances.T_min, "
+"substances.T_max, "
+"substances.weight AS Weight "
+"FROM substances "
+"JOIN state ON state.state_id = substances.state_id "
+"WHERE substances.sub_id IN "
+"(SELECT composition.sub_id FROM composition WHERE "
+"composition.element_id IN (%1) "
+"EXCEPT "
+"SELECT composition.sub_id FROM composition WHERE "
+"composition.element_id NOT IN (%1)) "
+"ORDER BY substances.sub_id;");
 
 }
 
