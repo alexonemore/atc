@@ -40,12 +40,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
 	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
 
-	// Databases
-	databases.reserve(ParametersNS::database_filenames.size());
-	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
-	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
-
-
 	// GUI methods should be called only in this constructor,
 	// but not in any other CoreApplication methods,
 	// because after construct this object will be moved to another thread.
@@ -102,6 +96,12 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalStartHeavyComputations,
 			gui, &MainWindow::SlotHeavyComputations);
 
+
+	// must invoke after move this to another thread
+	// Databases
+	databases.reserve(ParametersNS::database_filenames.size());
+	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
+	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
 	// initial parameters
 	auto db = databases.at(static_cast<int>(parameters_.database));
 	gui->SlotSetAvailableElements(db->GetAvailableElements());
@@ -208,7 +208,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	parameters_ = std::move(parameters);
 	auto&& db = databases.at(static_cast<int>(parameters_.database));
-	auto&& data = db->GetData(parameters_.checked_elements);
+	auto&& data = db->GetData(parameters_);
 	model_substances->SetNewData(std::move(data));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 }

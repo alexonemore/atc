@@ -48,14 +48,14 @@ const QString hsc_substances = QStringLiteral(
 "FROM ("
 "	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
 "	WHERE CompositionsOfSpecies.element_id IN ("
-"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN ('Ag','Au','S'))"
+"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))"
 "	EXCEPT"
 "	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
 "	WHERE CompositionsOfSpecies.element_id NOT IN ("
-"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN ('Ag','Au','S'))"
+"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))"
 ") AS T"
 "JOIN Species ON Species.species_id = T.species_id"
-"WHERE Species.Suffix IN ('g','l','s','')"
+"WHERE Species.Suffix IN (%2)"
 "");
 
 const QString thermo_substances = QStringLiteral(""
@@ -100,6 +100,7 @@ Database::~Database()
 
 QSqlQuery Database::Query(const QString& query)
 {
+	LOG()
 	return QSqlQuery(query, QSqlDatabase::database(filename_));
 }
 
@@ -118,9 +119,10 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 	LOG(available_elements)
 }
 
-SubstancesData DatabaseThermo::GetData(const QStringList& elements)
+SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters parameters)
 {
-	auto elements_str = elements.join(QStringLiteral("','"));
+	auto elements_str = QStringLiteral("'") +
+			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto q = Query(SQLQueries::thermo_substances.arg(elements_str));
 
 	while(q.next()) {
@@ -147,10 +149,40 @@ DatabaseHSC::DatabaseHSC(const QString& filename)
 	LOG(available_elements)
 }
 
-SubstancesData DatabaseHSC::GetData(const QStringList& elements)
+SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters parameters)
 {
+	auto elements_str = QStringLiteral("'") +
+			parameters.checked_elements.join("','") + QStringLiteral("'");
+	auto phases = GetPhasesString(parameters);
+	LOG(phases)
+	auto q = Query(SQLQueries::hsc_substances.arg(elements_str, phases));
+
+	while(q.next()) {
+
+
+
+	}
 
 	return SubstancesData{};
 }
 
+QString DatabaseHSC::GetPhasesString(const ParametersNS::Parameters parameters)
+{
+	QStringList list;
+	if(parameters.show_phases.gas) {
+		list.append(QStringLiteral("g"));
+	}
+	if(parameters.show_phases.liquid) {
+		list.append(QStringLiteral("l"));
+	}
+	if(parameters.show_phases.solid) {
+		list.append(QStringLiteral("s"));
+		list.append(QStringList(""));
+	}
+	if(list.isEmpty()) {
+		return QString{};
+	} else {
+		return QStringLiteral("'") + list.join("','") + QStringLiteral("'");
+	}
+}
 
