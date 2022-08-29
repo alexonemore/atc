@@ -31,8 +31,12 @@ int main(int argc, char *argv[])
 	QThread thread;
 	thread.setObjectName(QStringLiteral("<< CORE APP THREAD >>"));
 
-	MainWindow main_window;	
+	MainWindow main_window;
 	CoreApplication core_app(&main_window);
+
+	// connect with initialize need for open databases in core app thread
+	QObject::connect(&thread, &QThread::started,
+					 &core_app, &CoreApplication::Initialize);
 
 	main_window.show();
 	core_app.moveToThread(&thread);

@@ -61,6 +61,7 @@ signals:
 	void SignalStartHeavyComputations(QVector<HeavyContainer>& ho);
 
 public slots:
+	void Initialize();
 	void SlotUpdate(const ParametersNS::Parameters parameters);
 	//demo
 	void SlotRequestHandler(int i);

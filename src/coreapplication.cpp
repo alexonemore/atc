@@ -97,6 +97,17 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotHeavyComputations);
 
 
+
+}
+
+CoreApplication::~CoreApplication()
+{
+	LOG()
+}
+
+void CoreApplication::Initialize()
+{
+	LOG()
 	// must invoke after move this to another thread
 	// Databases
 	databases.reserve(ParametersNS::database_filenames.size());
@@ -104,13 +115,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
 	// initial parameters
 	auto db = databases.at(static_cast<int>(parameters_.database));
-	gui->SlotSetAvailableElements(db->GetAvailableElements());
-
-}
-
-CoreApplication::~CoreApplication()
-{
-	LOG()
+	emit SignalSetAvailableElements(db->GetAvailableElements());
 }
 
 void CoreApplication::SlotRequestHandler(int i)
