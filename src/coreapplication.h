@@ -28,6 +28,7 @@
 #include "heavycontainer.h"
 #include "database.h"
 #include "substancestable.h"
+#include "parameters.h"
 
 class CoreApplication : public QObject
 {
@@ -35,6 +36,7 @@ class CoreApplication : public QObject
 	Q_DISABLE_COPY_MOVE(CoreApplication)
 
 private:
+	ParametersNS::Parameters parameters_{};
 	QVector<Database*> databases;
 	SubstancesTable* model_substances;
 

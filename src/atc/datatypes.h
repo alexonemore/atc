@@ -20,6 +20,7 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
+#include <QString>
 #include <QVector>
 #include <QVariant>
 #include <QModelIndex>
@@ -27,6 +28,7 @@
 class SubstancesData
 {
 	QVector<QVector<QVariant>> data;
+	QVector<QString> names;
 public:
 	int Rows() const {
 		return data.size();
@@ -34,7 +36,7 @@ public:
 	int Cols() const {
 		return data.size() < 1 ? 0 : data.at(0).size();
 	}
-	QVariant AtIndex(const QModelIndex& index) const {
+	const QVariant& AtIndex(const QModelIndex& index) const {
 		return data.at(index.row()).at(index.column());
 	}
 	bool CheckIndex(const QModelIndex& index) const {
@@ -43,6 +45,9 @@ public:
 		} else {
 			return true;
 		}
+	}
+	const QString& NameAt(int i) const {
+		return names.at(i);
 	}
 };
 

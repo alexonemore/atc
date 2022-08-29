@@ -26,7 +26,6 @@
 #include <QProgressDialog>
 
 #include "utilities.h"
-#include "parameters.h"
 #include "substancestable.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
@@ -104,8 +103,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotHeavyComputations);
 
 	// initial parameters
-	ParametersNS::Parameters initial;
-	auto db = databases.at(static_cast<int>(initial.database));
+	auto db = databases.at(static_cast<int>(parameters_.database));
 	gui->SlotSetAvailableElements(db->GetAvailableElements());
 
 }
@@ -208,8 +206,9 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
-	auto&& db = databases.at(static_cast<int>(parameters.database));
-	auto&& data = db->GetData(parameters.checked_elements);
+	parameters_ = std::move(parameters);
+	auto&& db = databases.at(static_cast<int>(parameters_.database));
+	auto&& data = db->GetData(parameters_.checked_elements);
 	model_substances->SetNewData(std::move(data));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 }

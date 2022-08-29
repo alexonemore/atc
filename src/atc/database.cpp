@@ -37,9 +37,29 @@ const QString thermo_available_elements = QStringLiteral(
 "SELECT DISTINCT composition.element_id "
 "FROM composition);");
 
-const QString thermo_substances = QStringLiteral(
+const QString hsc_substances = QStringLiteral(
+"SELECT Species.Formula, "
+"IIF(length(Species.NameCh)>0, Species.NameCh, '') ||"
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') ||"
+"IIF(length(Species.NameCo)>0, Species.NameCo, '') ||"
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '')"
+"AS 'Name',"
+"Species.T_min AS 'T min', Species.T_max AS 'T max'"
+"FROM ("
+"	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
+"	WHERE CompositionsOfSpecies.element_id IN ("
+"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN ('Ag','Au','S'))"
+"	EXCEPT"
+"	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
+"	WHERE CompositionsOfSpecies.element_id NOT IN ("
+"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN ('Ag','Au','S'))"
+") AS T"
+"JOIN Species ON Species.species_id = T.species_id"
+"WHERE Species.Suffix IN ('g','l','s','')"
 "");
 
+const QString thermo_substances = QStringLiteral(""
+"");
 
 }
 
@@ -84,7 +104,7 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 
 SubstancesData DatabaseThermo::GetData(const QStringList& elements)
 {
-	auto elements_str = elements.join(QStringLiteral(","));
+	auto elements_str = elements.join(QStringLiteral("','"));
 	auto q = Query(SQLQueries::thermo_substances.arg(elements_str));
 
 	while(q.next()) {
