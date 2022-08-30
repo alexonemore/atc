@@ -22,14 +22,7 @@
 #include <stdexcept>
 #include <QtSql>
 
-namespace SQL {
-const QString available_elements = QStringLiteral(
-"SELECT Elements.Symbol "
-"FROM Elements "
-"WHERE Elements.element_id IN ("
-"SELECT DISTINCT CompositionsOfSpecies.element_id "
-"FROM CompositionsOfSpecies);");
-
+namespace Models {
 const QStringList substances_field_names = {
 	QStringLiteral("ID"),
 	QStringLiteral("Formula"),
@@ -37,6 +30,15 @@ const QStringList substances_field_names = {
 	QStringLiteral("T min"),
 	QStringLiteral("T max")
 };
+} // Models
+
+namespace SQL {
+const QString available_elements = QStringLiteral(
+"SELECT Elements.Symbol "
+"FROM Elements "
+"WHERE Elements.element_id IN ("
+"SELECT DISTINCT CompositionsOfSpecies.element_id "
+"FROM CompositionsOfSpecies);");
 
 const QString hsc_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
@@ -77,7 +79,7 @@ const QString thermo_substances_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE State.Symbol IN (%2);");
 
-}
+} // SQL
 
 Database::Database(const QString& filename)
 {

@@ -24,12 +24,23 @@
 #include <QSqlDatabase>
 #include "parameters.h"
 
+namespace Models {
+enum class SubstanceFields {
+	ID,
+	Formula,
+	Name,
+	T_min,
+	T_max
+};
+extern const QStringList substances_field_names;
+
+} // Models
+
 namespace SQL {
 extern const QString available_elements;
 extern const QString hsc_substances_template;
 extern const QString thermo_substances_template;
-extern const QStringList substances_field_names;
-}
+} // SQL
 
 struct SubstanceData
 {

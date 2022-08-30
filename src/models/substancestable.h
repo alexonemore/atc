@@ -32,7 +32,7 @@ class SubstancesTable : public QAbstractTableModel
 private:
 	SubstancesData data_;
 	int row_count{0};
-	const int col_count{SQL::substances_field_names.size()};
+	const int col_count{Models::substances_field_names.size()};
 
 public:
 	explicit SubstancesTable(QObject *parent = nullptr);

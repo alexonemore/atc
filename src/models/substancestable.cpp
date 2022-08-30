@@ -56,19 +56,18 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
-	auto row = index.row();
-	auto col = index.column();
-	switch(col) {
-	case 0:
-		return data_.at(row).id;
-	case 1:
-		return data_.at(row).formula;
-	case 2:
-		return data_.at(row).name;
-	case 3:
-		return data_.at(row).T_min;
-	case 4:
-		return data_.at(row).T_max;
+	auto&& data_at = data_.at(index.row());
+	switch(static_cast<Models::SubstanceFields>(index.column())) {
+	case Models::SubstanceFields::ID:
+		return data_at.id;
+	case Models::SubstanceFields::Formula:
+		return data_at.formula;
+	case Models::SubstanceFields::Name:
+		return data_at.name;
+	case Models::SubstanceFields::T_min:
+		return data_at.T_min;
+	case Models::SubstanceFields::T_max:
+		return data_at.T_max;
 	default:
 		return QVariant{};
 	}
@@ -78,7 +77,7 @@ QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
 									 int role) const
 {
 	if(role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-		return SQL::substances_field_names.at(section);
+		return Models::substances_field_names.at(section);
 	} else {
 		return QVariant{};
 	}
