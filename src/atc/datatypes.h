@@ -30,20 +30,6 @@ class SubstancesData
 	QVector<QVector<QVariant>> data;
 	QVector<QString> names;
 public:
-	SubstancesData(const int rows = 0, const int cols = 0)
-	{
-		names.resize(cols);
-		data.resize(rows);
-		for(auto&& i : data) {
-			i.resize(cols);
-		}
-	}
-	SubstancesData(const SubstancesData& rhs) = default;
-	SubstancesData(SubstancesData&& rhs) = default;
-	SubstancesData& operator=(const SubstancesData& rhs) = default;
-	SubstancesData& operator=(SubstancesData&& rhs) = default;
-	~SubstancesData() = default;
-
 	int Rows() const {
 		return data.size();
 	}
@@ -53,8 +39,11 @@ public:
 	const QVariant& AtIndex(const QModelIndex& index) const {
 		return data.at(index.row()).at(index.column());
 	}
-	QVariant& At(int row, int col) {
-		return data[row][col];
+	QVector<QVariant>& Last() {
+		return data.last();
+	}
+	void PushBackRow() {
+		data.push_back(QVector<QVariant>{Cols()});
 	}
 	bool CheckIndex(const QModelIndex& index) const {
 		if(index.row() >= Rows() || index.column() >= Cols()) {
@@ -66,8 +55,8 @@ public:
 	const QString& NameAt(int i) const {
 		return names.at(i);
 	}
-	QString& NameAt(int i) {
-		return names[i];
+	void PushBackName(const QString& name) {
+		names.push_back(name);
 	}
 };
 

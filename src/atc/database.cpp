@@ -162,21 +162,19 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = Query(SQLQueries::hsc_substances.arg(elements_str, phases));
-
 	auto rec = q.record();
 	auto cols = rec.count();
-	auto rows = q.size();
-	LOG("rows: ", rows, "cols: ", cols)
-	SubstancesData data(rows, cols);
+	SubstancesData data;
 	for(int i = 0; i != cols; ++i) {
-		data.NameAt(i) = rec.fieldName(i);
+		data.PushBackName(rec.fieldName(i));
 	}
-	int i{0};
 	while(q.next()) {
-		for(int j = 0; j != cols; ++j) {
-			data.At(i, j) = q.value(j);
+		data.PushBackRow();
+		for(int i = 0; i != cols; ++i) {
+			auto&& v = data.Last();
+			v[i] = q.value(i);
+
 		}
-		++i;
 	}
 
 	return data;
