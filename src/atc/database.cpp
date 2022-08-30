@@ -185,7 +185,7 @@ QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)
 	}
 	if(phases.solid) {
 		list.append(QStringLiteral("s"));
-		list.append(QStringList(""));
+		list.append(QStringLiteral(""));
 	}
 	if(list.isEmpty()) {
 		return QString{};
