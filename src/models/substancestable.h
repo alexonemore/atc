@@ -23,6 +23,7 @@
 #include <QAbstractTableModel>
 #include <QObject>
 #include "datatypes.h"
+#include "database.h"
 
 class SubstancesTable : public QAbstractTableModel
 {
@@ -32,7 +33,7 @@ class SubstancesTable : public QAbstractTableModel
 private:
 	SubstancesData data_;
 	int row_count{0};
-	int col_count{0};
+	const int col_count{SQL::substances_field_names.size()};
 
 public:
 	explicit SubstancesTable(QObject *parent = nullptr);

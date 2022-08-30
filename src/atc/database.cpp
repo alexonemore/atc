@@ -135,13 +135,14 @@ SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameter
 	LOG(phases)
 	auto q = Query(SQL::thermo_substances_template.arg(elements_str, phases));
 
+	SubstancesData data;
 	while(q.next()) {
 
 
 
 	}
 
-	return SubstancesData{};
+	return data;
 }
 
 
@@ -162,22 +163,11 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = Query(SQL::hsc_substances_template.arg(elements_str, phases));
-	auto rec = q.record();
-	auto cols = rec.count();
-
-
-
 
 	SubstancesData data;
-	for(int i = 0; i != cols; ++i) {
-		data.PushBackName(rec.fieldName(i));
-	}
+
 	while(q.next()) {
-		QVector<QVariant> v(cols);
-		for(int i = 0; i != cols; ++i) {
-			v[i] = q.value(i);
-		}
-		data.PushBackRow(std::move(v));
+
 	}
 	return data;
 }

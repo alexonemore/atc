@@ -29,8 +29,7 @@ void SubstancesTable::SetNewData(SubstancesData&& new_data)
 {
 
 	data_ = std::move(new_data);
-	col_count = data_.Cols();
-	row_count = data_.Rows();
+	row_count = data_.size();
 	auto tl = QAbstractTableModel::index(0, 0);
 	auto br = QAbstractTableModel::index(row_count, col_count);
 	emit dataChanged(tl, br);
@@ -73,7 +72,7 @@ QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
 									 int role) const
 {
 	if(role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-		return data_.NameAt(section);
+		return SQL::substances_field_names.at(section);
 	} else {
 		return QVariant{};
 	}

@@ -29,6 +29,14 @@ namespace SQL {
 extern const QStringList substances_field_names;
 }
 
+struct SubstanceData
+{
+	int id;
+	QString formula, name;
+	double T_min, T_max;
+};
+using SubstancesData = QVector<SubstanceData>;
+
 class Database
 {
 protected:
