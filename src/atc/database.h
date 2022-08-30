@@ -25,6 +25,9 @@
 #include "parameters.h"
 
 namespace SQL {
+extern const QString available_elements;
+extern const QString hsc_substances_template;
+extern const QString thermo_substances_template;
 extern const QStringList substances_field_names;
 }
 
@@ -44,11 +47,13 @@ protected:
 public:
 	Database(const QString& filename);
 	virtual ~Database();
-	virtual SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters) = 0;
+	virtual SubstancesData GetSubstancesData(
+			const ParametersNS::Parameters& parameters);
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
 protected:
+	virtual const QString& GetSubstancesDataString() const = 0;
 	QSqlQuery Query(const QString& query);
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
@@ -57,18 +62,26 @@ protected:
 class DatabaseThermo final : public Database
 {
 public:
-	DatabaseThermo(const QString& filename);
-	SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters) override;
-
+	DatabaseThermo(const QString& filename)
+		: Database(filename)
+	{}
+protected:
+	const QString& GetSubstancesDataString() const override {
+		return SQL::thermo_substances_template;
+	}
 };
 
 
 class DatabaseHSC final : public Database
 {
 public:
-	DatabaseHSC(const QString& filename);
-	SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters) override;
-
+	DatabaseHSC(const QString& filename)
+		: Database(filename)
+	{}
+protected:
+	const QString& GetSubstancesDataString() const override {
+		return SQL::hsc_substances_template;
+	}
 };
 
 #endif // DATABASE_H
