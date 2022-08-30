@@ -65,24 +65,24 @@ const QString hsc_substances_template = QStringLiteral(
 "JOIN Species ON Species.species_id = T.species_id "
 "WHERE Species.Suffix IN (%2);");
 
-const QString thermo_substances_template = QStringLiteral(""
-"SELECT "
-"substances.sub_id AS id, "
-"substances.name || ' [' || state.symbol || '] ' || substances.alt_name "
-"AS 'Name', "
-"state.name AS State, "
-"substances.T_min, "
-"substances.T_max, "
-"substances.weight AS Weight "
-"FROM substances "
-"JOIN state ON state.state_id = substances.state_id "
-"WHERE substances.sub_id IN "
-"(SELECT composition.sub_id FROM composition WHERE "
-"composition.element_id IN (%1) "
-"EXCEPT "
-"SELECT composition.sub_id FROM composition WHERE "
-"composition.element_id NOT IN (%1)) "
-"ORDER BY substances.sub_id;");
+const QString thermo_substances_template = QStringLiteral(
+"SELECT Species.species_id AS 'ID', "
+"Species.Formula || '(' || State.Symbol || ')' AS 'Formula', "
+"Species.Name AS 'Name', "
+"Species.T_min AS 'T min', "
+"Species.T_max AS 'T max' "
+"FROM ( "
+"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
+"WHERE CompositionsOfSpecies.element_id IN ( "
+"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
+"EXCEPT"
+"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
+"WHERE CompositionsOfSpecies.element_id NOT IN ("
+"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
+") AS T "
+"JOIN Species ON Species.species_id = T.species_id "
+"JOIN State ON State.state_id = Species.state_id "
+"WHERE State.Symbol IN (%2);");
 
 }
 
