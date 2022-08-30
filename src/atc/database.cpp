@@ -127,21 +127,21 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 
 }
 
-SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameters)
+SubstancesData DatabaseThermo::GetSubstancesData(const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = Query(SQL::thermo_substances_template.arg(elements_str, phases));
-
 	SubstancesData data;
 	while(q.next()) {
-
-
-
+		data.push_back(SubstanceData{q.value(0).toInt(),
+									 q.value(1).toString(),
+									 q.value(2).toString(),
+									 q.value(3).toDouble(),
+									 q.value(4).toDouble()});
 	}
-
 	return data;
 }
 
@@ -156,18 +156,20 @@ DatabaseHSC::DatabaseHSC(const QString& filename)
 
 }
 
-SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
+SubstancesData DatabaseHSC::GetSubstancesData(const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = Query(SQL::hsc_substances_template.arg(elements_str, phases));
-
 	SubstancesData data;
-
 	while(q.next()) {
-
+		data.push_back(SubstanceData{q.value(0).toInt(),
+									 q.value(1).toString(),
+									 q.value(2).toString(),
+									 q.value(3).toDouble(),
+									 q.value(4).toDouble()});
 	}
 	return data;
 }

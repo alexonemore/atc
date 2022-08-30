@@ -39,7 +39,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
 	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
-	qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
 	// GUI methods should be called only in this constructor,
 	// but not in any other CoreApplication methods,
@@ -214,7 +213,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	parameters_ = std::move(parameters);
 	auto&& db = databases.at(static_cast<int>(parameters_.database));
-	auto&& data = db->GetData(parameters_);
+	auto&& data = db->GetSubstancesData(parameters_);
 	model_substances->SetNewData(std::move(data));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 }
