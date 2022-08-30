@@ -33,7 +33,7 @@ protected:
 public:
 	Database(const QString& filename);
 	virtual ~Database();
-	virtual SubstancesData GetData(const ParametersNS::Parameters parameters) = 0;
+	virtual SubstancesData GetData(const ParametersNS::Parameters& parameters) = 0;
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
@@ -46,7 +46,7 @@ class DatabaseThermo final : public Database
 {
 public:
 	DatabaseThermo(const QString& filename);
-	SubstancesData GetData(const ParametersNS::Parameters parameters) override;
+	SubstancesData GetData(const ParametersNS::Parameters& parameters) override;
 
 };
 
@@ -55,10 +55,10 @@ class DatabaseHSC final : public Database
 {
 public:
 	DatabaseHSC(const QString& filename);
-	SubstancesData GetData(const ParametersNS::Parameters parameters) override;
+	SubstancesData GetData(const ParametersNS::Parameters& parameters) override;
 
 private:
-	QString GetPhasesString(const ParametersNS::Parameters parameters);
+	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
 
 #endif // DATABASE_H

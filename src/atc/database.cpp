@@ -38,7 +38,7 @@ const QString thermo_available_elements = QStringLiteral(
 "FROM composition);");
 
 const QString hsc_substances = QStringLiteral(
-"SELECT Species.Formula, "
+"SELECT Species.species_id, Species.Formula, "
 "IIF(length(Species.NameCh)>0, Species.NameCh, '') ||"
 "IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') ||"
 "IIF(length(Species.NameCo)>0, Species.NameCo, '') ||"
@@ -119,7 +119,7 @@ DatabaseThermo::DatabaseThermo(const QString& filename)
 	LOG(available_elements)
 }
 
-SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters parameters)
+SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
@@ -149,11 +149,11 @@ DatabaseHSC::DatabaseHSC(const QString& filename)
 	LOG(available_elements)
 }
 
-SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters parameters)
+SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
-	auto phases = GetPhasesString(parameters);
+	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = Query(SQLQueries::hsc_substances.arg(elements_str, phases));
 
@@ -166,16 +166,16 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters parameters)
 	return SubstancesData{};
 }
 
-QString DatabaseHSC::GetPhasesString(const ParametersNS::Parameters parameters)
+QString DatabaseHSC::GetPhasesString(const ParametersNS::ShowPhases& phases)
 {
 	QStringList list;
-	if(parameters.show_phases.gas) {
+	if(phases.gas) {
 		list.append(QStringLiteral("g"));
 	}
-	if(parameters.show_phases.liquid) {
+	if(phases.liquid) {
 		list.append(QStringLiteral("l"));
 	}
-	if(parameters.show_phases.solid) {
+	if(phases.solid) {
 		list.append(QStringLiteral("s"));
 		list.append(QStringList(""));
 	}
