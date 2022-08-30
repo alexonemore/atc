@@ -22,7 +22,7 @@
 #include <stdexcept>
 #include <QtSql>
 
-namespace SQLQueries {
+namespace SQL {
 const QString available_elements = QStringLiteral(
 "SELECT Elements.Symbol "
 "FROM Elements "
@@ -92,6 +92,11 @@ Database::Database(const QString& filename)
 	} else {
 		LOG(filename_)
 	}
+	auto q = Query(SQL::available_elements);
+	while(q.next()) {
+		available_elements.push_back(q.value(0).toString());
+	}
+	LOG(available_elements)
 }
 
 Database::~Database()
@@ -119,18 +124,16 @@ QSqlQuery Database::Query(const QString& query)
 DatabaseThermo::DatabaseThermo(const QString& filename)
 	: Database(filename)
 {
-	auto q = Query(SQLQueries::available_elements);
-	while(q.next()) {
-		available_elements.push_back(q.value(0).toString());
-	}
-	LOG(available_elements)
+
 }
 
 SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
-	auto q = Query(SQLQueries::thermo_substances_template.arg(elements_str));
+	auto phases = GetPhasesString(parameters.show_phases);
+	LOG(phases)
+	auto q = Query(SQL::thermo_substances_template.arg(elements_str, phases));
 
 	while(q.next()) {
 
@@ -149,11 +152,7 @@ SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameter
 DatabaseHSC::DatabaseHSC(const QString& filename)
 	: Database(filename)
 {
-	auto q = Query(SQLQueries::available_elements);
-	while(q.next()) {
-		available_elements.push_back(q.value(0).toString());
-	}
-	LOG(available_elements)
+
 }
 
 SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
@@ -162,7 +161,7 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
-	auto q = Query(SQLQueries::hsc_substances_template.arg(elements_str, phases));
+	auto q = Query(SQL::hsc_substances_template.arg(elements_str, phases));
 	auto rec = q.record();
 	auto cols = rec.count();
 
@@ -183,7 +182,7 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 	return data;
 }
 
-QString DatabaseHSC::GetPhasesString(const ParametersNS::ShowPhases& phases)
+QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)
 {
 	QStringList list;
 	if(phases.gas) {

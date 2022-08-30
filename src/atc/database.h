@@ -25,6 +25,10 @@
 #include "parameters.h"
 #include "datatypes.h"
 
+namespace SQL {
+extern const QStringList substances_field_names;
+}
+
 class Database
 {
 protected:
@@ -39,6 +43,7 @@ public:
 	}
 protected:
 	QSqlQuery Query(const QString& query);
+	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
 
 
@@ -57,8 +62,6 @@ public:
 	DatabaseHSC(const QString& filename);
 	SubstancesData GetData(const ParametersNS::Parameters& parameters) override;
 
-private:
-	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
 
 #endif // DATABASE_H
