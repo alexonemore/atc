@@ -23,7 +23,6 @@
 #include <QString>
 #include <QSqlDatabase>
 #include "parameters.h"
-#include "datatypes.h"
 
 namespace SQL {
 extern const QStringList substances_field_names;

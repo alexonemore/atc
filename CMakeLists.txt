@@ -116,6 +116,11 @@ set(ICON_FILES
 	images/update.svg
 )
 
+set(DATABASE_FILES
+	databases/hsc_database.db
+	databases/thermo_database.db
+)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 	qt_add_executable(${PROJECT_NAME}
 		MANUAL_FINALIZATION
@@ -192,8 +197,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
 # install
 install(FILES ${ICON_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/images)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/databases
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/databases)
 install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
@@ -204,8 +208,7 @@ install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 if(DEFINED QT_QMAKE_EXECUTABLE)
 	message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
 	file(COPY ${ICON_FILES} DESTINATION ${CMAKE_BINARY_DIR}/images)
-	file(COPY ${CMAKE_SOURCE_DIR}/databases/
-		 DESTINATION ${CMAKE_BINARY_DIR}/databases/)
+	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR}/databases)
 endif()
 
 # no cmd window

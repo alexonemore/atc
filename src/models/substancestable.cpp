@@ -56,6 +56,8 @@ int SubstancesTable::columnCount(const QModelIndex& parent) const
 
 QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 {
+	return QVariant{};
+#if 0
 	if(role == Qt::DisplayRole) {
 #ifndef NDEBUG
 		if(!data_.CheckIndex(index)) {
@@ -66,6 +68,7 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 	} else {
 		return QVariant{};
 	}
+#endif
 }
 
 QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,

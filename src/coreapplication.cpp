@@ -39,6 +39,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
 	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
+	qRegisterMetaType<Qt::Orientation>("Qt::Orientation");
 
 	// GUI methods should be called only in this constructor,
 	// but not in any other CoreApplication methods,

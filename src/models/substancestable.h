@@ -22,7 +22,6 @@
 
 #include <QAbstractTableModel>
 #include <QObject>
-#include "datatypes.h"
 #include "database.h"
 
 class SubstancesTable : public QAbstractTableModel
