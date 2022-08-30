@@ -53,6 +53,9 @@ int SubstancesTable::columnCount(const QModelIndex& parent) const
 
 QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 {
+	if(role != Qt::DisplayRole) {
+		return QVariant{};
+	}
 	auto row = index.row();
 	auto col = index.column();
 	switch(col) {
@@ -69,20 +72,6 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 	default:
 		return QVariant{};
 	}
-
-
-#if 0
-	if(role == Qt::DisplayRole) {
-#ifndef NDEBUG
-		if(!data_.CheckIndex(index)) {
-			return QVariant{};
-		}
-#endif
-		return data_.AtIndex(index);
-	} else {
-		return QVariant{};
-	}
-#endif
 }
 
 QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
@@ -94,4 +83,5 @@ QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
 		return QVariant{};
 	}
 }
+
 
