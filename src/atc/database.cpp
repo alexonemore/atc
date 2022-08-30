@@ -31,11 +31,11 @@ const QString hsc_available_elements = QStringLiteral(
 "FROM CompositionsOfSpecies);");
 
 const QString thermo_available_elements = QStringLiteral(
-"SELECT elements.symbol "
-"FROM elements "
-"WHERE elements.element_id IN ("
-"SELECT DISTINCT composition.element_id "
-"FROM composition);");
+"SELECT Elements.Symbol "
+"FROM Elements "
+"WHERE Elements.element_id IN ( "
+"SELECT DISTINCT CompositionsOfSpecies.element_id "
+"FROM CompositionsOfSpecies);");
 
 const QStringList substances_field_names = {
 	QStringLiteral("ID"),
