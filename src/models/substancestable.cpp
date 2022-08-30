@@ -27,11 +27,10 @@ SubstancesTable::SubstancesTable(QObject *parent)
 
 void SubstancesTable::SetNewData(SubstancesData&& new_data)
 {
+	beginResetModel();
 	data_ = std::move(new_data);
 	row_count = data_.size();
-	auto tl = QAbstractTableModel::index(0, 0);
-	auto br = QAbstractTableModel::index(row_count, col_count);
-	emit dataChanged(tl, br);
+	endResetModel();
 }
 
 int SubstancesTable::rowCount(const QModelIndex& parent) const
