@@ -39,24 +39,23 @@ const QString thermo_available_elements = QStringLiteral(
 
 const QString hsc_substances = QStringLiteral(
 "SELECT Species.species_id, Species.Formula, "
-"IIF(length(Species.NameCh)>0, Species.NameCh, '') ||"
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') ||"
-"IIF(length(Species.NameCo)>0, Species.NameCo, '') ||"
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '')"
-"AS 'Name',"
-"Species.T_min AS 'T min', Species.T_max AS 'T max'"
-"FROM ("
-"	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
-"	WHERE CompositionsOfSpecies.element_id IN ("
-"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))"
-"	EXCEPT"
-"	SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies"
-"	WHERE CompositionsOfSpecies.element_id NOT IN ("
-"		SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))"
-") AS T"
-"JOIN Species ON Species.species_id = T.species_id"
-"WHERE Species.Suffix IN (%2)"
-"");
+"IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
+"IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '') "
+"AS 'Name', "
+"Species.T_min AS 'T min', Species.T_max AS 'T max' "
+"FROM ( "
+"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
+"WHERE CompositionsOfSpecies.element_id IN ( "
+"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
+"EXCEPT "
+"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
+"WHERE CompositionsOfSpecies.element_id NOT IN ( "
+"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
+") AS T "
+"JOIN Species ON Species.species_id = T.species_id "
+"WHERE Species.Suffix IN (%2);");
 
 const QString thermo_substances = QStringLiteral(""
 "SELECT "
@@ -101,7 +100,14 @@ Database::~Database()
 QSqlQuery Database::Query(const QString& query)
 {
 	LOG()
-	return QSqlQuery(query, QSqlDatabase::database(filename_));
+	QSqlQuery q(query, QSqlDatabase::database(filename_));
+	if(q.lastError().isValid()) {
+		auto str = q.lastError().text();
+		LOG(str)
+		LOG(query)
+		throw std::runtime_error(str.toStdString().c_str());
+	}
+	return q;
 }
 
 
@@ -157,13 +163,23 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 	LOG(phases)
 	auto q = Query(SQLQueries::hsc_substances.arg(elements_str, phases));
 
+	auto rec = q.record();
+	auto cols = rec.count();
+	auto rows = q.size();
+	LOG("rows: ", rows, "cols: ", cols)
+	SubstancesData data(rows, cols);
+	for(int i = 0; i != cols; ++i) {
+		data.NameAt(i) = rec.fieldName(i);
+	}
+	int i{0};
 	while(q.next()) {
-
-
-
+		for(int j = 0; j != cols; ++j) {
+			data.At(i, j) = q.value(j);
+		}
+		++i;
 	}
 
-	return SubstancesData{};
+	return data;
 }
 
 QString DatabaseHSC::GetPhasesString(const ParametersNS::ShowPhases& phases)
