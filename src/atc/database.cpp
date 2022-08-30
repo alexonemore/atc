@@ -169,11 +169,8 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 		data.PushBackName(rec.fieldName(i));
 	}
 	while(q.next()) {
-		data.PushBackRow();
 		for(int i = 0; i != cols; ++i) {
-			auto&& v = data.Last();
-			v[i] = q.value(i);
-
+			LOG(q.value(i))
 		}
 	}
 
