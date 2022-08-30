@@ -23,17 +23,10 @@
 #include <QtSql>
 
 namespace SQLQueries {
-const QString hsc_available_elements = QStringLiteral(
+const QString available_elements = QStringLiteral(
 "SELECT Elements.Symbol "
 "FROM Elements "
 "WHERE Elements.element_id IN ("
-"SELECT DISTINCT CompositionsOfSpecies.element_id "
-"FROM CompositionsOfSpecies);");
-
-const QString thermo_available_elements = QStringLiteral(
-"SELECT Elements.Symbol "
-"FROM Elements "
-"WHERE Elements.element_id IN ( "
 "SELECT DISTINCT CompositionsOfSpecies.element_id "
 "FROM CompositionsOfSpecies);");
 
@@ -126,7 +119,7 @@ QSqlQuery Database::Query(const QString& query)
 DatabaseThermo::DatabaseThermo(const QString& filename)
 	: Database(filename)
 {
-	auto q = Query(SQLQueries::thermo_available_elements);
+	auto q = Query(SQLQueries::available_elements);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
@@ -156,7 +149,7 @@ SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameter
 DatabaseHSC::DatabaseHSC(const QString& filename)
 	: Database(filename)
 {
-	auto q = Query(SQLQueries::hsc_available_elements);
+	auto q = Query(SQLQueries::available_elements);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
