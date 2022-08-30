@@ -23,7 +23,7 @@
 #include <QApplication>
 #include <QThread>
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) try
 {
 	QApplication a(argc, argv);
 
@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 	thread.quit();
 	thread.wait();
 	return result;
+} catch(std::exception& e) {
+	qDebug() << e.what();
 }
 
 /* Kinds of signals-slots:

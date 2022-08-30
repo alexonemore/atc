@@ -31,8 +31,8 @@ class SubstancesTable : public QAbstractTableModel
 
 private:
 	SubstancesData data_;
-	int row_count;
-	int col_count;
+	int row_count{0};
+	int col_count{0};
 
 public:
 	explicit SubstancesTable(QObject *parent = nullptr);
@@ -44,6 +44,8 @@ public:
 	int rowCount(const QModelIndex& parent) const override;
 	int columnCount(const QModelIndex& parent) const override;
 	QVariant data(const QModelIndex& index, int role) const override;
+	QVariant headerData(int section, Qt::Orientation orientation,
+						int role) const override;
 };
 
 #endif // SUBSTANCESTABLE_H

@@ -22,42 +22,18 @@
 
 #include <QString>
 #include <QVector>
-#include <QVariant>
 #include <QModelIndex>
+#include <unordered_map>
 
-class SubstancesData
+
+struct SubstanceData
 {
-	QVector<QVector<QVariant>> data;
-	QVector<QString> names;
-public:
-	int Rows() const {
-		return data.size();
-	}
-	int Cols() const {
-		return names.size();
-	}
-	const QVariant& AtIndex(const QModelIndex& index) const {
-		return data.at(index.row()).at(index.column());
-	}
-	QVector<QVariant>& Last() {
-		return data.last();
-	}
-	void PushBackRow() {
-		data.push_back(QVector<QVariant>{Cols()});
-	}
-	bool CheckIndex(const QModelIndex& index) const {
-		if(index.row() >= Rows() || index.column() >= Cols()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	const QString& NameAt(int i) const {
-		return names.at(i);
-	}
-	void PushBackName(const QString& name) {
-		names.push_back(name);
-	}
+	QString formula, name;
+	double T_min, T_max;
 };
+using SubstanceID = int;
+using SubstancesDataRow = std::unordered_map<SubstanceID, SubstanceData>;
+using SubstancesData = QVector<SubstancesDataRow>;
+
 
 #endif // DATATYPES_H

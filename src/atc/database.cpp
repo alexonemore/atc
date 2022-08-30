@@ -37,8 +37,16 @@ const QString thermo_available_elements = QStringLiteral(
 "SELECT DISTINCT composition.element_id "
 "FROM composition);");
 
-const QString hsc_substances = QStringLiteral(
-"SELECT Species.species_id, Species.Formula, "
+const QStringList substances_field_names = {
+	QStringLiteral("ID"),
+	QStringLiteral("Formula"),
+	QStringLiteral("Name"),
+	QStringLiteral("T min"),
+	QStringLiteral("T max")
+};
+
+const QString hsc_substances_template = QStringLiteral(
+"SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
 "IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
 "IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
 "IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
@@ -57,7 +65,7 @@ const QString hsc_substances = QStringLiteral(
 "JOIN Species ON Species.species_id = T.species_id "
 "WHERE Species.Suffix IN (%2);");
 
-const QString thermo_substances = QStringLiteral(""
+const QString thermo_substances_template = QStringLiteral(""
 "SELECT "
 "substances.sub_id AS id, "
 "substances.name || ' [' || state.symbol || '] ' || substances.alt_name "
@@ -129,7 +137,7 @@ SubstancesData DatabaseThermo::GetData(const ParametersNS::Parameters& parameter
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");
-	auto q = Query(SQLQueries::thermo_substances.arg(elements_str));
+	auto q = Query(SQLQueries::thermo_substances_template.arg(elements_str));
 
 	while(q.next()) {
 
@@ -161,19 +169,24 @@ SubstancesData DatabaseHSC::GetData(const ParametersNS::Parameters& parameters)
 			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
-	auto q = Query(SQLQueries::hsc_substances.arg(elements_str, phases));
+	auto q = Query(SQLQueries::hsc_substances_template.arg(elements_str, phases));
 	auto rec = q.record();
 	auto cols = rec.count();
+
+
+
+
 	SubstancesData data;
 	for(int i = 0; i != cols; ++i) {
 		data.PushBackName(rec.fieldName(i));
 	}
 	while(q.next()) {
+		QVector<QVariant> v(cols);
 		for(int i = 0; i != cols; ++i) {
-			LOG(q.value(i))
+			v[i] = q.value(i);
 		}
+		data.PushBackRow(std::move(v));
 	}
-
 	return data;
 }
 

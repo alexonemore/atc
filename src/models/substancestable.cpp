@@ -25,13 +25,16 @@ SubstancesTable::SubstancesTable(QObject *parent)
 
 }
 
-void SubstancesTable::SetNewData(SubstancesData&& new_data) {
+void SubstancesTable::SetNewData(SubstancesData&& new_data)
+{
+
 	data_ = std::move(new_data);
 	col_count = data_.Cols();
 	row_count = data_.Rows();
-	auto tl = index(0, 0);
-	auto br = index(row_count, col_count);
+	auto tl = QAbstractTableModel::index(0, 0);
+	auto br = QAbstractTableModel::index(row_count, col_count);
 	emit dataChanged(tl, br);
+	emit headerDataChanged(Qt::Horizontal, 0, col_count);
 }
 
 int SubstancesTable::rowCount(const QModelIndex& parent) const
@@ -65,3 +68,14 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 		return QVariant{};
 	}
 }
+
+QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
+									 int role) const
+{
+	if(role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+		return data_.NameAt(section);
+	} else {
+		return QVariant{};
+	}
+}
+
