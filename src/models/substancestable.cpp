@@ -68,8 +68,6 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 		return data_at.T_min;
 	case Models::SubstanceFields::T_max:
 		return data_at.T_max;
-	default:
-		return QVariant{};
 	}
 }
 
