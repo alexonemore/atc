@@ -17,26 +17,22 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SUBSTANCESTABLE_H
-#define SUBSTANCESTABLE_H
+#ifndef SUBSTANCESTABLEMODEL_H
+#define SUBSTANCESTABLEMODEL_H
 
 #include <QAbstractTableModel>
-#include <QObject>
 #include "database.h"
 
-class SubstancesTable : public QAbstractTableModel
+class SubstancesTableModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	Q_DISABLE_COPY_MOVE(SubstancesTable)
-
+	Q_DISABLE_COPY_MOVE(SubstancesTableModel)
 private:
 	SubstancesData data_;
 	int row_count{0};
 	const int col_count{Models::substances_field_names.size()};
-
 public:
-	explicit SubstancesTable(QObject *parent = nullptr);
-
+	explicit SubstancesTableModel(QObject *parent = nullptr);
 	void SetNewData(SubstancesData&& new_data);
 
 	// QAbstractItemModel interface
@@ -46,7 +42,6 @@ public:
 	QVariant data(const QModelIndex& index, int role) const override;
 	QVariant headerData(int section, Qt::Orientation orientation,
 						int role) const override;
-
 };
 
-#endif // SUBSTANCESTABLE_H
+#endif // SUBSTANCESTABLEMODEL_H

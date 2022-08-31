@@ -85,8 +85,10 @@ set(PROJECT_SOURCES
 	src/plots/dialogchangegraphsettings.ui
 
 	# models
-	src/models/substancestable.h
-	src/models/substancestable.cpp
+	src/models/substancestablemodel.h
+	src/models/substancestablemodel.cpp
+	src/models/substancestemprangemodel.h
+	src/models/substancestemprangemodel.cpp
 
 	# views
 	src/views/substancestableview.h

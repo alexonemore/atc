@@ -27,7 +27,8 @@
 #include "mainwindow.h"
 #include "heavycontainer.h"
 #include "database.h"
-#include "substancestable.h"
+#include "substancestablemodel.h"
+#include "substancestemprangemodel.h"
 #include "parameters.h"
 
 class CoreApplication : public QObject
@@ -38,7 +39,8 @@ class CoreApplication : public QObject
 private:
 	ParametersNS::Parameters parameters_{};
 	QVector<Database*> databases;
-	SubstancesTable* model_substances;
+	SubstancesTableModel* model_substances;
+
 
 	// demo
 	QAbstractItemModel* table_1;

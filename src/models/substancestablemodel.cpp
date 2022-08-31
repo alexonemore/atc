@@ -17,16 +17,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "substancestable.h"
+#include "substancestablemodel.h"
 #include "utilities.h"
 
-SubstancesTable::SubstancesTable(QObject *parent)
+SubstancesTableModel::SubstancesTableModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
 
 }
 
-void SubstancesTable::SetNewData(SubstancesData&& new_data)
+void SubstancesTableModel::SetNewData(SubstancesData&& new_data)
 {
 	beginResetModel();
 	data_ = std::move(new_data);
@@ -34,7 +34,7 @@ void SubstancesTable::SetNewData(SubstancesData&& new_data)
 	endResetModel();
 }
 
-int SubstancesTable::rowCount(const QModelIndex& parent) const
+int SubstancesTableModel::rowCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {
 		return 0;
@@ -43,7 +43,7 @@ int SubstancesTable::rowCount(const QModelIndex& parent) const
 	}
 }
 
-int SubstancesTable::columnCount(const QModelIndex& parent) const
+int SubstancesTableModel::columnCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {
 		return 0;
@@ -52,33 +52,32 @@ int SubstancesTable::columnCount(const QModelIndex& parent) const
 	}
 }
 
-QVariant SubstancesTable::data(const QModelIndex& index, int role) const
+QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 {
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
 	auto&& data_at = data_.at(index.row());
 	switch(static_cast<Models::SubstanceFields>(index.column())) {
-	case Models::SubstanceFields::ID:
-		return data_at.id;
-	case Models::SubstanceFields::Formula:
-		return data_at.formula;
-	case Models::SubstanceFields::Name:
-		return data_at.name;
-	case Models::SubstanceFields::T_min:
-		return data_at.T_min;
-	case Models::SubstanceFields::T_max:
-		return data_at.T_max;
+	case Models::SubstanceFields::ID:		return data_at.id;
+	case Models::SubstanceFields::Formula:	return data_at.formula;
+	case Models::SubstanceFields::Name:		return data_at.name;
+	case Models::SubstanceFields::T_min:	return data_at.T_min;
+	case Models::SubstanceFields::T_max:	return data_at.T_max;
 	}
 	LOG("ERROR in SubstancesTable::data")
 	return QVariant{};
 }
 
-QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,
-									 int role) const
+QVariant SubstancesTableModel::headerData(int section,
+							Qt::Orientation orientation, int role) const
 {
-	if(role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-		return Models::substances_field_names.at(section);
+	if(role == Qt::DisplayRole) {
+		if(orientation == Qt::Horizontal) {
+			return Models::substances_field_names.at(section);
+		} else {
+			return section;
+		}
 	} else {
 		return QVariant{};
 	}

@@ -46,7 +46,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// All communication with the GUI must be done through signals.
 
 	// create models
-	model_substances = new SubstancesTable(this);
+	model_substances = new SubstancesTableModel(this);
 	table_1 = new QStringListModel(this);
 
 
