@@ -134,11 +134,32 @@ SubstancesData Database::GetSubstancesData(const ParametersNS::Parameters& param
 	auto q = Query(GetSubstancesDataString().arg(elements_str, phases));
 	SubstancesData data;
 	while(q.next()) {
-		data.push_back(SubstanceData{q.value(0).toInt(),
-									 q.value(1).toString(),
-									 q.value(2).toString(),
-									 q.value(3).toDouble(),
-									 q.value(4).toDouble()});
+		data.push_back(SubstanceData{q.value(0).toInt(),		// ID
+									 q.value(1).toString(),		// Formula
+									 q.value(2).toString(),		// Name
+									 q.value(3).toDouble(),		// T_min
+									 q.value(4).toDouble()});	// T_max
+	}
+	return data;
+}
+
+SubstancesTempRangeData Database::GetSubstancesTempRangeData(const int id)
+{
+	auto q = Query(GetSubstancesTempRangeDataString().arg(id));
+	SubstancesTempRangeData data;
+	while(q.next()) {
+		data.push_back(SubstanceTempRangeData{q.value(0).toDouble(), // T_min
+											  q.value(1).toDouble(), // T_max
+											  q.value(2).toDouble(), // H
+											  q.value(3).toDouble(), // S
+											  q.value(4).toDouble(), // f1
+											  q.value(5).toDouble(), // f2
+											  q.value(6).toDouble(), // f3
+											  q.value(7).toDouble(), // f4
+											  q.value(8).toDouble(), // f5
+											  q.value(9).toDouble(), // f6
+											  q.value(10).toDouble(), // f7
+											  q.value(11).toString()}); // phase
 	}
 	return data;
 }

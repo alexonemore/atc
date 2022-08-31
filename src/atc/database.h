@@ -85,7 +85,7 @@ public:
 	virtual ~Database();
 	virtual SubstancesData GetSubstancesData(
 			const ParametersNS::Parameters& parameters);
-
+	virtual SubstancesTempRangeData GetSubstancesTempRangeData(const int id);
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
