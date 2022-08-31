@@ -18,19 +18,21 @@
  */
 
 #include "substancestableview.h"
+#include <QSplitter>
 
 SubstancesTableView::SubstancesTableView(QWidget* parent)
-	: QSplitter(parent)
+	: QWidget(parent)
 {
 	substances = new QTableView(this);
 	ranges = new QTableView(this);
 	tabulated_tf = new QTableView(this);
+	auto splitter = new QSplitter(this);
 	auto right_splitter = new QSplitter(this);
-	addWidget(substances);
-	addWidget(right_splitter);
+	splitter->addWidget(substances);
+	splitter->addWidget(right_splitter);
 	right_splitter->addWidget(ranges);
 	right_splitter->addWidget(tabulated_tf);
-	setChildrenCollapsible(false);
+	splitter->setChildrenCollapsible(false);
 	right_splitter->setChildrenCollapsible(false);
 	right_splitter->setOrientation(Qt::Vertical);
 }

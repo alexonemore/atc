@@ -21,10 +21,9 @@
 #define SUBSTANCESTABLEVIEW_H
 
 #include <QWidget>
-#include <QSplitter>
 #include <QTableView>
 
-class SubstancesTableView : public QSplitter
+class SubstancesTableView : public QWidget
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTableView)

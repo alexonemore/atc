@@ -111,7 +111,7 @@ MainWindow::~MainWindow()
 void MainWindow::SetSubstancesModel(QAbstractItemModel* model)
 {
 	LOG()
-	ui->view_substances->setModel(model);
+	ui->view_substances->SetSubstancesTableModel(model);
 }
 
 void MainWindow::SetModel_1(QAbstractItemModel* model)

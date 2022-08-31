@@ -323,7 +323,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QTableView" name="view_substances"/>
+             <widget class="SubstancesTableView" name="view_substances" native="true"/>
             </item>
            </layout>
           </widget>
@@ -375,6 +375,12 @@
    <class>CalculationParameters</class>
    <extends>QWidget</extends>
    <header>calculationparameters.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SubstancesTableView</class>
+   <extends>QWidget</extends>
+   <header>substancestableview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
