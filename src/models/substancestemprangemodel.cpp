@@ -72,7 +72,6 @@ QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) cons
 	case Models::SubstanceTempRangeFields::f7:		return data_at.f7;
 	case Models::SubstanceTempRangeFields::phase:	return data_at.phase;
 	}
-
 	LOG("ERROR in SubstancesTempRangeModel::data")
 	return QVariant{};
 }

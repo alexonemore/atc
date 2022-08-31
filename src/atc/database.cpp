@@ -125,7 +125,8 @@ Database::~Database()
 {
 }
 
-SubstancesData Database::GetSubstancesData(const ParametersNS::Parameters& parameters)
+SubstancesData Database::GetSubstancesData(
+		const ParametersNS::Parameters& parameters)
 {
 	auto elements_str = QStringLiteral("'") +
 			parameters.checked_elements.join("','") + QStringLiteral("'");

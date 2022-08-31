@@ -35,7 +35,7 @@ public:
 	SubstancesTableView(QWidget* parent = nullptr);
 	void Initialize();
 	void SetSubstancesTableModel(QAbstractItemModel* model);
-	void SetSubstancesRangeModel(QAbstractItemModel* model);
+	void SetSubstancesTempRangeModel(QAbstractItemModel* model);
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 signals:
 	void SelectSubstance(int id);

@@ -40,7 +40,7 @@ private:
 	ParametersNS::Parameters parameters_{};
 	QVector<Database*> databases;
 	SubstancesTableModel* model_substances;
-
+	SubstancesTempRangeModel* model_substances_temp_range;
 
 	// demo
 	QAbstractItemModel* table_1;

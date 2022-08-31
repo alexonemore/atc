@@ -122,10 +122,10 @@ void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)
 	ui->view_substances->SetSubstancesTableModel(model);
 }
 
-void MainWindow::SetSubstancesRangeModel(QAbstractItemModel* model)
+void MainWindow::SetSubstancesTempRangeModel(QAbstractItemModel* model)
 {
 	LOG()
-	ui->view_substances->SetSubstancesRangeModel(model);
+	ui->view_substances->SetSubstancesTempRangeModel(model);
 }
 
 void MainWindow::SetSubstancesTabulatedModel(QAbstractItemModel* model)

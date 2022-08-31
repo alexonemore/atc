@@ -47,12 +47,15 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 
 	// create models
 	model_substances = new SubstancesTableModel(this);
+	model_substances_temp_range = new SubstancesTempRangeModel(this);
+	// demo
 	table_1 = new QStringListModel(this);
 
 
 
 	// set model
 	gui->SetSubstancesTableModel(model_substances);
+	gui->SetSubstancesTempRangeModel(model_substances_temp_range);
 	gui->Initialize(); // must be called after set models
 
 	// demo
@@ -112,7 +115,7 @@ CoreApplication::~CoreApplication()
 void CoreApplication::Initialize()
 {
 	LOG()
-	// must invoke after move this to another thread
+	// must invoke after this was moved to another (non GUI) thread
 	// Databases
 	databases.reserve(ParametersNS::database_filenames.size());
 	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
@@ -232,7 +235,7 @@ void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 	auto db = CurrentDatabase();
 	auto&& data_temp_range = db->GetSubstancesTempRangeData(id);
 
-	// model_substances_temprange->SetNewData(std::move(data_temp_range));
+	model_substances_temp_range->SetNewData(std::move(data_temp_range));
 	// auto&& data_tabulated_tf = thermodynamic_tabulator->
 	//				GetTabulatedThermodynamicFunctions(??data_temp_range);
 

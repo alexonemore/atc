@@ -55,7 +55,7 @@ public:
 public:
 	void Initialize();
 	void SetSubstancesTableModel(QAbstractItemModel* model);
-	void SetSubstancesRangeModel(QAbstractItemModel* model);
+	void SetSubstancesTempRangeModel(QAbstractItemModel* model);
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 	// demo
 	void SetModel_1(QAbstractItemModel* model);

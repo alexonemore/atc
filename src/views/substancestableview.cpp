@@ -60,7 +60,7 @@ void SubstancesTableView::SetSubstancesTableModel(QAbstractItemModel* model)
 	substances->setModel(model);
 }
 
-void SubstancesTableView::SetSubstancesRangeModel(QAbstractItemModel* model)
+void SubstancesTableView::SetSubstancesTempRangeModel(QAbstractItemModel* model)
 {
 	ranges->setModel(model);
 }
