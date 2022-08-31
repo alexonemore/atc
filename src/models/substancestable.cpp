@@ -18,6 +18,7 @@
  */
 
 #include "substancestable.h"
+#include "utilities.h"
 
 SubstancesTable::SubstancesTable(QObject *parent)
 	: QAbstractTableModel(parent)
@@ -69,6 +70,8 @@ QVariant SubstancesTable::data(const QModelIndex& index, int role) const
 	case Models::SubstanceFields::T_max:
 		return data_at.T_max;
 	}
+	LOG("ERROR in SubstancesTable::data")
+	return QVariant{};
 }
 
 QVariant SubstancesTable::headerData(int section, Qt::Orientation orientation,

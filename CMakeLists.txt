@@ -89,6 +89,8 @@ set(PROJECT_SOURCES
 	src/models/substancestable.cpp
 
 	# views
+	src/views/substancestableview.h
+	src/views/substancestableview.cpp
 
 	# misc
 	src/misc/utilities.h
