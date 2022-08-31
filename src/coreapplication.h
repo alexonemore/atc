@@ -60,9 +60,12 @@ signals:
 	void SignalShow3DGraphData(QSurfaceDataArray* data);
 	void SignalStartHeavyComputations(QVector<HeavyContainer>& ho);
 
+private slots:
+	void SlotUpdate(const ParametersNS::Parameters parameters);
+	void SlotSubstancesTableSelectionHandler(int id);
+
 public slots:
 	void Initialize();
-	void SlotUpdate(const ParametersNS::Parameters parameters);
 	//demo
 	void SlotRequestHandler(int i);
 	void SlotPushButtonHandler(const QString& text);

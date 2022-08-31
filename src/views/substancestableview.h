@@ -33,15 +33,15 @@ private:
 	QTableView* tabulated_tf;
 public:
 	SubstancesTableView(QWidget* parent = nullptr);
-	void SetSubstancesTableModel(QAbstractItemModel* model) {
-		substances->setModel(model);
-	}
-	void SetSubstancesRangeModel(QAbstractItemModel* model) {
-		ranges->setModel(model);
-	}
-	void SetSubstancesTabulatedModel(QAbstractItemModel* model) {
-		tabulated_tf->setModel(model);
-	}
+	void Initialize();
+	void SetSubstancesTableModel(QAbstractItemModel* model);
+	void SetSubstancesRangeModel(QAbstractItemModel* model);
+	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
+signals:
+	void SelectSubstance(int id);
+private slots:
+	void SelectionChanged(const QItemSelection &selected,
+						  const QItemSelection &deselected);
 };
 
 #endif // SUBSTANCESTABLEVIEW_H

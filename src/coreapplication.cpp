@@ -52,7 +52,9 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 
 
 	// set model
-	gui->SetSubstancesModel(model_substances);
+	gui->SetSubstancesTableModel(model_substances);
+	gui->Initialize(); // must be called after set models
+
 	// demo
 	gui->SetModel_1(table_1);
 	gui->SetModel_2(table_1);
@@ -216,5 +218,10 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	auto&& data = db->GetSubstancesData(parameters_);
 	model_substances->SetNewData(std::move(data));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
+}
+
+void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
+{
+
 }
 

@@ -19,6 +19,10 @@
 
 #include "substancestableview.h"
 #include <QSplitter>
+#include <QVBoxLayout>
+#include <QHeaderView>
+#include "utilities.h"
+#include "database.h"
 
 SubstancesTableView::SubstancesTableView(QWidget* parent)
 	: QWidget(parent)
@@ -35,4 +39,46 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	splitter->setChildrenCollapsible(false);
 	right_splitter->setChildrenCollapsible(false);
 	right_splitter->setOrientation(Qt::Vertical);
+	auto layout = new QVBoxLayout(this);
+	setLayout(layout);
+	layout->addWidget(splitter);
+	substances->setSelectionMode(QAbstractItemView::SingleSelection);
+	substances->setSelectionBehavior(QAbstractItemView::SelectRows);
+	substances->verticalHeader()->setVisible(false);
+}
+
+void SubstancesTableView::Initialize()
+{
+	connect(substances->selectionModel(),
+			&QItemSelectionModel::selectionChanged,
+			this, &SubstancesTableView::SelectionChanged);
+	substances->setColumnHidden(0, true);
+}
+
+void SubstancesTableView::SetSubstancesTableModel(QAbstractItemModel* model)
+{
+	substances->setModel(model);
+}
+
+void SubstancesTableView::SetSubstancesRangeModel(QAbstractItemModel* model)
+{
+	ranges->setModel(model);
+}
+
+void SubstancesTableView::SetSubstancesTabulatedModel(QAbstractItemModel* model)
+{
+	tabulated_tf->setModel(model);
+}
+
+void SubstancesTableView::SelectionChanged(const QItemSelection& selected,
+										   const QItemSelection& deselected)
+{
+	Q_UNUSED(deselected)
+	if(!selected.isEmpty()) {
+		auto&& index = selected.first().topLeft();
+		auto id_col = static_cast<int>(Models::SubstanceFields::ID);
+		auto id = index.sibling(index.row(), id_col).data().toInt();
+		LOG(id)
+		emit SelectSubstance(id);
+	}
 }

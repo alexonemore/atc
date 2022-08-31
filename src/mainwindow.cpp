@@ -99,19 +99,39 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->add_3d_graph, &QPushButton::clicked,
 			this, &MainWindow::SignalNeed3DGraphData);
 
+	// internal selections
+	connect(ui->view_substances, &SubstancesTableView::SelectSubstance,
+			this, &MainWindow::SignalSubstancesTableSelection);
 
 }
 
 MainWindow::~MainWindow()
 {
 	LOG()
-			delete ui;
+	delete ui;
 }
 
-void MainWindow::SetSubstancesModel(QAbstractItemModel* model)
+void MainWindow::Initialize()
+{
+	ui->view_substances->Initialize();
+}
+
+void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)
 {
 	LOG()
 	ui->view_substances->SetSubstancesTableModel(model);
+}
+
+void MainWindow::SetSubstancesRangeModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->view_substances->SetSubstancesRangeModel(model);
+}
+
+void MainWindow::SetSubstancesTabulatedModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->view_substances->SetSubstancesTabulatedModel(model);
 }
 
 void MainWindow::SetModel_1(QAbstractItemModel* model)

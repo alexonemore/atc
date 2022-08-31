@@ -53,7 +53,11 @@ public:
 	virtual ~MainWindow() override;
 
 public:
-	void SetSubstancesModel(QAbstractItemModel* model);
+	void Initialize();
+	void SetSubstancesTableModel(QAbstractItemModel* model);
+	void SetSubstancesRangeModel(QAbstractItemModel* model);
+	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
+	// demo
 	void SetModel_1(QAbstractItemModel* model);
 	void SetModel_2(QAbstractItemModel* model);
 	void SetSelectonModel(QItemSelectionModel* selection);
@@ -83,6 +87,7 @@ private slots:
 
 signals:
 	void SignalUpdate(const ParametersNS::Parameters parameters);
+	void SignalSubstancesTableSelection(int id);
 	//demo
 	void SignalSendRequest(int);
 	void SignalPushButtonClicked(QString);
