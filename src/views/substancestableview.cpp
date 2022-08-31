@@ -78,7 +78,7 @@ void SubstancesTableView::SelectionChanged(const QItemSelection& selected,
 		auto&& index = selected.first().topLeft();
 		auto id_col = static_cast<int>(Models::SubstanceFields::ID);
 		auto id = index.sibling(index.row(), id_col).data().toInt();
-		LOG(id)
+		LOG("id:", id)
 		emit SelectSubstance(id);
 	}
 }

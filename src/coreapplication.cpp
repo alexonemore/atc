@@ -211,10 +211,15 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 	return vec;
 }
 
+Database* CoreApplication::CurrentDatabase()
+{
+	return databases.at(static_cast<int>(parameters_.database));
+}
+
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	parameters_ = std::move(parameters);
-	auto&& db = databases.at(static_cast<int>(parameters_.database));
+	auto db = CurrentDatabase();
 	auto&& data = db->GetSubstancesData(parameters_);
 	model_substances->SetNewData(std::move(data));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
@@ -222,6 +227,9 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
+	auto db = CurrentDatabase();
+
+
 
 }
 

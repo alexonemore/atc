@@ -30,6 +30,20 @@ const QStringList substances_field_names = {
 	QStringLiteral("T min"),
 	QStringLiteral("T max")
 };
+extern const QStringList substances_temprange_field_names = {
+	QStringLiteral("T min"),
+	QStringLiteral("T max,"),
+	QStringLiteral("H"),
+	QStringLiteral("S,"),
+	QStringLiteral("f1"),
+	QStringLiteral("f2"),
+	QStringLiteral("f3"),
+	QStringLiteral("f4"),
+	QStringLiteral("f5"),
+	QStringLiteral("f6"),
+	QStringLiteral("f7"),
+	QStringLiteral("Phase")
+};
 } // Models
 
 namespace SQL {
@@ -78,6 +92,12 @@ const QString thermo_substances_template = QStringLiteral(
 "JOIN Species ON Species.species_id = T.species_id "
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE State.Symbol IN (%2);");
+
+const QString hsc_substances_temprange_template = QStringLiteral(""
+																 "");
+
+const QString thermo_substances_temprange_template = QStringLiteral(""
+																	"");
 
 } // SQL
 

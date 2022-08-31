@@ -34,13 +34,27 @@ enum class SubstanceFields {
 };
 extern const QStringList substances_field_names;
 
+enum class SubstanceTempRangeFields {
+	T_min, T_max,
+	H, S,
+	f1, f2, f3, f4, f5, f6, f7,
+	phase
+};
+extern const QStringList substances_temprange_field_names;
+
 } // Models
 
 namespace SQL {
 extern const QString available_elements;
 extern const QString hsc_substances_template;
 extern const QString thermo_substances_template;
+extern const QString hsc_substances_temprange_template;
+extern const QString thermo_substances_temprange_template;
 } // SQL
+
+/****************************************************************************
+ *						Data Structures
+ ****************************************************************************/
 
 struct SubstanceData
 {
@@ -49,6 +63,17 @@ struct SubstanceData
 	double T_min, T_max;
 };
 using SubstancesData = QVector<SubstanceData>;
+
+struct SubstanceTempRangeData
+{
+	double T_min, T_max, H, S, f1, f2, f3, f4, f5, f6, f7;
+	QString phase;
+};
+using SubstancesTempRangeData = QVector<SubstanceTempRangeData>;
+
+/****************************************************************************
+ *						Database virtual interface
+ ****************************************************************************/
 
 class Database
 {
@@ -60,15 +85,20 @@ public:
 	virtual ~Database();
 	virtual SubstancesData GetSubstancesData(
 			const ParametersNS::Parameters& parameters);
+
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
 protected:
 	virtual const QString& GetSubstancesDataString() const = 0;
+	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
 	QSqlQuery Query(const QString& query);
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
 
+/****************************************************************************
+ *						Database Thermo
+ ****************************************************************************/
 
 class DatabaseThermo final : public Database
 {
@@ -80,8 +110,14 @@ protected:
 	const QString& GetSubstancesDataString() const override {
 		return SQL::thermo_substances_template;
 	}
+	const QString& GetSubstancesTempRangeDataString() const override {
+		return SQL::thermo_substances_temprange_template;
+	}
 };
 
+/****************************************************************************
+ *						Database HSC
+ ****************************************************************************/
 
 class DatabaseHSC final : public Database
 {
@@ -92,6 +128,9 @@ public:
 protected:
 	const QString& GetSubstancesDataString() const override {
 		return SQL::hsc_substances_template;
+	}
+	const QString& GetSubstancesTempRangeDataString() const override {
+		return SQL::hsc_substances_temprange_template;
 	}
 };
 

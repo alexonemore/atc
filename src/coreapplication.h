@@ -76,6 +76,7 @@ public slots:
 
 private:
 	QVector<HeavyContainer> PrepareHeavyCalculations();
+	Database* CurrentDatabase();
 
 };
 
