@@ -230,8 +230,11 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
 	auto db = CurrentDatabase();
-	auto data_temp_range = db->GetSubstancesTempRangeData(id);
+	auto&& data_temp_range = db->GetSubstancesTempRangeData(id);
 
+	// model_substances_temprange->SetNewData(std::move(data_temp_range));
+	// auto&& data_tabulated_tf = thermodynamic_tabulator->
+	//				GetTabulatedThermodynamicFunctions(??data_temp_range);
 
 }
 
