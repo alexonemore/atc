@@ -48,16 +48,17 @@ int SubstancesTempRangeModel::columnCount(const QModelIndex& parent) const
 	if(parent.isValid()) {
 		return 0;
 	} else {
-		return col_count;
+		return col_count == 0 ? 1 : col_count;
 	}
 }
 
 QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) const
 {
-	if(role != Qt::DisplayRole) {
+	auto col = index.column();
+	if(role != Qt::DisplayRole || col >= data_.size()) {
 		return QVariant{};
 	}
-	auto&& data_at = data_.at(index.column());
+	auto&& data_at = data_.at(col);
 	switch(static_cast<Models::SubstanceTempRangeFields>(index.row())) {
 	case Models::SubstanceTempRangeFields::T_min:	return data_at.T_min;
 	case Models::SubstanceTempRangeFields::T_max:	return data_at.T_max;
@@ -83,7 +84,7 @@ QVariant SubstancesTempRangeModel::headerData(int section,
 		if(orientation == Qt::Vertical) {
 			return Models::substances_temprange_field_names.at(section);
 		} else {
-			return section;
+			return section+1;
 		}
 	} else {
 		return QVariant{};

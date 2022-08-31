@@ -24,9 +24,7 @@
 #include <QAbstractItemView>
 #include <QStringListModel>
 #include <QProgressDialog>
-
 #include "utilities.h"
-#include "substancestable.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}

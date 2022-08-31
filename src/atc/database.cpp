@@ -32,9 +32,9 @@ const QStringList substances_field_names = {
 };
 extern const QStringList substances_temprange_field_names = {
 	QStringLiteral("T min"),
-	QStringLiteral("T max,"),
+	QStringLiteral("T max"),
 	QStringLiteral("H"),
-	QStringLiteral("S,"),
+	QStringLiteral("S"),
 	QStringLiteral("f1"),
 	QStringLiteral("f2"),
 	QStringLiteral("f3"),
@@ -94,10 +94,24 @@ const QString thermo_substances_template = QStringLiteral(
 "WHERE State.Symbol IN (%2);");
 
 const QString hsc_substances_temprange_template = QStringLiteral(""
+
 																 "");
 
-const QString thermo_substances_temprange_template = QStringLiteral(""
-																	"");
+const QString thermo_substances_temprange_template = QStringLiteral(
+"SELECT TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
+"Species.H0 AS 'H', 0 AS 'S', "
+"TempRange.f1 AS 'f1', "
+"TempRange.f2 AS 'f2', "
+"TempRange.f3 AS 'f3', "
+"TempRange.f4 AS 'f4', "
+"TempRange.f5 AS 'f5', "
+"TempRange.f6 AS 'f6', "
+"TempRange.f7 AS 'f7', "
+"State.Symbol AS 'Phase' "
+"FROM TempRange "
+"JOIN Species ON Species.species_id = TempRange.species_id "
+"JOIN State ON State.state_id = Species.state_id "
+"WHERE TempRange.species_id = %1;");
 
 } // SQL
 
