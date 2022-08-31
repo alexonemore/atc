@@ -145,6 +145,7 @@ SubstancesData Database::GetSubstancesData(const ParametersNS::Parameters& param
 
 SubstancesTempRangeData Database::GetSubstancesTempRangeData(const int id)
 {
+	LOG(id)
 	auto q = Query(GetSubstancesTempRangeDataString().arg(id));
 	SubstancesTempRangeData data;
 	while(q.next()) {

@@ -66,6 +66,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotUpdate);
 	connect(this, &CoreApplication::SignalSetAvailableElements,
 			gui, &MainWindow::SlotSetAvailableElements);
+	connect(gui, &MainWindow::SignalSubstancesTableSelection,
+			this, &CoreApplication::SlotSubstancesTableSelectionHandler);
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
 			this, &CoreApplication::SlotRequestHandler);
@@ -228,7 +230,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
 	auto db = CurrentDatabase();
-
+	auto data_temp_range = db->GetSubstancesTempRangeData(id);
 
 
 }
