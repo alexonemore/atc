@@ -93,9 +93,20 @@ const QString thermo_substances_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE State.Symbol IN (%2);");
 
-const QString hsc_substances_temprange_template = QStringLiteral(""
-
-																 "");
+const QString hsc_substances_temprange_template = QStringLiteral(
+"SELECT TempRange.T1 AS 'T min', TempRange.T2 AS 'T max', "
+"TempRange.H AS 'H', "
+"TempRange.S AS 'S', "
+"TempRange.A AS 'f1', "
+"TempRange.B AS 'f2', "
+"TempRange.C AS 'f3', "
+"TempRange.D AS 'f4', "
+"TempRange.E AS 'f5', "
+"TempRange.F AS 'f6', "
+"0 AS 'f7', "
+"TempRange.Phase AS 'Phase' "
+"FROM TempRange "
+"WHERE TempRange.species_id = %1;");
 
 const QString thermo_substances_temprange_template = QStringLiteral(
 "SELECT TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
