@@ -18,9 +18,71 @@
  */
 
 #include "substancestabulatedtfmodel.h"
+#include "utilities.h"
 
 SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
 
+}
+
+void SubstancesTabulatedTFModel::SetNewData(SubstancesTabulatedTFData&& new_data)
+{
+	beginResetModel();
+	data_ = std::move(new_data);
+	row_count = data_.temperatures.size();
+	endResetModel();
+}
+
+int SubstancesTabulatedTFModel::rowCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return row_count;
+	}
+}
+
+int SubstancesTabulatedTFModel::columnCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return col_count;
+	}
+}
+
+QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
+										  int role) const
+{
+	if(role != Qt::DisplayRole) {
+		return QVariant{};
+	}
+	auto col = index.column();
+	auto row = index.row();
+	switch(static_cast<Models::SubstancesTabulatedTFFields>(col)) {
+	case Models::SubstancesTabulatedTFFields::T:	return data_.temperatures.at(row);
+	case Models::SubstancesTabulatedTFFields::G_kJ:	return data_.G_kJ.at(row);
+	case Models::SubstancesTabulatedTFFields::H_kJ:	return data_.H_kJ.at(row);
+	case Models::SubstancesTabulatedTFFields::F_J:	return data_.F_J.at(row);
+	case Models::SubstancesTabulatedTFFields::S_J:	return data_.S_J.at(row);
+	case Models::SubstancesTabulatedTFFields::Cp_J:	return data_.Cp_J.at(row);
+	case Models::SubstancesTabulatedTFFields::c:	return data_.c.at(row);
+	}
+	LOG("ERROR in SubstancesTable::data")
+	return QVariant{};
+}
+
+QVariant SubstancesTabulatedTFModel::headerData(int section,
+							Qt::Orientation orientation, int role) const
+{
+	if(role == Qt::DisplayRole) {
+		if(orientation == Qt::Horizontal) {
+			return Models::substance_tabulated_tf_field_names.at(section);
+		} else {
+			return section;
+		}
+	} else {
+		return QVariant{};
+	}
 }

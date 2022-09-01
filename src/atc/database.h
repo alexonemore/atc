@@ -43,6 +43,7 @@ enum class SubstanceTempRangeFields {
 extern const QStringList substances_temprange_field_names;
 
 enum class SubstancesTabulatedTFFields {
+	T,
 	G_kJ,
 	H_kJ,
 	F_J,
@@ -80,6 +81,12 @@ struct SubstanceTempRangeData
 	QString phase;
 };
 using SubstancesTempRangeData = QVector<SubstanceTempRangeData>;
+
+struct SubstancesTabulatedTFData
+{
+	QVector<double> temperatures;
+	QVector<double> G_kJ, H_kJ, F_J, S_J, Cp_J, c;
+};
 
 /****************************************************************************
  *						Database virtual interface

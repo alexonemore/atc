@@ -27,8 +27,21 @@ class SubstancesTabulatedTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTabulatedTFModel)
+private:
+	SubstancesTabulatedTFData data_;
+	int row_count{0};
+	const int col_count{Models::substance_tabulated_tf_field_names.size()};
 public:
 	explicit SubstancesTabulatedTFModel(QObject *parent = nullptr);
+	void SetNewData(SubstancesTabulatedTFData&& new_data);
+
+	// QAbstractItemModel interface
+public:
+	int rowCount(const QModelIndex& parent) const override;
+	int columnCount(const QModelIndex& parent) const override;
+	QVariant data(const QModelIndex& index, int role) const override;
+	QVariant headerData(int section, Qt::Orientation orientation,
+						int role) const override;
 };
 
 #endif // SUBSTANCESTABULATEDTFMODEL_H

@@ -46,6 +46,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// create models
 	model_substances = new SubstancesTableModel(this);
 	model_substances_temp_range = new SubstancesTempRangeModel(this);
+	model_substances_tabulated_tf = new SubstancesTabulatedTFModel(this);
 	// demo
 	table_1 = new QStringListModel(this);
 
@@ -54,6 +55,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// set model
 	gui->SetSubstancesTableModel(model_substances);
 	gui->SetSubstancesTempRangeModel(model_substances_temp_range);
+	gui->SetSubstancesTabulatedModel(model_substances_tabulated_tf);
 	gui->Initialize(); // must be called after set models
 
 	// demo

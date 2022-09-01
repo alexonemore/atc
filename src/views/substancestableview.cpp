@@ -45,6 +45,7 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	substances->setSelectionMode(QAbstractItemView::SingleSelection);
 	substances->setSelectionBehavior(QAbstractItemView::SelectRows);
 	substances->verticalHeader()->setVisible(false);
+	tabulated_tf->verticalHeader()->setVisible(false);
 }
 
 void SubstancesTableView::Initialize()

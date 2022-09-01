@@ -29,6 +29,7 @@
 #include "database.h"
 #include "substancestablemodel.h"
 #include "substancestemprangemodel.h"
+#include "substancestabulatedtfmodel.h"
 #include "parameters.h"
 
 class CoreApplication : public QObject
@@ -41,6 +42,7 @@ private:
 	QVector<Database*> databases;
 	SubstancesTableModel* model_substances;
 	SubstancesTempRangeModel* model_substances_temp_range;
+	SubstancesTabulatedTFModel* model_substances_tabulated_tf;
 
 	// demo
 	QAbstractItemModel* table_1;
