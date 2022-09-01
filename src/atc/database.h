@@ -53,6 +53,11 @@ enum class SubstancesTabulatedTFFields {
 };
 extern const QStringList substance_tabulated_tf_field_names;
 
+enum class Phase {
+	G, L, S,
+	Error
+};
+extern const QStringList phases_names;
 } // namespace Models
 
 namespace SQL {
@@ -78,7 +83,7 @@ using SubstancesData = QVector<SubstanceData>;
 struct TempRangeData
 {
 	double T_min, T_max, H, S, f1, f2, f3, f4, f5, f6, f7;
-	QString phase;
+	Models::Phase phase;
 };
 using SubstanceTempRangeData = QVector<TempRangeData>;
 
@@ -113,6 +118,7 @@ protected:
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
 	QSqlQuery Query(const QString& query);
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
+	Models::Phase ToPhase(const QString& phase);
 };
 
 /****************************************************************************

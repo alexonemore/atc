@@ -53,6 +53,12 @@ const QStringList substance_tabulated_tf_field_names = {
 	QStringLiteral("Cp [J/molK]"),
 	QStringLiteral("c [G/RT]")
 };
+extern const QStringList phases_names = {
+	QStringLiteral("G"),
+	QStringLiteral("L"),
+	QStringLiteral("S"),
+	QStringLiteral("Error")
+};
 } // Models
 
 namespace SQL {
@@ -195,7 +201,7 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 											  q.value(8).toDouble(), // f5
 											  q.value(9).toDouble(), // f6
 											  q.value(10).toDouble(), // f7
-											  q.value(11).toString()}); // phase
+								  ToPhase(q.value(11).toString())}); // phase
 	}
 	return data;
 }
@@ -230,6 +236,19 @@ QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)
 		return QString{};
 	} else {
 		return QStringLiteral("'") + list.join("','") + QStringLiteral("'");
+	}
+}
+
+Models::Phase Database::ToPhase(const QString& phase)
+{
+	if(phase == QStringLiteral("s") || phase == QStringLiteral("S")) {
+		return Models::Phase::S;
+	} else if (phase == QStringLiteral("l") || phase == QStringLiteral("L")) {
+		return Models::Phase::L;
+	} else if (phase == QStringLiteral("g") || phase == QStringLiteral("G")) {
+		return Models::Phase::G;
+	} else {
+		return Models::Phase::Error;
 	}
 }
 
