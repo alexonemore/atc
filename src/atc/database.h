@@ -101,7 +101,7 @@ struct SubstancesTabulatedTFData
 class Database
 {
 protected:
-	QString filename_;
+	QString name;
 	QStringList available_elements;
 public:
 	Database(const QString& filename);

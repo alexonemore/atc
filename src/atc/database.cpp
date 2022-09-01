@@ -156,18 +156,18 @@ QSqlQuery Query(const QString& query, const QString& name)
 
 Database::Database(const QString& filename)
 {
-	filename_ = filename;
-	auto sql = QSqlDatabase::addDatabase("QSQLITE", filename_);
-	sql.setDatabaseName(filename_);
+	name = filename;
+	auto sql = QSqlDatabase::addDatabase("QSQLITE", name);
+	sql.setDatabaseName(name);
 	if(!sql.open()) {
 		QString str("Cannot open Database file: ");
-		str += filename_ + "\n" + sql.lastError().text();
+		str += name + "\n" + sql.lastError().text();
 		LOG(str)
 		throw std::runtime_error(str.toStdString().c_str());
 	} else {
-		LOG(filename_)
+		LOG(name)
 	}
-	auto q = SQL::Query(SQL::available_elements, filename_);
+	auto q = SQL::Query(SQL::available_elements, name);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
@@ -186,7 +186,7 @@ SubstancesData Database::GetSubstancesData(
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = SQL::Query(GetSubstancesDataString().arg(elements_str, phases),
-						filename_);
+						name);
 	SubstancesData data;
 	while(q.next()) {
 		data.push_back(SubstanceData{q.value(0).toInt(),		// ID
@@ -201,7 +201,7 @@ SubstancesData Database::GetSubstancesData(
 SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 {
 	LOG(id)
-	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(id), filename_);
+	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(id), name);
 	SubstanceTempRangeData data;
 	while(q.next()) {
 		data.push_back(TempRangeData{q.value(0).toDouble(), // T_min
