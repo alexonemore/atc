@@ -123,6 +123,55 @@ double TF_Tv(const double temperature_K, const TempRangeData& coef)
 } // namespace Thermo
 
 
+namespace HSC {
+double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	auto f = std::find_if(coefs.cbegin(), coefs.cend(),
+				 [temperature_K](const auto& coef){
+		return coef.T_max <= temperature_K;
+	});
+	const double A = f->f1;
+	const double B = f->f2;
+	const double C = f->f3;
+	const double D = f->f4;
+	const double E = f->f5;
+	const double F = f->f6;
+	const double T = temperature_K;
+	double res = A + B*T*1.0E-03 + C*std::pow(T, -2)*1.0E05 + D*T*T*1.0E-06 +
+			E*std::pow(T, -3)*1.0E08 + F*T*T*T*1.0E-9;
+	return res;
+}
+double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return 0;
+}
+} // namespace HSC
+
+
 } // namespace Thermodynamics
 
 
