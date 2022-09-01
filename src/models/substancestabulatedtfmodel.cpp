@@ -76,20 +76,18 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 QVariant SubstancesTabulatedTFModel::headerData(int section,
 							Qt::Orientation orientation, int role) const
 {
-	if(role == Qt::DisplayRole) {
-		if(orientation == Qt::Horizontal) {
-			switch(static_cast<Models::SubstancesTabulatedTFFields>(section)) {
-			case Models::SubstancesTabulatedTFFields::T:
-				return Models::substance_tabulated_tf_field_names.at(section).
-						arg(ParametersNS::temperature_units.at(
-								static_cast<int>(data_.temperature_unit)));
-			default:
-				return Models::substance_tabulated_tf_field_names.at(section);
-			}
-		} else {
-			return section;
-		}
-	} else {
+	if(role != Qt::DisplayRole) {
 		return QVariant{};
+	}
+	if(orientation != Qt::Horizontal) {
+		return section;
+	}
+	switch(static_cast<Models::SubstancesTabulatedTFFields>(section)) {
+	case Models::SubstancesTabulatedTFFields::T:
+		return Models::substance_tabulated_tf_field_names.at(section).
+				arg(ParametersNS::temperature_units.at(
+						static_cast<int>(data_.temperature_unit)));
+	default:
+		return Models::substance_tabulated_tf_field_names.at(section);
 	}
 }
