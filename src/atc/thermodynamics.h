@@ -17,14 +17,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ATC_H
-#define ATC_H
+#ifndef THERMODYNAMICS_H
+#define THERMODYNAMICS_H
 
 
-class ATC
+class Thermodynamics
 {
 public:
-	ATC();
+	Thermodynamics();
 };
 
-#endif // ATC_H
+#endif // THERMODYNAMICS_H

@@ -19,7 +19,7 @@
 
 #include "thermodynamics.h"
 
-ATC::ATC()
+Thermodynamics::Thermodynamics()
 {
 
 }
