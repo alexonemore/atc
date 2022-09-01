@@ -21,7 +21,6 @@
 #define DATABASE_H
 
 #include <QString>
-#include <QSqlDatabase>
 #include "parameters.h"
 
 namespace Models {
@@ -116,7 +115,6 @@ public:
 protected:
 	virtual const QString& GetSubstancesDataString() const = 0;
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
-	QSqlQuery Query(const QString& query);
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 	Models::Phase ToPhase(const QString& phase);
 };

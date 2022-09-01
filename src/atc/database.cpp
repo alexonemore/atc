@@ -139,6 +139,19 @@ const QString thermo_substances_temprange_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE TempRange.species_id = %1;");
 
+QSqlQuery Query(const QString& query, const QString& name)
+{
+	LOG()
+	QSqlQuery q(query, QSqlDatabase::database(name));
+	if(q.lastError().isValid()) {
+		auto str = q.lastError().text();
+		LOG(str)
+		LOG(query)
+		throw std::runtime_error(str.toStdString().c_str());
+	}
+	return q;
+}
+
 } // SQL
 
 Database::Database(const QString& filename)
@@ -154,7 +167,7 @@ Database::Database(const QString& filename)
 	} else {
 		LOG(filename_)
 	}
-	auto q = Query(SQL::available_elements);
+	auto q = SQL::Query(SQL::available_elements, filename_);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
@@ -172,7 +185,8 @@ SubstancesData Database::GetSubstancesData(
 			parameters.checked_elements.join("','") + QStringLiteral("'");
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
-	auto q = Query(GetSubstancesDataString().arg(elements_str, phases));
+	auto q = SQL::Query(GetSubstancesDataString().arg(elements_str, phases),
+						filename_);
 	SubstancesData data;
 	while(q.next()) {
 		data.push_back(SubstanceData{q.value(0).toInt(),		// ID
@@ -187,7 +201,7 @@ SubstancesData Database::GetSubstancesData(
 SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 {
 	LOG(id)
-	auto q = Query(GetSubstancesTempRangeDataString().arg(id));
+	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(id), filename_);
 	SubstanceTempRangeData data;
 	while(q.next()) {
 		data.push_back(TempRangeData{q.value(0).toDouble(), // T_min
@@ -204,19 +218,6 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 								  ToPhase(q.value(11).toString())}); // phase
 	}
 	return data;
-}
-
-QSqlQuery Database::Query(const QString& query)
-{
-	LOG()
-	QSqlQuery q(query, QSqlDatabase::database(filename_));
-	if(q.lastError().isValid()) {
-		auto str = q.lastError().text();
-		LOG(str)
-		LOG(query)
-		throw std::runtime_error(str.toStdString().c_str());
-	}
-	return q;
 }
 
 QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)
