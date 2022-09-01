@@ -38,7 +38,7 @@ double TF_S_J(const double temperature_K, const TempRangeData& coef);
 double TF_Cp_J(const double temperature_K, const TempRangeData& coef);
 double TF_c(const double temperature_K, const TempRangeData& coef);
 double TF_Tv(const double temperature_K, const TempRangeData& coef);
-}
+} // namespace Thermo
 
 namespace HSC {
 double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs);
@@ -49,11 +49,8 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs);
 double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs);
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs);
 double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs);
-}
-
+} // namespace HSC
 
 } // namespace Thermodynamics
-
-
 
 #endif // THERMODYNAMICS_H
