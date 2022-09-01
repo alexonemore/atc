@@ -26,7 +26,7 @@ SubstancesTempRangeModel::SubstancesTempRangeModel(QObject *parent)
 
 }
 
-void SubstancesTempRangeModel::SetNewData(SubstancesTempRangeData&& new_data)
+void SubstancesTempRangeModel::SetNewData(SubstanceTempRangeData&& new_data)
 {
 	beginResetModel();
 	data_ = std::move(new_data);

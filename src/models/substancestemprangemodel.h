@@ -28,12 +28,12 @@ class SubstancesTempRangeModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTempRangeModel)
 private:
-	SubstancesTempRangeData data_;
+	SubstanceTempRangeData data_;
 	const int row_count{Models::substances_temprange_field_names.size()};
 	int col_count{0};
 public:
 	explicit SubstancesTempRangeModel(QObject *parent = nullptr);
-	void SetNewData(SubstancesTempRangeData&& new_data);
+	void SetNewData(SubstanceTempRangeData&& new_data);
 
 	// QAbstractItemModel interface
 public:

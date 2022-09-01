@@ -20,11 +20,40 @@
 #ifndef THERMODYNAMICS_H
 #define THERMODYNAMICS_H
 
+#include "database.h"
 
-class Thermodynamics
-{
-public:
-	Thermodynamics();
-};
+namespace Thermodynamics {
+
+constexpr double R = 8.31441; // J/molK
+
+double ToKelvin(const double t, const ParametersNS::TemperatureUnit tu);
+double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu);
+
+namespace Thermo {
+double TF_F_J(const double temperature_K, const TempRangeData& coef);
+double TF_G_kJ(const double temperature_K, const TempRangeData& coef);
+double TF_H_kJ(const double temperature_K, const TempRangeData& coef);
+double TF_H_J(const double temperature_K, const TempRangeData& coef);
+double TF_S_J(const double temperature_K, const TempRangeData& coef);
+double TF_Cp_J(const double temperature_K, const TempRangeData& coef);
+double TF_c(const double temperature_K, const TempRangeData& coef);
+double TF_Tv(const double temperature_K, const TempRangeData& coef);
+}
+
+namespace HSC {
+double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs);
+}
+
+
+} // namespace Thermodynamics
+
+
 
 #endif // THERMODYNAMICS_H

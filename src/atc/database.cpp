@@ -178,13 +178,13 @@ SubstancesData Database::GetSubstancesData(
 	return data;
 }
 
-SubstancesTempRangeData Database::GetSubstancesTempRangeData(const int id)
+SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 {
 	LOG(id)
 	auto q = Query(GetSubstancesTempRangeDataString().arg(id));
-	SubstancesTempRangeData data;
+	SubstanceTempRangeData data;
 	while(q.next()) {
-		data.push_back(SubstanceTempRangeData{q.value(0).toDouble(), // T_min
+		data.push_back(TempRangeData{q.value(0).toDouble(), // T_min
 											  q.value(1).toDouble(), // T_max
 											  q.value(2).toDouble(), // H
 											  q.value(3).toDouble(), // S

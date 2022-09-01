@@ -19,7 +19,38 @@
 
 #include "thermodynamics.h"
 
-Thermodynamics::Thermodynamics()
+namespace Thermodynamics {
+
+double ToKelvin(const double t, const ParametersNS::TemperatureUnit tu)
 {
+	switch(tu) {
+	case ParametersNS::TemperatureUnit::Kelvin:
+		return t;
+	case ParametersNS::TemperatureUnit::Celsius:
+		return t + 273.15;
+	case ParametersNS::TemperatureUnit::Fahrenheit:
+		return (t + 459.67) * 5 / 9;
+	}
+	return t;
+}
+
+double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu)
+{
+	switch(tu) {
+	case ParametersNS::TemperatureUnit::Kelvin:
+		return t;
+	case ParametersNS::TemperatureUnit::Celsius:
+		return t - 273.15;
+	case ParametersNS::TemperatureUnit::Fahrenheit:
+		return (t * 9 / 5) - 459.67;
+	}
+	return t;
+}
+
+
+
 
 }
+
+
+

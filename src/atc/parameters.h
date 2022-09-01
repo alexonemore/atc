@@ -127,8 +127,8 @@ struct Parameters
 	PressureUnit	pressure_range_unit {PressureUnit::MPa};
 	double			temperature_initial	{300.0};
 	double			pressure_initial	{0.1};
-	Range			composition1_range	{  0.0,  100.0,  10.0};
-	Range			composition2_range	{  0.0,  100.0,  10.0};
+	Range			composition1_range	{  0.0,  100.0, 10.0};
+	Range			composition2_range	{  0.0,  100.0, 10.0};
 	Range			temperature_range	{300.0, 1000.0, 10.0};
 	Range			pressure_range		{  0.1,    1.0,  0.1};
 	int				threads				{1};
@@ -137,7 +137,8 @@ struct Parameters
 	QStringList		checked_elements;
 
 	Parameters();
-
 };
+
 } // namespace ParametersNS
+
 #endif // PARAMETERS_H
