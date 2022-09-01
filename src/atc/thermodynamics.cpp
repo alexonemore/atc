@@ -157,9 +157,10 @@ double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	const double E = f->f5;
 	const double F = f->f6;
 	const double T = temperature_K;
-	double res = A + B*T*1.0E-03 + C*std::pow(T, -2)*1.0E05 + D*T*T*1.0E-06 +
-			E*std::pow(T, -3)*1.0E08 + F*T*T*T*1.0E-9;
-	return res;
+	const double TT = T*T;
+	const double TTT = TT*T;
+	return (A + (B * T * 1.0E-03) + (C * 1.0E05 / TT) + (D * TT * 1.0E-06)
+			+ (E * 1.0E08 / TTT) + (F * TTT * 1.0E-9));
 }
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
