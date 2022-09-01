@@ -45,7 +45,7 @@ const QStringList substances_temprange_field_names = {
 	QStringLiteral("Phase")
 };
 const QStringList substance_tabulated_tf_field_names = {
-	QStringLiteral("T [K]"),
+	QStringLiteral("T"),
 	QStringLiteral("G [kJ/mol]"),
 	QStringLiteral("H [kJ/mol]"),
 	QStringLiteral("F [J/molK]"),

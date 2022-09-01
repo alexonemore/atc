@@ -86,6 +86,8 @@ struct SubstancesTabulatedTFData
 {
 	QVector<double> temperatures;
 	QVector<double> G_kJ, H_kJ, F_J, S_J, Cp_J, c;
+	ParametersNS::TemperatureUnit temperature_unit{
+		ParametersNS::TemperatureUnit::Kelvin};
 };
 
 /****************************************************************************
