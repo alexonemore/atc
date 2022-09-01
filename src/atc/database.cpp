@@ -30,7 +30,7 @@ const QStringList substances_field_names = {
 	QStringLiteral("T min"),
 	QStringLiteral("T max")
 };
-extern const QStringList substances_temprange_field_names = {
+const QStringList substances_temprange_field_names = {
 	QStringLiteral("T min"),
 	QStringLiteral("T max"),
 	QStringLiteral("H"),
@@ -43,6 +43,14 @@ extern const QStringList substances_temprange_field_names = {
 	QStringLiteral("f6"),
 	QStringLiteral("f7"),
 	QStringLiteral("Phase")
+};
+const QStringList substance_tabulated_tf_field_names = {
+	QStringLiteral("G [kJ/mol]"),
+	QStringLiteral("H [kJ/mol]"),
+	QStringLiteral("F [J/molK]"),
+	QStringLiteral("S [J/molK]"),
+	QStringLiteral("Cp [J/molK]"),
+	QStringLiteral("c [G/RT]")
 };
 } // Models
 

@@ -89,6 +89,8 @@ set(PROJECT_SOURCES
 	src/models/substancestablemodel.cpp
 	src/models/substancestemprangemodel.h
 	src/models/substancestemprangemodel.cpp
+	src/models/substancestabulatedtfmodel.h
+	src/models/substancestabulatedtfmodel.cpp
 
 	# views
 	src/views/substancestableview.h

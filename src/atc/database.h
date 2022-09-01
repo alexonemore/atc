@@ -42,6 +42,16 @@ enum class SubstanceTempRangeFields {
 };
 extern const QStringList substances_temprange_field_names;
 
+enum class SubstancesTabulatedTFFields {
+	G_kJ,
+	H_kJ,
+	F_J,
+	S_J,
+	Cp_J,
+	c
+};
+extern const QStringList substance_tabulated_tf_field_names;
+
 } // Models
 
 namespace SQL {
