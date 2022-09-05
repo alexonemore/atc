@@ -33,7 +33,8 @@ ParametersNS::Range RangeToKelvin(const ParametersNS::Range range,
 								  const ParametersNS::TemperatureUnit tu);
 ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
 									const ParametersNS::TemperatureUnit tu);
-
+const TempRangeData& FindCoef(const double temperature_K,
+							  const SubstanceTempRangeData& coefs);
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef);
 double TF_G_kJ(const double temperature_K, const TempRangeData& coef);
@@ -43,6 +44,15 @@ double TF_S_J(const double temperature_K, const TempRangeData& coef);
 double TF_Cp_J(const double temperature_K, const TempRangeData& coef);
 double TF_c(const double temperature_K, const TempRangeData& coef);
 double TF_Tv(const double temperature_K, const TempRangeData& coef);
+
+double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs);
+double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs);
 } // namespace Thermo
 
 namespace HSC {
@@ -60,8 +70,10 @@ SubstancesTabulatedTFData
 Tabulate(const ParametersNS::Range& temperature_range,
 		 const ParametersNS::TemperatureUnit& unit,
 		 const ParametersNS::Extrapolation& extrapolation,
+		 const ParametersNS::Database& database,
 		 const SubstanceTempRangeData& coefs);
 
+void RangeTabulator(const ParametersNS::Range range, QVector<double>& x);
 
 } // namespace Thermodynamics
 

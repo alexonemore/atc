@@ -69,6 +69,14 @@ ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
 	return new_range;
 }
 
+const TempRangeData& FindCoef(const double temperature_K,
+							  const SubstanceTempRangeData& coefs)
+{
+	return *(std::find_if(coefs.cbegin(), coefs.cend(),
+						  [temperature_K](const auto& coef){
+		return coef.T_max <= temperature_K;}));
+}
+
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef)
 {
@@ -142,6 +150,39 @@ double TF_Tv(const double temperature_K, const TempRangeData& coef)
 {
 	return (Thermo::TF_H_J(temperature_K, coef) /
 			Thermo::TF_S_J(temperature_K, coef));
+}
+
+double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_F_J(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_G_kJ(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_H_kJ(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_H_J(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_S_J(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_Cp_J(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_c(temperature_K, FindCoef(temperature_K, coefs));
+}
+double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
+{
+	return TF_Tv(temperature_K, FindCoef(temperature_K, coefs));
 }
 } // namespace Thermo
 
@@ -266,16 +307,13 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	auto f = std::find_if(coefs.cbegin(), coefs.cend(),
-						  [temperature_K](const auto& coef){
-		return coef.T_max <= temperature_K;
-	});
-	const double A = f->f1;
-	const double B = f->f2;
-	const double C = f->f3;
-	const double D = f->f4;
-	const double E = f->f5;
-	const double F = f->f6;
+	auto&& f = FindCoef(temperature_K, coefs);
+	const double A = f.f1;
+	const double B = f.f2;
+	const double C = f.f3;
+	const double D = f.f4;
+	const double E = f.f5;
+	const double F = f.f6;
 	const double T = temperature_K;
 	const double T2 = T*T;
 	const double T3 = T2*T;
@@ -298,10 +336,10 @@ SubstancesTabulatedTFData
 Tabulate(const ParametersNS::Range& temperature_range,
 		 const ParametersNS::TemperatureUnit& unit,
 		 const ParametersNS::Extrapolation& extrapolation,
+		 const ParametersNS::Database& database,
 		 const SubstanceTempRangeData& coefs)
 {
 	ParametersNS::Range range_in_unit{temperature_range};
-	constexpr double eps = std::numeric_limits<double>::epsilon();
 	if(extrapolation == ParametersNS::Extrapolation::Disable) {
 		auto T1 = FromKelvin(coefs.cbegin()->T_min, unit);
 		auto T2 = FromKelvin(coefs.crbegin()->T_max, unit);
@@ -309,14 +347,51 @@ Tabulate(const ParametersNS::Range& temperature_range,
 		range_in_unit.stop = std::clamp(range_in_unit.stop, T1, T2);
 	}
 	SubstancesTabulatedTFData data;
-	QVector<double> kelvins;
-	if(std::abs(range_in_unit.stop - range_in_unit.start) < eps) {
+	data.temperature_unit = unit;
 
+	// TODO tabulate by diapasons
+	RangeTabulator(range_in_unit, data.temperatures);
+	auto size = data.temperatures.size();
+	data.G_kJ.resize(size);
+	data.H_kJ.resize(size);
+	data.F_J.resize(size);
+	data.S_J.resize(size);
+	data.Cp_J.resize(size);
+	data.c.resize(size);
+	QVector<double> kelvins(size);
+	std::transform(data.temperatures.cbegin(), data.temperatures.cend(),
+				   kelvins.begin(), [unit](auto t){return ToKelvin(t, unit);});
+	switch(database) {
+	case ParametersNS::Database::Thermo:
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.G_kJ.begin(),
+					   [coefs](auto t){return Thermo::TF_G_kJ(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.H_kJ.begin(),
+					   [coefs](auto t){return Thermo::TF_H_kJ(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.F_J.begin(),
+					   [coefs](auto t){return Thermo::TF_F_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.S_J.begin(),
+					   [coefs](auto t){return Thermo::TF_S_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.Cp_J.begin(),
+					   [coefs](auto t){return Thermo::TF_Cp_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.c.begin(),
+					   [coefs](auto t){return Thermo::TF_c(t, coefs);});
+		break;
+	case ParametersNS::Database::HSC:
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.G_kJ.begin(),
+					   [coefs](auto t){return HSC::TF_G_kJ(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.H_kJ.begin(),
+					   [coefs](auto t){return HSC::TF_H_kJ(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.F_J.begin(),
+					   [coefs](auto t){return HSC::TF_F_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.S_J.begin(),
+					   [coefs](auto t){return HSC::TF_S_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.Cp_J.begin(),
+					   [coefs](auto t){return HSC::TF_Cp_J(t, coefs);});
+		std::transform(kelvins.cbegin(), kelvins.cend(), data.c.begin(),
+					   [coefs](auto t){return HSC::TF_c(t, coefs);});
+		break;
 	}
-
-
-
-
+	return data;
 }
 
 void RangeTabulator(const ParametersNS::Range range, QVector<double>& x)
@@ -346,8 +421,8 @@ void RangeTabulator(const ParametersNS::Range range, QVector<double>& x)
 		}
 		x.push_back(stop);
 		LOG("size = ", size)
-		LOG("x.size = ", x.size())
-		assert(x.size() == size && "Reserve fail");
+				LOG("x.size = ", x.size())
+				assert(x.size() == size && "Reserve fail");
 	}
 }
 

@@ -25,6 +25,7 @@
 #include <QStringListModel>
 #include <QProgressDialog>
 #include "utilities.h"
+#include "thermodynamics.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}
@@ -235,14 +236,16 @@ void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 	auto db = CurrentDatabase();
 	auto data_temp_range = db->GetSubstancesTempRangeData(id);
 
-	// SubstancesTabulatedTFData tabdata = tabulator(data_temp_range,
-	//								parameters_.temperature_range,
-	//								paremeters_.temperature_range_unit);
-	// model_substances_tabulated_tf->SetNewData(std::move(tabdata));
+	auto tabdata = Thermodynamics::Tabulate(parameters_.temperature_range,
+											parameters_.temperature_range_unit,
+											parameters_.extrapolation,
+											parameters_.database,
+											data_temp_range);
+
+	model_substances_tabulated_tf->SetNewData(std::move(tabdata));
 
 	model_substances_temp_range->SetNewData(std::move(data_temp_range));
-	// auto&& data_tabulated_tf = thermodynamic_tabulator->
-	//				GetTabulatedThermodynamicFunctions(??data_temp_range);
+
 
 }
 
