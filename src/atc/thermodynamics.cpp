@@ -124,6 +124,35 @@ double TF_Tv(const double temperature_K, const TempRangeData& coef)
 
 
 namespace HSC {
+double IntgralOfCp(const double temperature_K, const TempRangeData& coef)
+{
+	const double T = temperature_K;
+	const double T2 = T*T;
+	const double T3 = T2*T;
+	const double T4 = T3*T;
+	const double A = coef.f1;
+	const double B = coef.f2;
+	const double C = coef.f3;
+	const double D = coef.f4;
+	const double E = coef.f5;
+	const double F = coef.f6;
+	return ((A * T) + (2.0E-3 * B * T2) - (1.0E5 * C / T) +
+			(1.0E-6 * D * T3 / 3) - (5.0E7 * E / T2) + (2.5E-10 * F * T4));
+}
+double IntegralOfCpByT(const double temperature_K, const TempRangeData& coef)
+{
+	const double T = temperature_K;
+	const double T2 = T*T;
+	const double T3 = T2*T;
+	const double A = coef.f1;
+	const double B = coef.f2;
+	const double C = coef.f3;
+	const double D = coef.f4;
+	const double E = coef.f5;
+	const double F = coef.f6;
+	return ((A * std::log(T)) + (1.0E-3 * B * T) - (5.0E4 * C / T2) +
+			(5.0E-7 * D * T2) + (((-1.0E8 * E / T3) + (1.0E-9 * F * T3)) / 3));
+}
 double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
 	return 0;
@@ -138,6 +167,9 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
+
+
+
 	return 0;
 }
 double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
