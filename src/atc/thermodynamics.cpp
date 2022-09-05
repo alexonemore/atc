@@ -65,7 +65,8 @@ double TF_F_J(const double temperature_K, const TempRangeData& coef)
 
 double TF_G_kJ(const double temperature_K, const TempRangeData& coef)
 {
-	return (coef.H-(temperature_K * TF_F_J(temperature_K, coef)*1.0E-03));
+	return (coef.H -
+			(temperature_K * Thermo::TF_F_J(temperature_K, coef) * 1.0E-03));
 }
 
 double TF_H_kJ(const double temperature_K, const TempRangeData& coef)
@@ -83,7 +84,7 @@ double TF_H_kJ(const double temperature_K, const TempRangeData& coef)
 
 double TF_H_J(const double temperature_K, const TempRangeData& coef)
 {
-	return TF_H_kJ(temperature_K, coef) * 1000;
+	return (Thermo::TF_H_kJ(temperature_K, coef) * 1000);
 }
 
 double TF_S_J(const double temperature_K, const TempRangeData& coef)
@@ -113,12 +114,13 @@ double TF_Cp_J(const double temperature_K, const TempRangeData& coef)
 double TF_c(const double temperature_K, const TempRangeData& coef)
 {
 	return ((1000 * coef.H / (Thermodynamics::R * temperature_K)) -
-			(TF_F_J(temperature_K, coef) / Thermodynamics::R));
+			(Thermo::TF_F_J(temperature_K, coef) / Thermodynamics::R));
 }
 
 double TF_Tv(const double temperature_K, const TempRangeData& coef)
 {
-	return TF_H_J(temperature_K, coef) / TF_S_J(temperature_K, coef);
+	return (Thermo::TF_H_J(temperature_K, coef) /
+			Thermo::TF_S_J(temperature_K, coef));
 }
 } // namespace Thermo
 
@@ -155,12 +157,13 @@ double IntegralOfCpByT(const double temperature_K, const TempRangeData& coef)
 }
 double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	return ((1.0E3 * HSC::TF_G_kJ(temperature_K, coefs) -
+			 HSC::TF_H_J(298.15, coefs)) / temperature_K);
 }
 double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return HSC::TF_H_kJ(temperature_K, coefs) -
-			1.0E-3 * temperature_K * HSC::TF_S_J(temperature_K, coefs);
+	return (HSC::TF_H_kJ(temperature_K, coefs) -
+			1.0E-3 * temperature_K * HSC::TF_S_J(temperature_K, coefs));
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
@@ -169,7 +172,7 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 	auto coef_first = coefs.cbegin();
 	if(temperature_K < coef_first->T_min) {
 		H += coef_first->H;
-		H += HSC::IntgralOfCp(coef_first->T_min, *coef_first) -
+		H -= HSC::IntgralOfCp(coef_first->T_min, *coef_first) -
 				HSC::IntgralOfCp(temperature_K, *coef_first);
 		return H;
 	}
@@ -201,7 +204,7 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return HSC::TF_H_kJ(temperature_K, coefs) * 1.0E3;
+	return (HSC::TF_H_kJ(temperature_K, coefs) * 1.0E3);
 }
 double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
@@ -210,7 +213,7 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	auto coef_first = coefs.cbegin();
 	if(temperature_K < coef_first->T_min) {
 		S += coef_first->S;
-		S += HSC::IntegralOfCpByT(coef_first->T_min, *coef_first) -
+		S -= HSC::IntegralOfCpByT(coef_first->T_min, *coef_first) -
 				HSC::IntegralOfCpByT(temperature_K, *coef_first);
 		return S;
 	}
@@ -243,7 +246,7 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
 	auto f = std::find_if(coefs.cbegin(), coefs.cend(),
-				 [temperature_K](const auto& coef){
+						  [temperature_K](const auto& coef){
 		return coef.T_max <= temperature_K;
 	});
 	const double A = f->f1;
@@ -260,11 +263,13 @@ double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	return (1.0E3 * HSC::TF_G_kJ(temperature_K, coefs) /
+			(Thermodynamics::R * temperature_K));
 }
 double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	return (HSC::TF_H_J(temperature_K, coefs) /
+			HSC::TF_S_J(temperature_K, coefs));
 }
 } // namespace HSC
 
