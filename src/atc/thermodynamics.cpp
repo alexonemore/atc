@@ -163,18 +163,81 @@ double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	double H{0};
+
+	auto coef_first = coefs.cbegin();
+	if(temperature_K < coef_first->T_min) {
+		H += coef_first->H;
+		H += HSC::IntgralOfCp(coef_first->T_min, *coef_first) -
+				HSC::IntgralOfCp(temperature_K, *coef_first);
+		return H;
+	}
+
+	auto coef_last = coefs.crbegin();
+	if(temperature_K > coef_last->T_max) {
+		for(auto&& coef : coefs) {
+			H += coef.H;
+			H += HSC::IntgralOfCp(coef.T_max, coef) -
+					HSC::IntgralOfCp(coef.T_min, coef);
+		}
+		H += HSC::IntgralOfCp(temperature_K, *coef_last) -
+				HSC::IntgralOfCp(coef_last->T_max, *coef_last);
+		return H;
+	}
+
+	for(auto&& coef : coefs) {
+		H += coef.H;
+		if(temperature_K > coef.T_max) {
+			H += HSC::IntgralOfCp(coef.T_max, coef) -
+					HSC::IntgralOfCp(coef.T_min, coef);
+		} else {
+			H += HSC::IntgralOfCp(temperature_K, coef) -
+					HSC::IntgralOfCp(coef.T_min, coef);
+			break;
+		}
+	}
+	return H;
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-
-
-
-	return 0;
+	return TF_H_kJ(temperature_K, coefs) * 1.0E3;
 }
 double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	double S{0};
+
+	auto coef_first = coefs.cbegin();
+	if(temperature_K < coef_first->T_min) {
+		S += coef_first->S;
+		S += HSC::IntegralOfCpByT(coef_first->T_min, *coef_first) -
+				HSC::IntegralOfCpByT(temperature_K, *coef_first);
+		return S;
+	}
+
+	auto coef_last = coefs.crbegin();
+	if(temperature_K > coef_last->T_max) {
+		for(auto&& coef : coefs) {
+			S += coef.S;
+			S += HSC::IntegralOfCpByT(coef.T_max, coef) -
+					HSC::IntegralOfCpByT(coef.T_min, coef);
+		}
+		S += HSC::IntegralOfCpByT(temperature_K, *coef_last) -
+				HSC::IntegralOfCpByT(coef_last->T_max, *coef_last);
+		return S;
+	}
+
+	for(auto&& coef : coefs) {
+		S += coef.S;
+		if(temperature_K > coef.T_max) {
+			S += HSC::IntegralOfCpByT(coef.T_max, coef) -
+					HSC::IntegralOfCpByT(coef.T_min, coef);
+		} else {
+			S += HSC::IntegralOfCpByT(temperature_K, coef) -
+					HSC::IntegralOfCpByT(coef.T_min, coef);
+			break;
+		}
+	}
+	return S;
 }
 double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
@@ -189,10 +252,10 @@ double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	const double E = f->f5;
 	const double F = f->f6;
 	const double T = temperature_K;
-	const double TT = T*T;
-	const double TTT = TT*T;
-	return (A + (B * T * 1.0E-03) + (C * 1.0E05 / TT) + (D * TT * 1.0E-06)
-			+ (E * 1.0E08 / TTT) + (F * TTT * 1.0E-9));
+	const double T2 = T*T;
+	const double T3 = T2*T;
+	return (A + (B * T * 1.0E-03) + (C * 1.0E05 / T2) + (D * T2 * 1.0E-06)
+			+ (E * 1.0E08 / T3) + (F * T3 * 1.0E-9));
 }
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
