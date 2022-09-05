@@ -21,6 +21,7 @@
 #define THERMODYNAMICS_H
 
 #include "database.h"
+#include "parameters.h"
 
 namespace Thermodynamics {
 
@@ -28,6 +29,10 @@ constexpr double R = 8.31441; // J/molK
 
 double ToKelvin(const double t, const ParametersNS::TemperatureUnit tu);
 double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu);
+ParametersNS::Range RangeToKelvin(const ParametersNS::Range range,
+								  const ParametersNS::TemperatureUnit tu);
+ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
+									const ParametersNS::TemperatureUnit tu);
 
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef);
@@ -50,6 +55,13 @@ double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs);
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs);
 double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs);
 } // namespace HSC
+
+SubstancesTabulatedTFData
+Tabulate(const ParametersNS::Range& temperature_range,
+		 const ParametersNS::TemperatureUnit& unit,
+		 const ParametersNS::Extrapolation& extrapolation,
+		 const SubstanceTempRangeData& coefs);
+
 
 } // namespace Thermodynamics
 

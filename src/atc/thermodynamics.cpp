@@ -18,6 +18,7 @@
  */
 
 #include "thermodynamics.h"
+#include "utilities.h"
 #include <cmath>
 
 namespace Thermodynamics {
@@ -46,6 +47,26 @@ double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu)
 		return (t * 9 / 5) - 459.67;
 	}
 	return t;
+}
+
+ParametersNS::Range RangeToKelvin(const ParametersNS::Range range,
+								  const ParametersNS::TemperatureUnit tu)
+{
+	ParametersNS::Range new_range;
+	new_range.start = ToKelvin(range.start, tu);
+	new_range.stop = ToKelvin(range.stop, tu);
+	new_range.step = range.step;
+	return new_range;
+}
+
+ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
+									const ParametersNS::TemperatureUnit tu)
+{
+	ParametersNS::Range new_range;
+	new_range.start = FromKelvin(range.start, tu);
+	new_range.stop = FromKelvin(range.stop, tu);
+	new_range.step = range.step;
+	return new_range;
 }
 
 namespace Thermo {
@@ -273,6 +294,60 @@ double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 } // namespace HSC
 
+SubstancesTabulatedTFData
+Tabulate(const ParametersNS::Range& temperature_range,
+		 const ParametersNS::TemperatureUnit& unit,
+		 const ParametersNS::Extrapolation& extrapolation,
+		 const SubstanceTempRangeData& coefs)
+{
+	auto start = ToKelvin(temperature_range.start, unit);
+	auto stop = ToKelvin(temperature_range.stop, unit);
+	auto step = temperature_range.step;
+	if(extrapolation == ParametersNS::Extrapolation::Disable) {
+		auto T1 = coefs.cbegin()->T_min;
+		auto T2 = coefs.crbegin()->T_max;
+		start = std::clamp(start, T1, T2);
+		stop = std::clamp(stop, T1, T2);
+	}
+	SubstancesTabulatedTFData data;
+
+
+
+
+
+}
+
+void RangeTabulator(const ParametersNS::Range range, QVector<double>& x)
+{
+	const double start = range.start;
+	const double stop = range.stop;
+	const double step = range.step;
+	constexpr double eps = std::numeric_limits<double>::epsilon();
+	x.clear();
+	if(std::abs(stop - start) < eps) {
+		x.push_back(start);
+	} else if(std::abs(step) < eps) {
+		x.reserve(2);
+		x.push_back(start);
+		x.push_back(stop);
+	} else {
+		int size = static_cast<int>(std::ceil(std::abs((stop-start)/step)))+1;
+		x.reserve(size);
+		double rounding_decimal = 1/step < 1000 ?
+					1000 : std::pow(10, std::ceil(std::log10(1/step))+1);
+		int i = 1;
+		double current = start;
+		while (current < stop) {
+			x.push_back(current);
+			current = std::round((start + step * (i++)) * rounding_decimal)
+					/ rounding_decimal;
+		}
+		x.push_back(stop);
+		LOG("size = ", size)
+		LOG("x.size = ", x.size())
+		assert(x.size() == size && "Reserve fail");
+	}
+}
 
 } // namespace Thermodynamics
 
