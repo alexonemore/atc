@@ -159,7 +159,8 @@ double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return 0;
+	return HSC::TF_H_kJ(temperature_K, coefs) -
+			1.0E-3 * temperature_K * HSC::TF_S_J(temperature_K, coefs);
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
@@ -200,7 +201,7 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return TF_H_kJ(temperature_K, coefs) * 1.0E3;
+	return HSC::TF_H_kJ(temperature_K, coefs) * 1.0E3;
 }
 double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
