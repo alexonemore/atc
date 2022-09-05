@@ -300,17 +300,19 @@ Tabulate(const ParametersNS::Range& temperature_range,
 		 const ParametersNS::Extrapolation& extrapolation,
 		 const SubstanceTempRangeData& coefs)
 {
-	auto start = ToKelvin(temperature_range.start, unit);
-	auto stop = ToKelvin(temperature_range.stop, unit);
-	auto step = temperature_range.step;
+	ParametersNS::Range range_in_unit{temperature_range};
+	constexpr double eps = std::numeric_limits<double>::epsilon();
 	if(extrapolation == ParametersNS::Extrapolation::Disable) {
-		auto T1 = coefs.cbegin()->T_min;
-		auto T2 = coefs.crbegin()->T_max;
-		start = std::clamp(start, T1, T2);
-		stop = std::clamp(stop, T1, T2);
+		auto T1 = FromKelvin(coefs.cbegin()->T_min, unit);
+		auto T2 = FromKelvin(coefs.crbegin()->T_max, unit);
+		range_in_unit.start = std::clamp(range_in_unit.start, T1, T2);
+		range_in_unit.stop = std::clamp(range_in_unit.stop, T1, T2);
 	}
 	SubstancesTabulatedTFData data;
+	QVector<double> kelvins;
+	if(std::abs(range_in_unit.stop - range_in_unit.start) < eps) {
 
+	}
 
 
 
