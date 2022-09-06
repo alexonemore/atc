@@ -92,6 +92,11 @@ const TempRangeData& FindCoef(const double temperature_K,
 #endif
 }
 
+bool InDiapason(const double t, const TempRangeData& coef)
+{
+	return (coef.T_min <= t && t <= coef.T_max);
+};
+
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef)
 {
@@ -244,8 +249,39 @@ double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	double H{0};
+	double H{coefs.cbegin()->H};
 
+	if(temperature_K > Thermodynamics::T0) {
+		for(auto&& coef : coefs) {
+			if(coef.T_max <= Thermodynamics::T0) {
+				continue;
+			} else if(coef.T_min < Thermodynamics::T0) {
+				// coef.T_max > Thermodynamics::T0
+				// 100 -- 400 example
+				if(InDiapason(temperature_K, coef)) {
+
+				}
+
+
+			} else {
+				// coef.T_min > Thermodynamics::T0
+				// coef.T_max > Thermodynamics::T0
+
+
+
+
+			}
+
+
+		}
+
+
+	} else if(temperature_K < Thermodynamics::T0) {
+
+	}
+
+
+#if 0
 	auto coef_first = coefs.cbegin();
 	if(temperature_K < coef_first->T_min) {
 		H += coef_first->H;
@@ -277,6 +313,7 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 			break;
 		}
 	}
+#endif
 	return H;
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
