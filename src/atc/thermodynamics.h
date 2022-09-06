@@ -26,6 +26,7 @@
 namespace Thermodynamics {
 
 constexpr double R = 8.31441; // J/molK
+constexpr double T0 = 298.15; // K
 
 double ToKelvin(const double t, const ParametersNS::TemperatureUnit tu);
 double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu);
@@ -35,6 +36,7 @@ ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
 									const ParametersNS::TemperatureUnit tu);
 const TempRangeData& FindCoef(const double temperature_K,
 							  const SubstanceTempRangeData& coefs);
+
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef);
 double TF_G_kJ(const double temperature_K, const TempRangeData& coef);

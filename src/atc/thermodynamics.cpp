@@ -52,29 +52,44 @@ double FromKelvin(const double t, const ParametersNS::TemperatureUnit tu)
 ParametersNS::Range RangeToKelvin(const ParametersNS::Range range,
 								  const ParametersNS::TemperatureUnit tu)
 {
-	ParametersNS::Range new_range;
-	new_range.start = ToKelvin(range.start, tu);
-	new_range.stop = ToKelvin(range.stop, tu);
-	new_range.step = range.step;
+	ParametersNS::Range new_range{range};
+	new_range.start = ToKelvin(new_range.start, tu);
+	new_range.stop = ToKelvin(new_range.stop, tu);
 	return new_range;
 }
 
 ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
 									const ParametersNS::TemperatureUnit tu)
 {
-	ParametersNS::Range new_range;
-	new_range.start = FromKelvin(range.start, tu);
-	new_range.stop = FromKelvin(range.stop, tu);
-	new_range.step = range.step;
+	ParametersNS::Range new_range{range};
+	new_range.start = FromKelvin(new_range.start, tu);
+	new_range.stop = FromKelvin(new_range.stop, tu);
 	return new_range;
 }
 
 const TempRangeData& FindCoef(const double temperature_K,
 							  const SubstanceTempRangeData& coefs)
 {
-	return *(std::find_if(coefs.cbegin(), coefs.cend(),
+	assert(coefs.size() > 0 && "coefs.size() == 0");
+	if(temperature_K < coefs[0].T_min) {
+		return coefs[0];
+	}
+#if 1
+	for(const auto& it : coefs) {
+		if(temperature_K < it.T_max) return it;
+	}
+	return coefs[coefs.size()-1];
+#else
+	auto f = std::find_if(coefs.cbegin(), coefs.cend(),
 						  [temperature_K](const auto& coef){
-		return coef.T_max <= temperature_K;}));
+		return temperature_K < coef.T_max;
+	});
+	if(f == coefs.cend()) {
+		return *coefs.crbegin(); // coefs[coefs.size()-1];
+	} else {
+		return *f;
+	}
+#endif
 }
 
 namespace Thermo {
@@ -188,7 +203,7 @@ double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 
 namespace HSC {
-double IntgralOfCp(const double temperature_K, const TempRangeData& coef)
+double IntgralOfCp_kJ(const double temperature_K, const TempRangeData& coef)
 {
 	const double T = temperature_K;
 	const double T2 = T*T;
@@ -200,10 +215,10 @@ double IntgralOfCp(const double temperature_K, const TempRangeData& coef)
 	const double D = coef.f4;
 	const double E = coef.f5;
 	const double F = coef.f6;
-	return ((A * T) + (2.0E-3 * B * T2) - (1.0E5 * C / T) +
+	return 1.0E-3 * ((A * T) + (2.0E-3 * B * T2) - (1.0E5 * C / T) +
 			(1.0E-6 * D * T3 / 3) - (5.0E7 * E / T2) + (2.5E-10 * F * T4));
 }
-double IntegralOfCpByT(const double temperature_K, const TempRangeData& coef)
+double IntegralOfCpByT_kJ(const double temperature_K, const TempRangeData& coef)
 {
 	const double T = temperature_K;
 	const double T2 = T*T;
@@ -214,7 +229,7 @@ double IntegralOfCpByT(const double temperature_K, const TempRangeData& coef)
 	const double D = coef.f4;
 	const double E = coef.f5;
 	const double F = coef.f6;
-	return ((A * std::log(T)) + (1.0E-3 * B * T) - (5.0E4 * C / T2) +
+	return 1.0E-3 * ((A * std::log(T)) + (1.0E-3 * B * T) - (5.0E4 * C / T2) +
 			(5.0E-7 * D * T2) + (((-1.0E8 * E / T3) + (1.0E-9 * F * T3)) / 3));
 }
 double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
@@ -234,8 +249,8 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 	auto coef_first = coefs.cbegin();
 	if(temperature_K < coef_first->T_min) {
 		H += coef_first->H;
-		H -= HSC::IntgralOfCp(coef_first->T_min, *coef_first) -
-				HSC::IntgralOfCp(temperature_K, *coef_first);
+		H -= HSC::IntgralOfCp_kJ(coef_first->T_min, *coef_first) -
+				HSC::IntgralOfCp_kJ(temperature_K, *coef_first);
 		return H;
 	}
 
@@ -243,22 +258,22 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 	if(temperature_K > coef_last->T_max) {
 		for(auto&& coef : coefs) {
 			H += coef.H;
-			H += HSC::IntgralOfCp(coef.T_max, coef) -
-					HSC::IntgralOfCp(coef.T_min, coef);
+			H += HSC::IntgralOfCp_kJ(coef.T_max, coef) -
+					HSC::IntgralOfCp_kJ(coef.T_min, coef);
 		}
-		H += HSC::IntgralOfCp(temperature_K, *coef_last) -
-				HSC::IntgralOfCp(coef_last->T_max, *coef_last);
+		H += HSC::IntgralOfCp_kJ(temperature_K, *coef_last) -
+				HSC::IntgralOfCp_kJ(coef_last->T_max, *coef_last);
 		return H;
 	}
 
 	for(auto&& coef : coefs) {
 		H += coef.H;
 		if(temperature_K > coef.T_max) {
-			H += HSC::IntgralOfCp(coef.T_max, coef) -
-					HSC::IntgralOfCp(coef.T_min, coef);
+			H += HSC::IntgralOfCp_kJ(coef.T_max, coef) -
+					HSC::IntgralOfCp_kJ(coef.T_min, coef);
 		} else {
-			H += HSC::IntgralOfCp(temperature_K, coef) -
-					HSC::IntgralOfCp(coef.T_min, coef);
+			H += HSC::IntgralOfCp_kJ(temperature_K, coef) -
+					HSC::IntgralOfCp_kJ(coef.T_min, coef);
 			break;
 		}
 	}
@@ -275,8 +290,8 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	auto coef_first = coefs.cbegin();
 	if(temperature_K < coef_first->T_min) {
 		S += coef_first->S;
-		S -= HSC::IntegralOfCpByT(coef_first->T_min, *coef_first) -
-				HSC::IntegralOfCpByT(temperature_K, *coef_first);
+		S -= HSC::IntegralOfCpByT_kJ(coef_first->T_min, *coef_first) -
+				HSC::IntegralOfCpByT_kJ(temperature_K, *coef_first);
 		return S;
 	}
 
@@ -284,22 +299,22 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	if(temperature_K > coef_last->T_max) {
 		for(auto&& coef : coefs) {
 			S += coef.S;
-			S += HSC::IntegralOfCpByT(coef.T_max, coef) -
-					HSC::IntegralOfCpByT(coef.T_min, coef);
+			S += HSC::IntegralOfCpByT_kJ(coef.T_max, coef) -
+					HSC::IntegralOfCpByT_kJ(coef.T_min, coef);
 		}
-		S += HSC::IntegralOfCpByT(temperature_K, *coef_last) -
-				HSC::IntegralOfCpByT(coef_last->T_max, *coef_last);
+		S += HSC::IntegralOfCpByT_kJ(temperature_K, *coef_last) -
+				HSC::IntegralOfCpByT_kJ(coef_last->T_max, *coef_last);
 		return S;
 	}
 
 	for(auto&& coef : coefs) {
 		S += coef.S;
 		if(temperature_K > coef.T_max) {
-			S += HSC::IntegralOfCpByT(coef.T_max, coef) -
-					HSC::IntegralOfCpByT(coef.T_min, coef);
+			S += HSC::IntegralOfCpByT_kJ(coef.T_max, coef) -
+					HSC::IntegralOfCpByT_kJ(coef.T_min, coef);
 		} else {
-			S += HSC::IntegralOfCpByT(temperature_K, coef) -
-					HSC::IntegralOfCpByT(coef.T_min, coef);
+			S += HSC::IntegralOfCpByT_kJ(temperature_K, coef) -
+					HSC::IntegralOfCpByT_kJ(coef.T_min, coef);
 			break;
 		}
 	}
