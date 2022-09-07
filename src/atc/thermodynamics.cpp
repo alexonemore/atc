@@ -208,7 +208,7 @@ double TF_Tv(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 
 namespace HSC {
-double IntgralOfCp_kJ(const double temperature_K, const TempRangeData& coef)
+double IntegralOfCp_kJ(const double temperature_K, const TempRangeData& coef)
 {
 	const double T = temperature_K;
 	const double T2 = T*T;
@@ -249,7 +249,7 @@ double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	double H{coefs.cbegin()->H};
+	double H{0};
 
 	if(temperature_K > Thermodynamics::T0) {
 		for(auto&& coef : coefs) {
@@ -260,22 +260,25 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 				// 100 -- 400 example
 				if(InDiapason(temperature_K, coef)) {
 
+
+				} else {
+
+
 				}
-
-
 			} else {
 				// coef.T_min > Thermodynamics::T0
 				// coef.T_max > Thermodynamics::T0
-
-
-
-
+				// 350 -- 450 example
+				H += coef.H; // not if first coef
+				if(InDiapason(temperature_K, coef)) {
+					H += HSC::IntegralOfCp_kJ(temperature_K, coef) -
+							HSC::IntegralOfCp_kJ(coef.T_min, coef);
+				} else {
+					H += HSC::IntegralOfCp_kJ(coef.T_max, coef) -
+							HSC::IntegralOfCp_kJ(coef.T_min, coef);
+				}
 			}
-
-
 		}
-
-
 	} else if(temperature_K < Thermodynamics::T0) {
 
 	}
