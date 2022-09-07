@@ -320,39 +320,6 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 	}
 
 
-#if 0
-	auto coef_first = coefs.cbegin();
-	if(temperature_K < coef_first->T_min) {
-		H += coef_first->H;
-		H -= HSC::IntgralOfCp_kJ(coef_first->T_min, *coef_first) -
-				HSC::IntgralOfCp_kJ(temperature_K, *coef_first);
-		return H;
-	}
-
-	auto coef_last = coefs.crbegin();
-	if(temperature_K > coef_last->T_max) {
-		for(auto&& coef : coefs) {
-			H += coef.H;
-			H += HSC::IntgralOfCp_kJ(coef.T_max, coef) -
-					HSC::IntgralOfCp_kJ(coef.T_min, coef);
-		}
-		H += HSC::IntgralOfCp_kJ(temperature_K, *coef_last) -
-				HSC::IntgralOfCp_kJ(coef_last->T_max, *coef_last);
-		return H;
-	}
-
-	for(auto&& coef : coefs) {
-		H += coef.H;
-		if(temperature_K > coef.T_max) {
-			H += HSC::IntgralOfCp_kJ(coef.T_max, coef) -
-					HSC::IntgralOfCp_kJ(coef.T_min, coef);
-		} else {
-			H += HSC::IntgralOfCp_kJ(temperature_K, coef) -
-					HSC::IntgralOfCp_kJ(coef.T_min, coef);
-			break;
-		}
-	}
-#endif
 	return H;
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
