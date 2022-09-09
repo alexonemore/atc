@@ -252,16 +252,27 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 	double H{0};
 
 	// lower than first T min
-	auto first = coefs.cbegin();
+	const auto first = coefs.cbegin();
 	if(temperature_K < first->T_min) {
 		H += first->H;
+		for(auto it = coefs.cbegin(), end = coefs.cend(); it != end; ++it) {
+
+		}
+		for(auto&& coef : coefs) {
+			if(coef.T_min >= Thermodynamics::T0) {
+				break;
+			}
+
+		}
+
+
 		H -= HSC::IntegralOfCp_kJ(first->T_min, *first) -
 				HSC::IntegralOfCp_kJ(temperature_K, *first);
 		return H;
 	}
 
 	// higher than last T max
-	auto last = coefs.crbegin();
+	const auto last = coefs.crbegin();
 	if(temperature_K > last->T_max) {
 		for(auto&& coef : coefs) {
 			H += coef.H;
