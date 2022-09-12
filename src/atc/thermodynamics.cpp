@@ -249,87 +249,46 @@ double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 }
 double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	double H{0};
+	auto first = coefs.cbegin();
+	auto last = std::prev(coefs.cend());
 
-	// lower than first T min
-	const auto first = coefs.cbegin();
-	if(temperature_K < first->T_min) {
-		H += first->H;
-		for(auto it = coefs.cbegin(), end = coefs.cend(); it != end; ++it) {
+	double H{first->H};
 
-		}
-		for(auto&& coef : coefs) {
-			if(coef.T_min >= Thermodynamics::T0) {
-				break;
-			}
-
-		}
+	if(temperature_K < Thermodynamics::T0)
+	{
 
 
-		H -= HSC::IntegralOfCp_kJ(first->T_min, *first) -
-				HSC::IntegralOfCp_kJ(temperature_K, *first);
-		return H;
-	}
-
-	// higher than last T max
-	const auto last = coefs.crbegin();
-	if(temperature_K > last->T_max) {
-		for(auto&& coef : coefs) {
-			H += coef.H;
-			H += HSC::IntegralOfCp_kJ(coef.T_max, coef) -
-					HSC::IntegralOfCp_kJ(coef.T_min, coef);
-		}
-		H += HSC::IntegralOfCp_kJ(temperature_K, *last) -
-				HSC::IntegralOfCp_kJ(last->T_max, *last);
-		return H;
-	}
-
-	// in range
-	if(temperature_K > Thermodynamics::T0) {
-		for(auto&& coef : coefs) {
-			if(coef.T_max <= Thermodynamics::T0) {
+	} else { // temperature_K >= Thermodynamics::T0
+		for(auto coef = coefs.cbegin(), end = coefs.cend(); coef != end; ++coef)
+		{
+			if(coef->T_max <= Thermodynamics::T0) {
 				continue;
-			} else if(coef.T_min < Thermodynamics::T0) {
-				// coef.T_max > Thermodynamics::T0
-				// 100 -- 400 example
-				H += coef.H;
-				if(InDiapason(temperature_K, coef)) {
-					H += HSC::IntegralOfCp_kJ(temperature_K, coef) -
-							HSC::IntegralOfCp_kJ(Thermodynamics::T0, coef);
-				} else {
-					H += HSC::IntegralOfCp_kJ(coef.T_max, coef) -
-							HSC::IntegralOfCp_kJ(Thermodynamics::T0, coef);
-				}
-			} else {
-				// coef.T_min >= Thermodynamics::T0
-				// coef.T_max >  Thermodynamics::T0
-				// 350 -- 450 example
-				H += coef.H;
-				if(InDiapason(temperature_K, coef)) {
-					H += HSC::IntegralOfCp_kJ(temperature_K, coef) -
-							HSC::IntegralOfCp_kJ(coef.T_min, coef);
-				} else {
-					H += HSC::IntegralOfCp_kJ(coef.T_max, coef) -
-							HSC::IntegralOfCp_kJ(coef.T_min, coef);
-				}
 			}
-		}
-	} else if(temperature_K < Thermodynamics::T0) {
-		for(auto&& coef : coefs) {
-			if(coef.T_min >= Thermodynamics::T0) {
+			if(coef->T_min >= temperature_K) {
 				break;
 			}
-			H += coef.H;
-			if(InDiapason(temperature_K, coef)) {
-				H -= HSC::IntegralOfCp_kJ(temperature_K, coef) -
-						HSC::IntegralOfCp_kJ(coef.T_min, coef);
-			} else {
-				H -= HSC::IntegralOfCp_kJ(coef.T_max, coef) -
-						HSC::IntegralOfCp_kJ(coef.T_min, coef);
+			// coef->T_max > Thermodynamics::T0
+			// coef->T_min <= temperature_K
+
+			if(coef != first && coef->T_min > Thermodynamics::T0) {
+				H += coef->H;
+			}
+			auto T_min = std::max(coef->T_min, Thermodynamics::T0);
+			auto T_max = std::min(coef->T_max, temperature_K);
+
+			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
+			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
+			auto dH = H_max - H_min;
+
+			H += dH;
+
+			if(coef == last && temperature_K > coef->T_max) {
+				H += HSC::IntegralOfCp_kJ(temperature_K, *coef) -
+						HSC::IntegralOfCp_kJ(coef->T_max, *coef);
 			}
 		}
-	}
 
+	}
 
 	return H;
 }
