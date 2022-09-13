@@ -35,7 +35,7 @@ Table::Table(QWidget* parent)
 	auto copy_action = new QAction(QIcon("images/copy.svg"),
 								   tr("Copy"), context_menu);
 	auto copy_with_headers_action = new QAction(QIcon("images/copy.svg"),
-												tr("Copy with Headers"), context_menu);
+									tr("Copy with Headers"), context_menu);
 
 	context_menu->addAction(copy_action);
 	context_menu->addAction(copy_with_headers_action);
@@ -47,15 +47,15 @@ Table::Table(QWidget* parent)
 	copy_with_headers_action->setShortcut(QKeySequence(tr("Ctrl+Shift+C")));
 
 	// Set up context menu actions
-	connect(this, &QTableView::customContextMenuRequested, this,
+	connect(this, &QTableView::customContextMenuRequested,
 			[this](const QPoint& pos) {
 		context_menu->popup(viewport()->mapToGlobal(pos));
 	});
 
-	connect(copy_action, &QAction::triggered, this, [this]() {
+	connect(copy_action, &QAction::triggered, [this]() {
 		Copy(false);
 	});
-	connect(copy_with_headers_action, &QAction::triggered, this, [this]() {
+	connect(copy_with_headers_action, &QAction::triggered, [this]() {
 		Copy(true);
 	});
 
