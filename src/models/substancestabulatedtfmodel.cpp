@@ -55,6 +55,7 @@ int SubstancesTabulatedTFModel::columnCount(const QModelIndex& parent) const
 QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 										  int role) const
 {
+	if(!index.isValid()) return QVariant{};
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
@@ -69,7 +70,7 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 	case Models::SubstancesTabulatedTFFields::Cp_J:	return data_.Cp_J.at(row);
 	case Models::SubstancesTabulatedTFFields::c:	return data_.c.at(row);
 	}
-	LOG("ERROR in SubstancesTable::data")
+	LOG("ERROR in SubstancesTabulatedTFModel::data")
 	return QVariant{};
 }
 

@@ -54,6 +54,7 @@ int SubstancesTempRangeModel::columnCount(const QModelIndex& parent) const
 
 QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) const
 {
+	if(!index.isValid()) return QVariant{};
 	auto col = index.column();
 	if(role != Qt::DisplayRole || col >= data_.size()) {
 		return QVariant{};

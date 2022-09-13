@@ -17,31 +17,21 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SUBSTANCESTABLEVIEW_H
-#define SUBSTANCESTABLEVIEW_H
+#ifndef TABLE_H
+#define TABLE_H
 
-#include <QWidget>
-#include "table.h"
+#include <QTableView>
 
-class SubstancesTableView : public QWidget
+class Table : public QTableView
 {
 	Q_OBJECT
-	Q_DISABLE_COPY_MOVE(SubstancesTableView)
+	Q_DISABLE_COPY_MOVE(Table)
 private:
-	Table* substances;
-	Table* ranges;
-	Table* tabulated_tf;
+	QMenu* context_menu;
 public:
-	SubstancesTableView(QWidget* parent = nullptr);
-	void Initialize();
-	void SetSubstancesTableModel(QAbstractItemModel* model);
-	void SetSubstancesTempRangeModel(QAbstractItemModel* model);
-	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
-signals:
-	void SelectSubstance(int id);
-private slots:
-	void SelectionChanged(const QItemSelection &selected,
-						  const QItemSelection &deselected);
+	explicit Table(QWidget* parent = nullptr);
+private:
+	void ContextMenuRequest();
 };
 
-#endif // SUBSTANCESTABLEVIEW_H
+#endif // TABLE_H

@@ -95,6 +95,8 @@ set(PROJECT_SOURCES
 	# views
 	src/views/substancestableview.h
 	src/views/substancestableview.cpp
+	src/views/table.h
+	src/views/table.cpp
 
 	# misc
 	src/misc/utilities.h

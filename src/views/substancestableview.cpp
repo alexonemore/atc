@@ -27,9 +27,9 @@
 SubstancesTableView::SubstancesTableView(QWidget* parent)
 	: QWidget(parent)
 {
-	substances = new QTableView(this);
-	ranges = new QTableView(this);
-	tabulated_tf = new QTableView(this);
+	substances = new Table(this);
+	ranges = new Table(this);
+	tabulated_tf = new Table(this);
 	auto splitter = new QSplitter(this);
 	auto right_splitter = new QSplitter(this);
 	splitter->addWidget(substances);

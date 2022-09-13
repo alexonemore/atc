@@ -54,6 +54,7 @@ int SubstancesTableModel::columnCount(const QModelIndex& parent) const
 
 QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 {
+	if(!index.isValid()) return QVariant{};
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
@@ -65,7 +66,7 @@ QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 	case Models::SubstanceFields::T_min:	return data_at.T_min;
 	case Models::SubstanceFields::T_max:	return data_at.T_max;
 	}
-	LOG("ERROR in SubstancesTable::data")
+	LOG("ERROR in SubstancesTableModel::data")
 	return QVariant{};
 }
 
