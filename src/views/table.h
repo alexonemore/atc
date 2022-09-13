@@ -28,10 +28,14 @@ class Table : public QTableView
 	Q_DISABLE_COPY_MOVE(Table)
 private:
 	QMenu* context_menu;
+
 public:
 	explicit Table(QWidget* parent = nullptr);
 private:
-	void ContextMenuRequest();
+	void Copy(const bool with_headers);
+	void CopyMimeData(const QModelIndexList& from_indices, QMimeData* mime_data,
+					  const bool with_headers);
+
 };
 
 #endif // TABLE_H
