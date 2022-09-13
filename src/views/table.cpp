@@ -72,10 +72,9 @@ void Table::Copy(const bool with_headers)
 void Table::CopyMimeData(const QModelIndexList& from_indices,
 						 QMimeData* mime_data, const bool with_headers)
 {
-	// Simplyfied version of same function from sqlitebrowser
+	// A slightly simplified version of same function from sqlitebrowser
 
 	QModelIndexList indices = from_indices;
-	std::vector<std::vector<QByteArray>> buffer;
 
 	// Remove all indices from hidden columns, because if we don't we might
 	// copy data from hidden columns as well which is very unintuitive;
@@ -112,6 +111,7 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 	// Copy selected data into internal copy-paste buffer
 	int last_row = indices.first().row();
 
+	std::vector<std::vector<QByteArray>> buffer;
 	std::vector<QByteArray> lst;
 	for(int i=0;i<indices.size();i++)
 	{
