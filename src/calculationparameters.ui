@@ -601,6 +601,47 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>workmode</tabstop>
+  <tabstop>target</tabstop>
+  <tabstop>liquid_solution</tabstop>
+  <tabstop>choose_substances</tabstop>
+  <tabstop>database</tabstop>
+  <tabstop>minimization_function</tabstop>
+  <tabstop>extrapolation</tabstop>
+  <tabstop>at_accuracy</tabstop>
+  <tabstop>threads</tabstop>
+  <tabstop>group1_units</tabstop>
+  <tabstop>group2_units</tabstop>
+  <tabstop>temperature_initial</tabstop>
+  <tabstop>temperature_initial_units</tabstop>
+  <tabstop>pressure_initial</tabstop>
+  <tabstop>pressure_initial_units</tabstop>
+  <tabstop>composition1_start</tabstop>
+  <tabstop>composition1_stop</tabstop>
+  <tabstop>composition1_step</tabstop>
+  <tabstop>composition1_units</tabstop>
+  <tabstop>composition2_start</tabstop>
+  <tabstop>composition2_stop</tabstop>
+  <tabstop>composition2_step</tabstop>
+  <tabstop>composition2_units</tabstop>
+  <tabstop>temperature_start</tabstop>
+  <tabstop>temperature_stop</tabstop>
+  <tabstop>temperature_step</tabstop>
+  <tabstop>temperature_units</tabstop>
+  <tabstop>pressure_start</tabstop>
+  <tabstop>pressure_stop</tabstop>
+  <tabstop>pressure_step</tabstop>
+  <tabstop>pressure_units</tabstop>
+  <tabstop>show_gas</tabstop>
+  <tabstop>show_liquid</tabstop>
+  <tabstop>show_solid</tabstop>
+  <tabstop>show_aqueous</tabstop>
+  <tabstop>show_ions</tabstop>
+  <tabstop>clear</tabstop>
+  <tabstop>update</tabstop>
+  <tabstop>calculate</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
