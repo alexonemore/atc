@@ -24,6 +24,7 @@
 #include <QMimeData>
 #include <QDateTime>
 #include <QBuffer>
+#include <QKeyEvent>
 #include <set>
 #include "utilities.h"
 
@@ -71,9 +72,11 @@ void Table::Copy(const bool with_headers)
 void Table::CopyMimeData(const QModelIndexList& from_indices,
 						 QMimeData* mime_data, const bool with_headers)
 {
+	// Simplyfied version of same function from sqlitebrowser
+
 	QModelIndexList indices = from_indices;
 	std::vector<std::vector<QByteArray>> buffer;
-	QString generator_stamp;
+
 	// Remove all indices from hidden columns, because if we don't we might
 	// copy data from hidden columns as well which is very unintuitive;
 	// especially copying the rowid column when selecting all columns of a
@@ -88,28 +91,23 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 	if (indices.isEmpty())
 		return;
 
-	//SqliteTableModel* m = qobject_cast<SqliteTableModel*>(model());
-	auto m = model();
-
-	// Clear internal copy-paste buffer
-	buffer.clear();
-
-	// If a single cell is selected which contains an image, copy it to the clipboard
+	// If a single cell is selected which contains an image,
+	// copy it to the clipboard
 	if (!with_headers && indices.size() == 1) {
 		QImage img;
-		QVariant varData = m->data(indices.first(), Qt::DisplayRole);
+		QVariant varData = model()->data(indices.first(), Qt::DisplayRole);
 
-		if (img.loadFromData(varData.toByteArray()))
-		{
+		if (img.loadFromData(varData.toByteArray())) {
 			// If it's an image, copy the image data to the clipboard
 			mime_data->setImageData(img);
 			return;
 		}
 	}
 
-	// If we got here, a non-image cell was or multiple cells were selected, or copy with headers was requested.
-	// In this case, we copy selected data into internal copy-paste buffer and then
-	// we write a table both in HTML and text formats to the system clipboard.
+	// If we got here, a non-image cell was or multiple cells were selected,
+	// or copy with headers was requested. In this case, we copy selected data
+	// into internal copy-paste buffer and then we write a table both in HTML
+	// and text formats to the system clipboard.
 
 	// Copy selected data into internal copy-paste buffer
 	int last_row = indices.first().row();
@@ -128,62 +126,63 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 	buffer.push_back(lst);
 
 	QString result;
-	QString htmlResult = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">";
-	htmlResult.append("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">");
-	htmlResult.append("<title></title>");
+	QString html_result = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">";
+	html_result.append("<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">");
+	html_result.append("<title></title>");
 
 	// The generator-stamp is later used to know whether the data in the system clipboard is still ours.
 	// In that case we will give precedence to our internal copy buffer.
 	QString now = QDateTime::currentDateTime().toString("YYYY-MM-DDTHH:mm:ss.zzz");
-	generator_stamp = QString("<meta name=\"generator\" content=\"%1\"><meta name=\"date\" content=\"%2\">").arg(QApplication::applicationName().toHtmlEscaped(), now);
-	htmlResult.append(generator_stamp);
+	auto generator_stamp = QString("<meta name=\"generator\" content=\"%1\"><meta name=\"date\" content=\"%2\">")
+			.arg(QApplication::applicationName().toHtmlEscaped(), now);
+	html_result.append(generator_stamp);
 	// TODO: is this really needed by Excel, since we use <pre> for multi-line cells?
-	htmlResult.append("<style type=\"text/css\">br{mso-data-placement:same-cell;}</style></head><body>"
+	html_result.append("<style type=\"text/css\">br{mso-data-placement:same-cell;}</style></head><body>"
 					  "<table border=1 cellspacing=0 cellpadding=2>");
 
 	// Insert the columns in a set, since they could be non-contiguous.
-	std::set<int> colsInIndexes, rowsInIndexes;
+	std::set<int> cols_in_indexes, rows_in_indexes;
 	for(const QModelIndex & idx : qAsConst(indices)) {
-		colsInIndexes.insert(idx.column());
-		rowsInIndexes.insert(idx.row());
+		cols_in_indexes.insert(idx.column());
+		rows_in_indexes.insert(idx.row());
 	}
 
-	int currentRow = indices.first().row();
+	int current_row = indices.first().row();
 
 	const QString fieldSepText = "\t";
-#ifdef Q_OS_WIN
-	const QString rowSepText = "\r\n";
-#else
 	const QString rowSepText = "\n";
-#endif
 
 	// Table headers
 	if (with_headers) {
-		htmlResult.append("<tr><th>");
-		int firstColumn = *colsInIndexes.begin();
+		html_result.append("<tr><th>");
+		int firstColumn = *cols_in_indexes.begin();
 
-		for(int col : colsInIndexes) {
-			QByteArray headerText = model()->headerData(col, Qt::Horizontal, Qt::DisplayRole).toByteArray();
+		for(int col : cols_in_indexes) {
+			QByteArray headerText = model()->headerData(col,
+								Qt::Horizontal, Qt::DisplayRole).toByteArray();
 			if (col != firstColumn) {
 				result.append(fieldSepText);
-				htmlResult.append("</th><th>");
+				html_result.append("</th><th>");
 			}
 			result.append(headerText);
-			htmlResult.append(headerText);
+			html_result.append(headerText);
 		}
 		result.append(rowSepText);
-		htmlResult.append("</th></tr>");
+		html_result.append("</th></tr>");
 	}
 
-	// Iterate over rows x cols checking if the index actually exists when needed, in order
-	// to support non-rectangular selections.
-	for(const int row : rowsInIndexes) {
-		for(const int column : colsInIndexes) {
+	// Iterate over rows x cols checking if the index actually exists
+	// when needed, in order to support non-rectangular selections.
+	for(const int row : rows_in_indexes) {
+		for(const int column : cols_in_indexes) {
 			const QModelIndex index = indices.first().sibling(row, column);
 			QString style;
 			if(indices.contains(index)) {
 				QFont font;
-				font.fromString(index.data(Qt::FontRole).toString());
+				auto font_string = index.data(Qt::FontRole).toString();
+				if(!font_string.isEmpty()) {
+					font.fromString(font_string);
+				}
 				const QString fontStyle(font.italic() ? "italic" : "normal");
 				const QString fontWeigth(font.bold() ? "bold" : "normal");
 				const QString fontDecoration(font.underline() ? " text-decoration: underline;" : "");
@@ -200,18 +199,19 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 							fgColor.name());
 			}
 
-			// Separators. For first cell, only opening table row tags must be added for the HTML and nothing for the text version.
-			if (index.row() == *rowsInIndexes.begin() && index.column() == *colsInIndexes.begin()) {
-				htmlResult.append(QString("<tr><td %1>").arg(style));
-			} else if (index.row() != currentRow) {
+			// Separators. For first cell, only opening table row tags
+			// must be added for the HTML and nothing for the text version.
+			if (index.row() == *rows_in_indexes.begin() && index.column() == *cols_in_indexes.begin()) {
+				html_result.append(QString("<tr><td %1>").arg(style));
+			} else if (index.row() != current_row) {
 				result.append(rowSepText);
-				htmlResult.append(QString("</td></tr><tr><td %1>").arg(style));
+				html_result.append(QString("</td></tr><tr><td %1>").arg(style));
 			} else {
 				result.append(fieldSepText);
-				htmlResult.append(QString("</td><td %1>").arg(style));
+				html_result.append(QString("</td><td %1>").arg(style));
 			}
 
-			currentRow = index.row();
+			current_row = index.row();
 
 			QImage img;
 			QVariant bArrdata = indices.contains(index) ? index.data(Qt::DisplayRole) : QVariant();
@@ -226,24 +226,38 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 				buffer.close();
 
 				QString imageBase64 = ba.toBase64();
-				htmlResult.append("<img src=\"data:image/png;base64,");
-				htmlResult.append(imageBase64);
+				html_result.append("<img src=\"data:image/png;base64,");
+				html_result.append(imageBase64);
 				result.append(QString());
-				htmlResult.append("\" alt=\"Image\">");
+				html_result.append("\" alt=\"Image\">");
 			} else {
 				QByteArray text = bArrdata.toByteArray();
 
 				// Table cell data: text
-				if (text.contains('\n') || text.contains('\t'))
-					htmlResult.append("<pre>" + QString(text).toHtmlEscaped() + "</pre>");
-				else
-					htmlResult.append(QString(text).toHtmlEscaped());
+				if (text.contains('\n') || text.contains('\t')) {
+					html_result.append("<pre>" + QString(text).toHtmlEscaped() + "</pre>");
+				} else {
+					html_result.append(QString(text).toHtmlEscaped());
+				}
 				result.append(text);
 			}
 		}
 	}
 
-	mime_data->setHtml(htmlResult + "</td></tr></table></body></html>");
+	mime_data->setHtml(html_result + "</td></tr></table></body></html>");
 	mime_data->setText(result);
 }
 
+void Table::keyPressEvent(QKeyEvent* event)
+{
+	if(event->matches(QKeySequence::Copy))
+	{
+		Copy(false);
+	} else if(event->modifiers().testFlag(Qt::ControlModifier) &&
+			  event->modifiers().testFlag(Qt::ShiftModifier) &&
+			  (event->key() == Qt::Key_C))
+	{
+		// Call copy with headers when Ctrl-Shift-C is pressed
+		Copy(true);
+	}
+}

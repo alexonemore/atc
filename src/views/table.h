@@ -36,6 +36,10 @@ private:
 	void CopyMimeData(const QModelIndexList& from_indices, QMimeData* mime_data,
 					  const bool with_headers);
 
+
+	// QWidget interface
+protected:
+	void keyPressEvent(QKeyEvent* event) override;
 };
 
 #endif // TABLE_H
