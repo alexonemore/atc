@@ -260,4 +260,5 @@ void Table::keyPressEvent(QKeyEvent* event)
 		// Call copy with headers when Ctrl-Shift-C is pressed
 		Copy(true);
 	}
+	return QTableView::keyPressEvent(event);
 }

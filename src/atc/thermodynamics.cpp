@@ -276,8 +276,6 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 			}
 			auto T_min = std::max(coef->T_min, temperature_K);
 			auto T_max = std::min(coef->T_max, Thermodynamics::T0);
-			QString s{"temperature_k: %1 T_min: %2 T_max: %3"};
-			LOG(s.arg(temperature_K).arg(T_min).arg(T_max))
 			assert(T_max >= T_min);
 
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
@@ -307,6 +305,10 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
 			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
+			if(H_max < H_min) {
+				LOG(temperature_K, T_min, T_max)
+				LOG(temperature_K, H_min, H_max)
+			}
 			assert(H_max >= H_min);
 
 			H += H_max - H_min;
