@@ -220,7 +220,7 @@ double IntegralOfCp_kJ(const double temperature_K, const TempRangeData& coef)
 	const double D = coef.f4;
 	const double E = coef.f5;
 	const double F = coef.f6;
-	return 1.0E-3 * ((A * T) + (2.0E-3 * B * T2) - (1.0E5 * C / T) +
+	return 1.0E-3 * ((A * T) + (5.0E-4 * B * T2) - (1.0E5 * C / T) +
 			(1.0E-6 * D * T3 / 3) - (5.0E7 * E / T2) + (2.5E-10 * F * T4));
 }
 double IntegralOfCpByT_J(const double temperature_K, const TempRangeData& coef)
@@ -276,8 +276,13 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 			auto T_min = std::max(coef->T_min, Thermodynamics::T0);
 			auto T_max = std::min(coef->T_max, temperature_K);
 
+			assert(T_max >= T_min);
+
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
 			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
+
+			assert(H_max >= H_min);
+
 			auto dH = H_max - H_min;
 
 			H += dH;
