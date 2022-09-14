@@ -256,18 +256,39 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 	if(temperature_K < Thermodynamics::T0)
 	{
+		if(temperature_K < first->T_min) {
+			H -= HSC::IntegralOfCp_kJ(first->T_min, *first) -
+					HSC::IntegralOfCp_kJ(temperature_K, *first);
+		}
+		for(auto coef = coefs.cbegin(), end = coefs.cend(); coef != end; ++coef)
+		{
+			if(coef->T_min >= Thermodynamics::T0) {
+				break;
+			}
+			// coef->T_min < Thermodynamic::T0
+			if(coef != first) {
+				H -= coef->H;
+			}
+			auto T_min = std::max(coef->T_min, temperature_K);
+			auto T_max = std::min(coef->T_max, Thermodynamics::T0);
+			assert(T_max >= T_min);
 
+			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
+			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
+			assert(H_max >= H_min);
 
+			H -= H_max - H_min;
+		}
 	} else { // temperature_K >= Thermodynamics::T0
 		for(auto coef = coefs.cbegin(), end = coefs.cend(); coef != end; ++coef)
 		{
 			if(coef->T_max <= Thermodynamics::T0) {
 				continue;
 			}
+			// coef->T_max > Thermodynamics::T0
 			if(coef->T_min >= temperature_K) {
 				break;
-			}
-			// coef->T_max > Thermodynamics::T0
+			}			
 			// coef->T_min <= temperature_K
 
 			if(coef != first && coef->T_min > Thermodynamics::T0) {
@@ -275,26 +296,20 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 			}
 			auto T_min = std::max(coef->T_min, Thermodynamics::T0);
 			auto T_max = std::min(coef->T_max, temperature_K);
-
 			assert(T_max >= T_min);
 
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
 			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
-
 			assert(H_max >= H_min);
 
-			auto dH = H_max - H_min;
-
-			H += dH;
+			H += H_max - H_min;
 
 			if(coef == last && temperature_K > coef->T_max) {
 				H += HSC::IntegralOfCp_kJ(temperature_K, *coef) -
 						HSC::IntegralOfCp_kJ(coef->T_max, *coef);
 			}
 		}
-
 	}
-
 	return H;
 }
 double TF_H_J(const double temperature_K, const SubstanceTempRangeData& coefs)
