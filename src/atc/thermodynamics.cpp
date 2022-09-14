@@ -280,8 +280,6 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
 			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
-			assert(H_max >= H_min);
-
 			H -= H_max - H_min;
 		}
 	} else { // temperature_K >= Thermodynamics::T0
@@ -305,12 +303,6 @@ double TF_H_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 			auto H_min = HSC::IntegralOfCp_kJ(T_min, *coef);
 			auto H_max = HSC::IntegralOfCp_kJ(T_max, *coef);
-			if(H_max < H_min) {
-				LOG(temperature_K, T_min, T_max)
-				LOG(temperature_K, H_min, H_max)
-			}
-			assert(H_max >= H_min);
-
 			H += H_max - H_min;
 
 			if(coef == last && temperature_K > coef->T_max) {
@@ -357,8 +349,6 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 			auto S_min = HSC::IntegralOfCpByT_J(T_min, *coef);
 			auto S_max = HSC::IntegralOfCpByT_J(T_max, *coef);
-			assert(S_max >= S_min);
-
 			S -= S_max - S_min;
 		}
 	} else { // temperature_K >= Thermodynamics::T0
@@ -382,8 +372,6 @@ double TF_S_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 
 			auto S_min = HSC::IntegralOfCpByT_J(T_min, *coef);
 			auto S_max = HSC::IntegralOfCpByT_J(T_max, *coef);
-			assert(S_max >= S_min);
-
 			S += S_max - S_min;
 
 			if(coef == last && temperature_K > coef->T_max) {
