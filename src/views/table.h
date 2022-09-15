@@ -31,12 +31,11 @@ private:
 
 public:
 	explicit Table(QWidget* parent = nullptr);
+	~Table() override;
 private:
 	void Copy(const bool with_headers);
 	void CopyMimeData(const QModelIndexList& from_indices, QMimeData* mime_data,
 					  const bool with_headers);
-
-
 	// QWidget interface
 protected:
 	void keyPressEvent(QKeyEvent* event) override;

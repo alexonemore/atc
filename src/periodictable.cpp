@@ -135,7 +135,7 @@ PeriodicTable::PeriodicTable(QWidget *parent) :
 	}
 	for(auto&& button : buttons) {
 		connect(button, &QPushButton::clicked,
-				this, &PeriodicTable::ClickButtonHandler);
+				this, &PeriodicTable::SignalClickedElementButton);
 	}
 }
 
@@ -179,9 +179,4 @@ void PeriodicTable::Clear()
 	for(auto&& button : buttons) {
 		button->setChecked(false);
 	}
-}
-
-void PeriodicTable::ClickButtonHandler()
-{
-	emit SignalClickedElementButton();
 }

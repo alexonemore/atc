@@ -50,7 +50,7 @@ private:
 
 public:
 	MainWindow(QWidget *parent = nullptr);
-	virtual ~MainWindow() override;
+	~MainWindow() override;
 
 public:
 	void Initialize();

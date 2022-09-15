@@ -44,8 +44,6 @@ public:
 public slots:
 	void SetEnabledElements(const QStringList& elements);
 	void Clear();
-private slots:
-	void ClickButtonHandler();
 signals:
 	void SignalClickedElementButton();
 };

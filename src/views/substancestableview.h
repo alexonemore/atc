@@ -33,6 +33,7 @@ private:
 	Table* tabulated_tf;
 public:
 	SubstancesTableView(QWidget* parent = nullptr);
+	~SubstancesTableView() override;
 	void Initialize();
 	void SetSubstancesTableModel(QAbstractItemModel* model);
 	void SetSubstancesTempRangeModel(QAbstractItemModel* model);

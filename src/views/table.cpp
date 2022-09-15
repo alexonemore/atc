@@ -61,6 +61,11 @@ Table::Table(QWidget* parent)
 
 }
 
+Table::~Table()
+{
+
+}
+
 void Table::Copy(const bool with_headers)
 {
 	LOG(with_headers)

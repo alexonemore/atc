@@ -48,6 +48,11 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	tabulated_tf->verticalHeader()->setVisible(false);
 }
 
+SubstancesTableView::~SubstancesTableView()
+{
+
+}
+
 void SubstancesTableView::Initialize()
 {
 	connect(substances->selectionModel(),
