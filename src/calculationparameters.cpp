@@ -51,6 +51,9 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	connect(ui->clear, &QPushButton::clicked,
 			this, &CalculationParameters::Clear);
 
+	connect(ui->periodic_table, &PeriodicTable::SignalClickedElementButton,
+			this, &CalculationParameters::Update);
+
 	SetupInitialParameters();
 }
 

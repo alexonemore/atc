@@ -498,8 +498,8 @@ void RangeTabulator(const ParametersNS::Range range, QVector<double>& x)
 		}
 		x.push_back(stop);
 		LOG("size = ", size)
-				LOG("x.size = ", x.size())
-				assert(x.size() == size && "Reserve fail");
+		LOG("x.size = ", x.size())
+		assert(x.size() == size && "Reserve fail");
 	}
 }
 

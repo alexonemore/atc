@@ -33,23 +33,21 @@ class PeriodicTable : public QWidget
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PeriodicTable)
-
-public:
-	explicit PeriodicTable(QWidget *parent = nullptr);
-	~PeriodicTable() override;
-
 private:
 	Ui::PeriodicTable *ui;
 	QVector<QPushButton*> buttons;
 	std::unordered_map<QString, QPushButton*> buttons_map;
-
 public:
+	explicit PeriodicTable(QWidget *parent = nullptr);
+	~PeriodicTable() override;
 	QStringList GetCheckedElements() const;
-
 public slots:
 	void SetEnabledElements(const QStringList& elements);
 	void Clear();
-
+private slots:
+	void ClickButtonHandler();
+signals:
+	void SignalClickedElementButton();
 };
 
 #endif // PERIODICTABLE_H

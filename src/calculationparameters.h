@@ -31,25 +31,18 @@ class CalculationParameters : public QWidget
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(CalculationParameters)
-
+private:
+	Ui::CalculationParameters *ui;
 public:
 	explicit CalculationParameters(QWidget *parent = nullptr);
 	~CalculationParameters() override;
-
-private:
-	Ui::CalculationParameters *ui;
-
-public:
 	void SetEnabledElements(const QStringList& elements);
-
 private:
 	ParametersNS::Parameters GetCurrentParameters() const;
-
 private slots:
 	void SetupInitialParameters();
 	void Update();
 	void Clear();
-
 signals:
 	void UpdateParameters(const ParametersNS::Parameters parameters);
 	void StartCalculate();
