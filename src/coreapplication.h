@@ -39,6 +39,7 @@ class CoreApplication : public QObject
 
 private:
 	ParametersNS::Parameters parameters_{};
+	int selected_substance{0};
 	QVector<Database*> databases;
 	SubstancesTableModel* model_substances;
 	SubstancesTempRangeModel* model_substances_temp_range;
@@ -81,7 +82,7 @@ public slots:
 private:
 	QVector<HeavyContainer> PrepareHeavyCalculations();
 	Database* CurrentDatabase();
-
+	void UpdateRangeTabulatedModels();
 };
 
 #endif // COREAPPLICATION_H

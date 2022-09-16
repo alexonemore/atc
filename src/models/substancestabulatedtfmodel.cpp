@@ -34,6 +34,13 @@ void SubstancesTabulatedTFModel::SetNewData(SubstancesTabulatedTFData&& new_data
 	endResetModel();
 }
 
+void SubstancesTabulatedTFModel::Clear()
+{
+	beginResetModel();
+	data_ = SubstancesTabulatedTFData{};
+	endResetModel();
+}
+
 int SubstancesTabulatedTFModel::rowCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {

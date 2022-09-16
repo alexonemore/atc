@@ -34,6 +34,13 @@ void SubstancesTableModel::SetNewData(SubstancesData&& new_data)
 	endResetModel();
 }
 
+void SubstancesTableModel::Clear()
+{
+	beginResetModel();
+	data_.clear();
+	endResetModel();
+}
+
 int SubstancesTableModel::rowCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {

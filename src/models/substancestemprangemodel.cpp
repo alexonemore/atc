@@ -34,6 +34,13 @@ void SubstancesTempRangeModel::SetNewData(SubstanceTempRangeData&& new_data)
 	endResetModel();
 }
 
+void SubstancesTempRangeModel::Clear()
+{
+	beginResetModel();
+	data_.clear();
+	endResetModel();
+}
+
 int SubstancesTempRangeModel::rowCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {

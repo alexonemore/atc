@@ -34,6 +34,7 @@ private:
 public:
 	explicit SubstancesTableModel(QObject *parent = nullptr);
 	void SetNewData(SubstancesData&& new_data);
+	void Clear();
 
 	// QAbstractItemModel interface
 public:

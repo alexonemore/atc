@@ -40,6 +40,7 @@ public:
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 signals:
 	void SelectSubstance(int id);
+	void ClearSelection();
 private slots:
 	void SelectionChanged(const QItemSelection &selected,
 						  const QItemSelection &deselected);

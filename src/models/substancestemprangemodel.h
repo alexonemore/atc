@@ -34,6 +34,7 @@ private:
 public:
 	explicit SubstancesTempRangeModel(QObject *parent = nullptr);
 	void SetNewData(SubstanceTempRangeData&& new_data);
+	void Clear();
 
 	// QAbstractItemModel interface
 public:

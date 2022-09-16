@@ -72,6 +72,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotSetAvailableElements);
 	connect(gui, &MainWindow::SignalSubstancesTableSelection,
 			this, &CoreApplication::SlotSubstancesTableSelectionHandler);
+
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
 			this, &CoreApplication::SlotRequestHandler);
@@ -224,28 +225,36 @@ Database* CoreApplication::CurrentDatabase()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
+	if(parameters.database != parameters_.database) {
+		selected_substance = 0;
+		model_substances_temp_range->Clear();
+		model_substances_tabulated_tf->Clear();
+	}
 	parameters_ = std::move(parameters);
 	auto db = CurrentDatabase();
 	auto&& data = db->GetSubstancesData(parameters_);
 	model_substances->SetNewData(std::move(data));
+	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 }
 
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
-	auto db = CurrentDatabase();
-	auto data_temp_range = db->GetSubstancesTempRangeData(id);
+	selected_substance = id;
+	UpdateRangeTabulatedModels();
+}
 
+void CoreApplication::UpdateRangeTabulatedModels()
+{
+	if(selected_substance <= 0) return;
+	auto db = CurrentDatabase();
+	auto data_temp_range = db->GetSubstancesTempRangeData(selected_substance);
 	auto tabdata = Thermodynamics::Tabulate(parameters_.temperature_range,
 											parameters_.temperature_range_unit,
 											parameters_.extrapolation,
 											parameters_.database,
 											data_temp_range);
-
 	model_substances_tabulated_tf->SetNewData(std::move(tabdata));
-
 	model_substances_temp_range->SetNewData(std::move(data_temp_range));
-
-
 }
 
