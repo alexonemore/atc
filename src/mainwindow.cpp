@@ -327,10 +327,6 @@ void MainWindow::UpdateButtonHandler(const ParametersNS::Parameters parameters)
 	// TODO update mainwindow for new parameters
 	// I don't know what to update in the mainwindow yet.
 
-	// get selected substance
-
-
-
 	emit SignalUpdate(parameters);
 }
 

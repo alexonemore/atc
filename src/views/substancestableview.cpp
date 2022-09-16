@@ -82,7 +82,7 @@ void SubstancesTableView::SelectionChanged(const QItemSelection& selected,
 	Q_UNUSED(deselected)
 	if(!selected.isEmpty()) {
 		auto&& index = selected.first().topLeft();
-		auto id_col = static_cast<int>(Models::SubstanceFields::ID);
+		constexpr auto id_col = static_cast<int>(Models::SubstanceFields::ID);
 		auto id = index.sibling(index.row(), id_col).data().toInt();
 		LOG("id:", id)
 		emit SelectSubstance(id);
