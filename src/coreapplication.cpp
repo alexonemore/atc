@@ -52,7 +52,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	table_1 = new QStringListModel(this);
 
 
-
 	// set model
 	gui->SetSubstancesTableModel(model_substances);
 	gui->SetSubstancesTempRangeModel(model_substances_temp_range);
@@ -225,10 +224,9 @@ Database* CoreApplication::CurrentDatabase()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
-	if(parameters.database != parameters_.database) {
-		selected_substance = 0;
-		model_substances_temp_range->Clear();
-		model_substances_tabulated_tf->Clear();
+	if(parameters.database != parameters_.database ||
+			parameters.checked_elements.isEmpty()) {
+		is_selected = false;
 	}
 	parameters_ = std::move(parameters);
 	auto db = CurrentDatabase();
@@ -240,21 +238,29 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
-	selected_substance = id;
+	selected_substance_id = id;
+	is_selected = true;
 	UpdateRangeTabulatedModels();
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()
 {
-	if(selected_substance <= 0) return;
-	auto db = CurrentDatabase();
-	auto data_temp_range = db->GetSubstancesTempRangeData(selected_substance);
-	auto tabdata = Thermodynamics::Tabulate(parameters_.temperature_range,
-											parameters_.temperature_range_unit,
-											parameters_.extrapolation,
-											parameters_.database,
-											data_temp_range);
-	model_substances_tabulated_tf->SetNewData(std::move(tabdata));
-	model_substances_temp_range->SetNewData(std::move(data_temp_range));
+	if(is_selected) {
+		auto db = CurrentDatabase();
+		auto data_temp_range = db->GetSubstancesTempRangeData(
+					selected_substance_id);
+		auto tabdata = Thermodynamics::Tabulate(
+					parameters_.temperature_range,
+					parameters_.temperature_range_unit,
+					parameters_.extrapolation,
+					parameters_.database,
+					data_temp_range);
+		model_substances_tabulated_tf->SetNewData(std::move(tabdata));
+		model_substances_temp_range->SetNewData(std::move(data_temp_range));
+
+	} else {
+		model_substances_temp_range->Clear();
+		model_substances_tabulated_tf->Clear();
+	}
 }
 

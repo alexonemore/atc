@@ -35,7 +35,6 @@ public:
 	explicit SubstancesTabulatedTFModel(QObject *parent = nullptr);
 	void SetNewData(SubstancesTabulatedTFData&& new_data);
 	void Clear();
-
 	// QAbstractItemModel interface
 public:
 	int rowCount(const QModelIndex& parent) const override;

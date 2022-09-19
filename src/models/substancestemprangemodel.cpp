@@ -38,6 +38,7 @@ void SubstancesTempRangeModel::Clear()
 {
 	beginResetModel();
 	data_.clear();
+	col_count = 0;
 	endResetModel();
 }
 

@@ -39,11 +39,15 @@ class CoreApplication : public QObject
 
 private:
 	ParametersNS::Parameters parameters_{};
-	int selected_substance{0};
 	QVector<Database*> databases;
 	SubstancesTableModel* model_substances;
 	SubstancesTempRangeModel* model_substances_temp_range;
 	SubstancesTabulatedTFModel* model_substances_tabulated_tf;
+
+	// selected substance in TempRange and TabulatedTF
+	int selected_substance_id;
+	bool is_selected{false};
+
 
 	// demo
 	QAbstractItemModel* table_1;

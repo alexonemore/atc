@@ -38,6 +38,7 @@ void SubstancesTabulatedTFModel::Clear()
 {
 	beginResetModel();
 	data_ = SubstancesTabulatedTFData{};
+	row_count = 0;
 	endResetModel();
 }
 
