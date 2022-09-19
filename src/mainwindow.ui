@@ -303,7 +303,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
@@ -331,6 +331,23 @@
            <attribute name="title">
             <string>Thermodynamic functions</string>
            </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="PlotTFView" name="widget" native="true"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -381,6 +398,12 @@
    <class>SubstancesTableView</class>
    <extends>QWidget</extends>
    <header>substancestableview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PlotTFView</class>
+   <extends>QWidget</extends>
+   <header>plottfview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -44,9 +44,9 @@ const QStringList composition_units{
 	QT_TR_NOOP("gram")
 };
 const QStringList temperature_units{
-	QT_TR_NOOP("K"),
-	QT_TR_NOOP("C"),
-	QT_TR_NOOP("F")
+	QStringLiteral("K"),
+	QStringLiteral("C"),
+	QStringLiteral("F")
 };
 const QStringList pressure_units{
 	QT_TR_NOOP("MPa"),
@@ -54,12 +54,12 @@ const QStringList pressure_units{
 	QT_TR_NOOP("bar")
 };
 const QStringList databases{
-	QT_TR_NOOP("Thermo"),
-	QT_TR_NOOP("HSC")
+	QStringLiteral("Thermo"),
+	QStringLiteral("HSC")
 };
 const QStringList database_filenames{
-	"databases/thermo_database.db",
-	"databases/hsc_database.db"
+	QStringLiteral("databases/thermo_database.db"),
+	QStringLiteral("databases/hsc_database.db")
 };
 const QStringList choose_substances{
 	QT_TR_NOOP("As checked"),

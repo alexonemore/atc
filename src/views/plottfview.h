@@ -17,15 +17,28 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "plottfmodel.h"
+#ifndef PLOTTFVIEW_H
+#define PLOTTFVIEW_H
 
-PlotTFModel::PlotTFModel(QObject *parent)
-	: QAbstractTableModel(parent)
+#include <QWidget>
+#include <QTableView>
+#include "plot2dgraph.h"
+
+class PlotTFView : public QWidget
 {
+	Q_OBJECT
+	Q_DISABLE_COPY_MOVE(PlotTFView)
+private:
+	QTableView* table;
+	Plot2DGraph* plot;
+public:
+	explicit PlotTFView(QWidget *parent = nullptr);
+	~PlotTFView() override;
+public slots:
+	void SlotSetXAxisUnit(const QString& temperature_unit);
 
-}
+signals:
 
-PlotTFModel::~PlotTFModel()
-{
+};
 
-}
+#endif // PLOTTFVIEW_H

@@ -99,6 +99,8 @@ set(PROJECT_SOURCES
 	src/views/substancestableview.cpp
 	src/views/table.h
 	src/views/table.cpp
+	src/views/plottfview.h
+	src/views/plottfview.cpp
 
 	# misc
 	src/misc/utilities.h
