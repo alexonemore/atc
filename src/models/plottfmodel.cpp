@@ -18,6 +18,7 @@
  */
 
 #include "plottfmodel.h"
+#include "utilities.h"
 
 PlotTFModel::PlotTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
@@ -65,11 +66,30 @@ int PlotTFModel::columnCount(const QModelIndex& parent) const
 
 QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 {
-	return QVariant();
+	if(!index.isValid()) return QVariant{};
+	if(role != Qt::DisplayRole) {
+		return QVariant{};
+	}
+	auto&& data_at = data_.at(index.row());
+	switch(static_cast<Models::SubstanceFields>(index.column())) {
+	case Models::SubstanceFields::ID:		return data_at.id;
+	case Models::SubstanceFields::Formula:	return data_at.formula;
+	default: break;
+	}
+	LOG("ERROR in PlotTFModel::data")
+	return QVariant{};
 }
 
 QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
 								 int role) const
 {
-	return QVariant();
+	if(role == Qt::DisplayRole) {
+		if(orientation == Qt::Horizontal) {
+			return Models::substances_field_names.at(section);
+		} else {
+			return section;
+		}
+	} else {
+		return QVariant{};
+	}
 }
