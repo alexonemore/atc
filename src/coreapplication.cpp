@@ -226,8 +226,7 @@ Database* CoreApplication::CurrentDatabase()
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
-	if(parameters.database != parameters_.database ||
-			parameters.checked_elements.isEmpty()) {
+	if(parameters.database != parameters_.database) {
 		is_selected = false;
 	}
 	parameters_ = std::move(parameters);
