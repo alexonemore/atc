@@ -21,6 +21,7 @@
 #define SUBSTANCESTABLEVIEW_H
 
 #include <QWidget>
+#include <QLabel>
 #include "table.h"
 
 class SubstancesTableView : public QWidget
@@ -31,6 +32,7 @@ private:
 	Table* substances;
 	Table* ranges;
 	Table* tabulated_tf;
+	QLabel* label;
 public:
 	SubstancesTableView(QWidget* parent = nullptr);
 	~SubstancesTableView() override;
@@ -38,6 +40,7 @@ public:
 	void SetSubstancesTableModel(QAbstractItemModel* model);
 	void SetSubstancesTempRangeModel(QAbstractItemModel* model);
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
+	void SetSelectedSubstanceLabel(const QString& name);
 signals:
 	void SelectSubstance(int id);
 	void ClearSelection();

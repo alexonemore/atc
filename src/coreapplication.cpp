@@ -71,6 +71,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotSetAvailableElements);
 	connect(gui, &MainWindow::SignalSubstancesTableSelection,
 			this, &CoreApplication::SlotSubstancesTableSelectionHandler);
+	connect(this, &CoreApplication::SignalSetSelectedSubstanceLabel,
+			gui, &MainWindow::SlotSetSelectedSubstanceLabel);
 
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
@@ -257,10 +259,12 @@ void CoreApplication::UpdateRangeTabulatedModels()
 					data_temp_range);
 		model_substances_tabulated_tf->SetNewData(std::move(tabdata));
 		model_substances_temp_range->SetNewData(std::move(data_temp_range));
-
+		auto name = db->GetSubstanceName(selected_substance_id);
+		emit SignalSetSelectedSubstanceLabel(name);
 	} else {
 		model_substances_temp_range->Clear();
 		model_substances_tabulated_tf->Clear();
+		emit SignalSetSelectedSubstanceLabel(tr("none"));
 	}
 }
 

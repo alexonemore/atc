@@ -256,6 +256,11 @@ void MainWindow::SlotSetAvailableElements(const QStringList& elements)
 	ui->calculation_parameters->SetEnabledElements(elements);
 }
 
+void MainWindow::SlotSetSelectedSubstanceLabel(const QString& name)
+{
+	ui->view_substances->SetSelectedSubstanceLabel(name);
+}
+
 void MainWindow::SlotLoadDatabase()
 {
 	LOG()

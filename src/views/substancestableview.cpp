@@ -30,18 +30,30 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	substances = new Table(this);
 	ranges = new Table(this);
 	tabulated_tf = new Table(this);
+	label = new QLabel(QStringLiteral("Nothing selected"), this);
 	auto splitter = new QSplitter(this);
 	auto right_splitter = new QSplitter(this);
+	auto layout = new QVBoxLayout(this);
+	auto right_layout = new QVBoxLayout(this);
+	auto right_widget = new QWidget(this);
+
+	setLayout(layout);
+	layout->addWidget(splitter);
+
 	splitter->addWidget(substances);
-	splitter->addWidget(right_splitter);
+	splitter->addWidget(right_widget);
+
+	right_widget->setLayout(right_layout);
+	right_layout->addWidget(label);
+	right_layout->addWidget(right_splitter);
+
 	right_splitter->addWidget(ranges);
 	right_splitter->addWidget(tabulated_tf);
+
 	splitter->setChildrenCollapsible(false);
 	right_splitter->setChildrenCollapsible(false);
 	right_splitter->setOrientation(Qt::Vertical);
-	auto layout = new QVBoxLayout(this);
-	setLayout(layout);
-	layout->addWidget(splitter);
+
 	substances->setSelectionMode(QAbstractItemView::SingleSelection);
 	substances->setSelectionBehavior(QAbstractItemView::SelectRows);
 	substances->verticalHeader()->setVisible(false);
@@ -74,6 +86,11 @@ void SubstancesTableView::SetSubstancesTempRangeModel(QAbstractItemModel* model)
 void SubstancesTableView::SetSubstancesTabulatedModel(QAbstractItemModel* model)
 {
 	tabulated_tf->setModel(model);
+}
+
+void SubstancesTableView::SetSelectedSubstanceLabel(const QString& name)
+{
+	label->setText(tr("Selected substance: %1").arg(name));
 }
 
 void SubstancesTableView::SelectionChanged(const QItemSelection& selected,

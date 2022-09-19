@@ -139,6 +139,24 @@ const QString thermo_substances_temprange_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE TempRange.species_id = %1;");
 
+const QString hsc_substances_name_template = QStringLiteral(
+"SELECT "
+"Species.Formula || ' ' || "
+"IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
+"IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
+"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '') "
+"AS 'Name' "
+"FROM Species "
+"WHERE Species.species_id = %1;");
+
+const QString thermo_substances_name_template = QStringLiteral(
+"SELECT "
+"Species.Formula || '(' || State.Symbol || ') ' || Species.Name AS 'Name' "
+"FROM Species "
+"JOIN State ON State.state_id = Species.state_id "
+"WHERE Species.species_id = %1;");
+
 QSqlQuery Query(const QString& query, const QString& name)
 {
 	LOG()
@@ -218,6 +236,14 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 								  ToPhase(q.value(11).toString())}); // phase
 	}
 	return data;
+}
+
+QString Database::GetSubstanceName(const int id)
+{
+	LOG(id)
+	auto q = SQL::Query(GetSubstancesNameString().arg(id), name);
+	q.first();
+	return q.value(0).toString();
 }
 
 QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)

@@ -58,6 +58,7 @@ public:
 
 signals:
 	void SignalSetAvailableElements(const QStringList elements);
+	void SignalSetSelectedSubstanceLabel(const QString& name);
 	//demo
 	void SignalShowResponse(const QString&);
 	void SignalShowTime(const QString&);

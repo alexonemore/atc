@@ -65,6 +65,8 @@ extern const QString hsc_substances_template;
 extern const QString thermo_substances_template;
 extern const QString hsc_substances_temprange_template;
 extern const QString thermo_substances_temprange_template;
+extern const QString hsc_substances_name_template;
+extern const QString thermo_substances_name_template;
 } // namespace SQL
 
 /****************************************************************************
@@ -112,9 +114,11 @@ public:
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
+	virtual QString GetSubstanceName(const int id);
 protected:
 	virtual const QString& GetSubstancesDataString() const = 0;
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
+	virtual const QString& GetSubstancesNameString() const = 0;
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 	Models::Phase ToPhase(const QString& phase);
 };
@@ -136,6 +140,9 @@ protected:
 	const QString& GetSubstancesTempRangeDataString() const override {
 		return SQL::thermo_substances_temprange_template;
 	}
+	const QString& GetSubstancesNameString() const override {
+		return SQL::thermo_substances_name_template;
+	}
 };
 
 /****************************************************************************
@@ -154,6 +161,9 @@ protected:
 	}
 	const QString& GetSubstancesTempRangeDataString() const override {
 		return SQL::hsc_substances_temprange_template;
+	}
+	const QString& GetSubstancesNameString() const override {
+		return SQL::hsc_substances_name_template;
 	}
 };
 
