@@ -33,6 +33,7 @@ private:
 	int col_count{0};
 public:
 	explicit SubstancesTempRangeModel(QObject *parent = nullptr);
+	~SubstancesTempRangeModel() override;
 	void SetNewData(SubstanceTempRangeData&& new_data);
 	void Clear();
 

@@ -17,33 +17,19 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SUBSTANCESTABLEMODEL_H
-#define SUBSTANCESTABLEMODEL_H
+#ifndef PLOTTFMODEL_H
+#define PLOTTFMODEL_H
 
 #include <QAbstractTableModel>
-#include "database.h"
 
-class SubstancesTableModel : public QAbstractTableModel
+class PlotTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	Q_DISABLE_COPY_MOVE(SubstancesTableModel)
-private:
-	SubstancesData data_;
-	int row_count{0};
-	const int col_count{Models::substances_field_names.size()};
+	Q_DISABLE_COPY_MOVE(PlotTFModel)
 public:
-	explicit SubstancesTableModel(QObject *parent = nullptr);
-	~SubstancesTableModel() override;
-	void SetNewData(SubstancesData&& new_data);
-	void Clear();
+	explicit PlotTFModel(QObject *parent = nullptr);
+	~PlotTFModel() override;
 
-	// QAbstractItemModel interface
-public:
-	int rowCount(const QModelIndex& parent) const override;
-	int columnCount(const QModelIndex& parent) const override;
-	QVariant data(const QModelIndex& index, int role) const override;
-	QVariant headerData(int section, Qt::Orientation orientation,
-						int role) const override;
 };
 
-#endif // SUBSTANCESTABLEMODEL_H
+#endif // PLOTTFMODEL_H

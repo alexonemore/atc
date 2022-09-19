@@ -91,6 +91,8 @@ set(PROJECT_SOURCES
 	src/models/substancestemprangemodel.cpp
 	src/models/substancestabulatedtfmodel.h
 	src/models/substancestabulatedtfmodel.cpp
+	src/models/plottfmodel.h
+	src/models/plottfmodel.cpp
 
 	# views
 	src/views/substancestableview.h

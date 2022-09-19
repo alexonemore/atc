@@ -22,7 +22,7 @@
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Demo</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
@@ -273,7 +273,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>ATC</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
@@ -307,7 +307,7 @@
           </property>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
-            <string>Tab 1</string>
+            <string>Substances</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_11">
             <property name="leftMargin">
@@ -329,7 +329,7 @@
           </widget>
           <widget class="QWidget" name="tab_4">
            <attribute name="title">
-            <string>Tab 2</string>
+            <string>Thermodynamic functions</string>
            </attribute>
           </widget>
          </widget>

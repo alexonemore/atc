@@ -33,8 +33,10 @@ private:
 	const int col_count{Models::substance_tabulated_tf_field_names.size()};
 public:
 	explicit SubstancesTabulatedTFModel(QObject *parent = nullptr);
+	~SubstancesTabulatedTFModel() override;
 	void SetNewData(SubstancesTabulatedTFData&& new_data);
 	void Clear();
+
 	// QAbstractItemModel interface
 public:
 	int rowCount(const QModelIndex& parent) const override;

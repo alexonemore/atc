@@ -26,6 +26,11 @@ SubstancesTempRangeModel::SubstancesTempRangeModel(QObject *parent)
 
 }
 
+SubstancesTempRangeModel::~SubstancesTempRangeModel()
+{
+
+}
+
 void SubstancesTempRangeModel::SetNewData(SubstanceTempRangeData&& new_data)
 {
 	beginResetModel();

@@ -133,6 +133,8 @@ public:
 	DatabaseThermo(const QString& filename)
 		: Database(filename)
 	{}
+	~DatabaseThermo() override
+	{}
 protected:
 	const QString& GetSubstancesDataString() const override {
 		return SQL::thermo_substances_template;
@@ -154,6 +156,8 @@ class DatabaseHSC final : public Database
 public:
 	DatabaseHSC(const QString& filename)
 		: Database(filename)
+	{}
+	~DatabaseHSC() override
 	{}
 protected:
 	const QString& GetSubstancesDataString() const override {

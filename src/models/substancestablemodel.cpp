@@ -26,6 +26,11 @@ SubstancesTableModel::SubstancesTableModel(QObject *parent)
 
 }
 
+SubstancesTableModel::~SubstancesTableModel()
+{
+
+}
+
 void SubstancesTableModel::SetNewData(SubstancesData&& new_data)
 {
 	beginResetModel();

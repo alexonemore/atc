@@ -26,6 +26,11 @@ SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 
 }
 
+SubstancesTabulatedTFModel::~SubstancesTabulatedTFModel()
+{
+
+}
+
 void SubstancesTabulatedTFModel::SetNewData(SubstancesTabulatedTFData&& new_data)
 {
 	beginResetModel();
