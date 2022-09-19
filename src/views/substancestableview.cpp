@@ -58,6 +58,8 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	substances->setSelectionBehavior(QAbstractItemView::SelectRows);
 	substances->verticalHeader()->setVisible(false);
 	tabulated_tf->verticalHeader()->setVisible(false);
+
+	label->setTextInteractionFlags(Qt::TextSelectableByMouse);
 }
 
 SubstancesTableView::~SubstancesTableView()
@@ -90,7 +92,7 @@ void SubstancesTableView::SetSubstancesTabulatedModel(QAbstractItemModel* model)
 
 void SubstancesTableView::SetSelectedSubstanceLabel(const QString& name)
 {
-	label->setText(tr("Selected substance: %1").arg(name));
+	label->setText(tr("Selected substance: <b>%1</b>").arg(name));
 }
 
 void SubstancesTableView::SelectionChanged(const QItemSelection& selected,
