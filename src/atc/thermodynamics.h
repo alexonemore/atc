@@ -36,7 +36,6 @@ ParametersNS::Range RangeFromKelvin(const ParametersNS::Range range,
 									const ParametersNS::TemperatureUnit tu);
 const TempRangeData& FindCoef(const double temperature_K,
 							  const SubstanceTempRangeData& coefs);
-bool InDiapason(const double t, const TempRangeData& coef);
 
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef);

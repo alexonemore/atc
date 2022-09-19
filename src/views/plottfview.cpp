@@ -22,7 +22,8 @@
 #include <QHBoxLayout>
 #include "parameters.h"
 
-PlotTFView::PlotTFView(QWidget *parent) : QWidget(parent)
+PlotTFView::PlotTFView(QWidget *parent)
+	: QWidget(parent)
 {
 	table = new QTableView(this);
 	plot = new Plot2DGraph(this);
@@ -52,6 +53,11 @@ PlotTFView::PlotTFView(QWidget *parent) : QWidget(parent)
 PlotTFView::~PlotTFView()
 {
 
+}
+
+void PlotTFView::SetModel(QAbstractItemModel* model)
+{
+	table->setModel(model);
 }
 
 void PlotTFView::SlotSetXAxisUnit(const QString& temperature_unit)

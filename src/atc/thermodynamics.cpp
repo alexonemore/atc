@@ -92,11 +92,6 @@ const TempRangeData& FindCoef(const double temperature_K,
 #endif
 }
 
-bool InDiapason(const double t, const TempRangeData& coef)
-{
-	return (coef.T_min <= t && t <= coef.T_max);
-};
-
 namespace Thermo {
 double TF_F_J(const double temperature_K, const TempRangeData& coef)
 {

@@ -34,6 +34,7 @@ private:
 public:
 	explicit PlotTFView(QWidget *parent = nullptr);
 	~PlotTFView() override;
+	void SetModel(QAbstractItemModel* model);
 public slots:
 	void SlotSetXAxisUnit(const QString& temperature_unit);
 
