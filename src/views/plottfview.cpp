@@ -46,7 +46,7 @@ PlotTFView::PlotTFView(QWidget *parent)
 	plot->SetTitle(tr("Thermodynamic functions"));
 	plot->SetAxisY1Name(QStringLiteral("G, H [KJ/mol]"));
 	plot->SetAxisY2Name(QStringLiteral("F, S, Cp, c [J/molK]"));
-	SlotSetXAxisUnit(ParametersNS::temperature_units.at(0));
+	SetXAxisUnit(ParametersNS::temperature_units.at(0));
 
 }
 
@@ -60,7 +60,7 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 	table->setModel(model);
 }
 
-void PlotTFView::SlotSetXAxisUnit(const QString& temperature_unit)
+void PlotTFView::SetXAxisUnit(const QString& temperature_unit)
 {
 	plot->SetAxisXName(tr("Temperature [%1]").arg(temperature_unit));
 }

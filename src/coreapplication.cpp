@@ -107,7 +107,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 
 	connect(this, &CoreApplication::SignalStartHeavyComputations,
 			gui, &MainWindow::SlotHeavyComputations);
-
+	connect(this, &CoreApplication::SignalSetPlotXAxisUnit,
+			gui, &MainWindow::SlotSetPlotXAxisUnit);
 
 
 }
@@ -248,6 +249,8 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	model_plot_tf->SetNewData(std::move(names));
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
+	emit SignalSetPlotXAxisUnit(ParametersNS::temperature_units.at(
+	ERROR					static_cast<int>(parameters_.temperature_range_unit)));
 }
 
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)

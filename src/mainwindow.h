@@ -76,6 +76,7 @@ public slots:
 public slots:
 	void SlotSetAvailableElements(const QStringList& elements);
 	void SlotSetSelectedSubstanceLabel(const QString& name);
+	void SlotSetPlotXAxisUnit(const QString& unit);
 	// demo
 	void SlotShowResponse(const QString& text);
 	void SlotShowRequest(const QString& text);

@@ -267,6 +267,11 @@ void MainWindow::SlotSetSelectedSubstanceLabel(const QString& name)
 	ui->view_substances->SetSelectedSubstanceLabel(name);
 }
 
+void MainWindow::SlotSetPlotXAxisUnit(const QString& unit)
+{
+	ui->plot_tf_view->SetXAxisUnit(unit);
+}
+
 void MainWindow::SlotLoadDatabase()
 {
 	LOG()

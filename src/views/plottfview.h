@@ -36,7 +36,7 @@ public:
 	~PlotTFView() override;
 	void SetModel(QAbstractItemModel* model);
 public slots:
-	void SlotSetXAxisUnit(const QString& temperature_unit);
+	void SetXAxisUnit(const QString& temperature_unit);
 
 signals:
 
