@@ -134,6 +134,12 @@ void MainWindow::SetSubstancesTabulatedModel(QAbstractItemModel* model)
 	ui->view_substances->SetSubstancesTabulatedModel(model);
 }
 
+void MainWindow::SetTFPlotModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->plot_tf_view->SetModel(model);
+}
+
 void MainWindow::SetModel_1(QAbstractItemModel* model)
 {
 	LOG()

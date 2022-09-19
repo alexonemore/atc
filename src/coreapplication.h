@@ -31,6 +31,7 @@
 #include "substancestemprangemodel.h"
 #include "substancestabulatedtfmodel.h"
 #include "parameters.h"
+#include "plottfmodel.h"
 
 class CoreApplication : public QObject
 {
@@ -43,6 +44,7 @@ private:
 	SubstancesTableModel* model_substances;
 	SubstancesTempRangeModel* model_substances_temp_range;
 	SubstancesTabulatedTFModel* model_substances_tabulated_tf;
+	PlotTFModel* model_plot_tf;
 
 	// selected substance in TempRange and TabulatedTF
 	int selected_substance_id;

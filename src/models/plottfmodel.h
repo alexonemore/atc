@@ -21,15 +21,29 @@
 #define PLOTTFMODEL_H
 
 #include <QAbstractTableModel>
+#include "database.h"
 
 class PlotTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PlotTFModel)
+private:
+	SubstanceNames data_;
+	int row_count{0};
+	const int col_count{2};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);
 	~PlotTFModel() override;
+	void SetNewData(SubstanceNames&& data);
+	void Clear();
 
+	// QAbstractItemModel interface
+public:
+	int rowCount(const QModelIndex& parent) const override;
+	int columnCount(const QModelIndex& parent) const override;
+	QVariant data(const QModelIndex& index, int role) const override;
+	QVariant headerData(int section, Qt::Orientation orientation,
+						int role) const override;
 };
 
 #endif // PLOTTFMODEL_H

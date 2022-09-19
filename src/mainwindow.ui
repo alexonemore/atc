@@ -345,7 +345,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="PlotTFView" name="widget" native="true"/>
+             <widget class="PlotTFView" name="plot_tf_view" native="true"/>
             </item>
            </layout>
           </widget>

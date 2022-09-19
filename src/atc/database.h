@@ -73,10 +73,16 @@ extern const QString thermo_substances_name_template;
  *						Data Structures
  ****************************************************************************/
 
-struct SubstanceData
+struct SubstanceFormula
 {
 	int id;
-	QString formula, name;
+	QString formula;
+};
+using SubstanceNames = QVector<SubstanceFormula>;
+
+struct SubstanceData : SubstanceFormula
+{
+	QString name;
 	double T_min, T_max;
 };
 using SubstancesData = QVector<SubstanceData>;

@@ -48,14 +48,16 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	model_substances = new SubstancesTableModel(this);
 	model_substances_temp_range = new SubstancesTempRangeModel(this);
 	model_substances_tabulated_tf = new SubstancesTabulatedTFModel(this);
+	model_plot_tf = new PlotTFModel(this);
 	// demo
 	table_1 = new QStringListModel(this);
 
 
-	// set model
+	// set models
 	gui->SetSubstancesTableModel(model_substances);
 	gui->SetSubstancesTempRangeModel(model_substances_temp_range);
 	gui->SetSubstancesTabulatedModel(model_substances_tabulated_tf);
+	gui->SetTFPlotModel(model_plot_tf);
 	gui->Initialize(); // must be called after set models
 
 	// demo
@@ -231,8 +233,19 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	}
 	parameters_ = std::move(parameters);
 	auto db = CurrentDatabase();
-	auto&& data = db->GetSubstancesData(parameters_);
+	auto data = db->GetSubstancesData(parameters_);
+
+	SubstanceNames names(data.size());
+#if 1 // structure slicing
+	std::copy(data.cbegin(), data.cend(), names.begin());
+#else // no slicing
+	std::transform(data.cbegin(), data.cend(), names.begin(),
+				   [](const SubstanceData& i){
+		return SubstanceFormula{i.id, i.formula};
+	});
+#endif
 	model_substances->SetNewData(std::move(data));
+	model_plot_tf->SetNewData(std::move(names));
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 }

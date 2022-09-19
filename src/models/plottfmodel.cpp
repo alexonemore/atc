@@ -29,3 +29,47 @@ PlotTFModel::~PlotTFModel()
 {
 
 }
+
+void PlotTFModel::SetNewData(SubstanceNames&& data)
+{
+	beginResetModel();
+	data_ = std::move(data);
+	row_count = data_.size();
+	endResetModel();
+}
+
+void PlotTFModel::Clear()
+{
+	beginResetModel();
+	data_.clear();
+	endResetModel();
+}
+
+int PlotTFModel::rowCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return row_count;
+	}
+}
+
+int PlotTFModel::columnCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return col_count;
+	}
+}
+
+QVariant PlotTFModel::data(const QModelIndex& index, int role) const
+{
+	return QVariant();
+}
+
+QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
+								 int role) const
+{
+	return QVariant();
+}
