@@ -43,6 +43,7 @@ void SubstancesTableModel::Clear()
 {
 	beginResetModel();
 	data_.clear();
+	row_count = 0;
 	endResetModel();
 }
 
