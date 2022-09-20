@@ -32,8 +32,8 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 	label = new QLabel(QStringLiteral("Nothing selected"), this);
 	auto splitter = new QSplitter(this);
 	auto right_splitter = new QSplitter(this);
-	auto layout = new QVBoxLayout(this);
-	auto right_layout = new QVBoxLayout(this);
+	auto layout = new QVBoxLayout;
+	auto right_layout = new QVBoxLayout;
 	auto right_widget = new QWidget(this);
 
 	setLayout(layout);
