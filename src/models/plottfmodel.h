@@ -24,15 +24,16 @@
 #include <QColor>
 #include "database.h"
 
+enum class PlotTFModelFields {
+	ID,
+	Formula
+};
+
 class PlotTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PlotTFModel)
 private:
-	enum class PlotTFModelFields {
-		ID,
-		Formula
-	};
 	static const QStringList plot_TF_model_field_names;
 	struct Cell {
 		QColor color{Qt::white};

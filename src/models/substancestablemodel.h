@@ -23,20 +23,20 @@
 #include <QAbstractTableModel>
 #include "database.h"
 
+enum class SubstanceFields {
+	ID,
+	Formula,
+	Name,
+	T_min,
+	T_max
+};
+
 class SubstancesTableModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTableModel)
 private:
-	enum class SubstanceFields {
-		ID,
-		Formula,
-		Name,
-		T_min,
-		T_max
-	};
 	static const QStringList substances_field_names;
-private:
 	SubstancesData data_;
 	int row_count{0};
 	const int col_count{substances_field_names.size()};

@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
 #include "utilities.h"
+#include "plottfmodel.h"
 
 SubstancesTableView::SubstancesTableView(QWidget* parent)
 	: QWidget(parent)
@@ -100,7 +101,7 @@ void SubstancesTableView::SelectionChanged(const QItemSelection& selected,
 	Q_UNUSED(deselected)
 	if(!selected.isEmpty()) {
 		auto&& index = selected.first().topLeft();
-		constexpr auto id_col = 0; // PlotTFModel::PlotTFModelFields::ID
+		constexpr auto id_col = static_cast<int>(PlotTFModelFields::ID);
 		auto id = index.sibling(index.row(), id_col).data().toInt();
 		LOG("id:", id)
 		emit SelectSubstance(id);

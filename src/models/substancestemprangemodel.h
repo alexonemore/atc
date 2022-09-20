@@ -23,19 +23,19 @@
 #include <QAbstractTableModel>
 #include "database.h"
 
+enum class SubstanceTempRangeFields {
+	T_min, T_max,
+	H, S,
+	f1, f2, f3, f4, f5, f6, f7,
+	phase
+};
+
 class SubstancesTempRangeModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTempRangeModel)
 private:
-	enum class SubstanceTempRangeFields {
-		T_min, T_max,
-		H, S,
-		f1, f2, f3, f4, f5, f6, f7,
-		phase
-	};
 	static const QStringList substances_temprange_field_names;
-private:
 	SubstanceTempRangeData data_;
 	const int row_count{substances_temprange_field_names.size()};
 	int col_count{0};
