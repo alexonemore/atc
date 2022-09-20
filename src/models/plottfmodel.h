@@ -29,6 +29,11 @@ class PlotTFModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PlotTFModel)
 private:
+	enum class PlotTFModelFields {
+		ID,
+		Formula
+	};
+	static const QStringList plot_TF_model_field_names;
 	struct Cell {
 		QColor color{Qt::white};
 		Qt::CheckState checked{Qt::Unchecked};
@@ -37,7 +42,7 @@ private:
 private:
 	SubstanceNames data_;
 	int row_count{0};
-	const int col_count{2};
+	const int col_count{plot_TF_model_field_names.size()};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);
 	~PlotTFModel() override;

@@ -20,6 +20,11 @@
 #include "plottfmodel.h"
 #include "utilities.h"
 
+const QStringList PlotTFModel::plot_TF_model_field_names = {
+	QStringLiteral("ID"),
+	QStringLiteral("Formula")
+};
+
 PlotTFModel::PlotTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
@@ -71,10 +76,9 @@ QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 		return QVariant{};
 	}
 	auto&& data_at = data_.at(index.row());
-	switch(static_cast<Models::SubstanceFields>(index.column())) {
-	case Models::SubstanceFields::ID:		return data_at.id;
-	case Models::SubstanceFields::Formula:	return data_at.formula;
-	default: break;
+	switch(static_cast<PlotTFModelFields>(index.column())) {
+	case PlotTFModelFields::ID:			return data_at.id;
+	case PlotTFModelFields::Formula:	return data_at.formula;
 	}
 	LOG("ERROR in PlotTFModel::data")
 	return QVariant{};
@@ -85,7 +89,7 @@ QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
 {
 	if(role == Qt::DisplayRole) {
 		if(orientation == Qt::Horizontal) {
-			return Models::substances_field_names.at(section);
+			return plot_TF_model_field_names.at(section);
 		} else {
 			return section;
 		}
