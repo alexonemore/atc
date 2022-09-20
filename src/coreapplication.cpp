@@ -232,6 +232,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	if(parameters.database != parameters_.database) {
 		is_selected = false;
+		model_plot_tf->Clear();
 	}
 	parameters_ = std::move(parameters);
 	auto db = CurrentDatabase();

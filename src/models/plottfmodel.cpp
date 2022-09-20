@@ -68,6 +68,7 @@ void PlotTFModel::Clear()
 	beginResetModel();
 	data_names.clear();
 	data_tf.clear();
+	row_count = 0;
 	endResetModel();
 }
 
