@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QTableView>
 #include "plot2dgraph.h"
+#include "parameters.h"
 
 class PlotTFView : public QWidget
 {
@@ -36,7 +37,7 @@ public:
 	~PlotTFView() override;
 	void SetModel(QAbstractItemModel* model);
 public slots:
-	void SetXAxisUnit(const QString& temperature_unit);
+	void SetXAxisUnit(const ParametersNS::TemperatureUnit unit);
 
 signals:
 

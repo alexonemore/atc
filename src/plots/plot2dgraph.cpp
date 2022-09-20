@@ -164,31 +164,37 @@ void Plot2DGraph::ShowLegend()
 void Plot2DGraph::SetAxisXName(const QString& name)
 {
 	plot->xAxis->setLabel(name);
+	plot->replot();
 }
 
 void Plot2DGraph::SetAxisY1Name(const QString& name)
 {
 	plot->yAxis->setLabel(name);
+	plot->replot();
 }
 
 void Plot2DGraph::SetAxisY2Name(const QString& name)
 {
 	plot->yAxis2->setLabel(name);
+	plot->replot();
 }
 
 void Plot2DGraph::SetAxisXRange(double min, double max)
 {
 	plot->xAxis->setRange(min, max);
+	Replot();
 }
 
 void Plot2DGraph::SetAxisY1Range(double min, double max)
 {
 	plot->yAxis->setRange(min, max);
+	Replot();
 }
 
 void Plot2DGraph::SetAxisY2Range(double min, double max)
 {
 	plot->yAxis2->setRange(min, max);
+	Replot();
 }
 
 void Plot2DGraph::AddGraphY1(const GraphId id, QVector<double>&& x,

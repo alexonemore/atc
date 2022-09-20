@@ -61,7 +61,7 @@ public:
 signals:
 	void SignalSetAvailableElements(const QStringList elements);
 	void SignalSetSelectedSubstanceLabel(const QString& name);
-	void SignalSetPlotXAxisUnit(const QString& unit);
+	void SignalSetPlotXAxisUnit(const ParametersNS::TemperatureUnit unit);
 	//demo
 	void SignalShowResponse(const QString&);
 	void SignalShowTime(const QString&);

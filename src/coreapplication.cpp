@@ -34,6 +34,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 
 	qRegisterMetaType<QVector<int>>("QVector<int>");
 	qRegisterMetaType<ParametersNS::Parameters>("ParametersNS::Parameters");
+	qRegisterMetaType<ParametersNS::TemperatureUnit>("ParametersNS::TemperatureUnit");
 	qRegisterMetaType<GraphId>("GraphId");
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
@@ -249,8 +250,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	model_plot_tf->SetNewData(std::move(names));
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
-	emit SignalSetPlotXAxisUnit(ParametersNS::temperature_units.at(
-	ERROR					static_cast<int>(parameters_.temperature_range_unit)));
+	emit SignalSetPlotXAxisUnit(parameters_.temperature_range_unit);
 }
 
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)

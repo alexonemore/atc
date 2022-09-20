@@ -21,6 +21,7 @@
 #include <QSplitter>
 #include <QHBoxLayout>
 #include "parameters.h"
+#include "utilities.h"
 
 PlotTFView::PlotTFView(QWidget *parent)
 	: QWidget(parent)
@@ -46,7 +47,7 @@ PlotTFView::PlotTFView(QWidget *parent)
 	plot->SetTitle(tr("Thermodynamic functions"));
 	plot->SetAxisY1Name(QStringLiteral("G, H [KJ/mol]"));
 	plot->SetAxisY2Name(QStringLiteral("F, S, Cp, c [J/molK]"));
-	SetXAxisUnit(ParametersNS::temperature_units.at(0));
+	SetXAxisUnit(ParametersNS::TemperatureUnit::Kelvin);
 
 }
 
@@ -60,7 +61,9 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 	table->setModel(model);
 }
 
-void PlotTFView::SetXAxisUnit(const QString& temperature_unit)
+void PlotTFView::SetXAxisUnit(const ParametersNS::TemperatureUnit unit)
 {
-	plot->SetAxisXName(tr("Temperature [%1]").arg(temperature_unit));
+	auto&& str = ParametersNS::temperature_units.at(static_cast<int>(unit));
+	LOG(str)
+	plot->SetAxisXName(tr("Temperature [%1]").arg(str));
 }

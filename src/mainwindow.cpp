@@ -267,7 +267,7 @@ void MainWindow::SlotSetSelectedSubstanceLabel(const QString& name)
 	ui->view_substances->SetSelectedSubstanceLabel(name);
 }
 
-void MainWindow::SlotSetPlotXAxisUnit(const QString& unit)
+void MainWindow::SlotSetPlotXAxisUnit(const ParametersNS::TemperatureUnit unit)
 {
 	ui->plot_tf_view->SetXAxisUnit(unit);
 }
