@@ -21,12 +21,19 @@
 #define PLOTTFMODEL_H
 
 #include <QAbstractTableModel>
+#include <QColor>
 #include "database.h"
 
 class PlotTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PlotTFModel)
+private:
+	struct Cell {
+		QColor color{Qt::white};
+		Qt::CheckState checked{Qt::Unchecked};
+	};
+
 private:
 	SubstanceNames data_;
 	int row_count{0};

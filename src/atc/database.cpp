@@ -22,45 +22,6 @@
 #include <stdexcept>
 #include <QtSql>
 
-namespace Models {
-const QStringList substances_field_names = {
-	QStringLiteral("ID"),
-	QStringLiteral("Formula"),
-	QStringLiteral("Name"),
-	QStringLiteral("T min"),
-	QStringLiteral("T max")
-};
-const QStringList substances_temprange_field_names = {
-	QStringLiteral("T min"),
-	QStringLiteral("T max"),
-	QStringLiteral("H"),
-	QStringLiteral("S"),
-	QStringLiteral("f1"),
-	QStringLiteral("f2"),
-	QStringLiteral("f3"),
-	QStringLiteral("f4"),
-	QStringLiteral("f5"),
-	QStringLiteral("f6"),
-	QStringLiteral("f7"),
-	QStringLiteral("Phase")
-};
-const QStringList substance_tabulated_tf_field_names = {
-	QStringLiteral("T [%1]"),
-	QStringLiteral("G [kJ/mol]"),
-	QStringLiteral("H [kJ/mol]"),
-	QStringLiteral("F [J/molK]"),
-	QStringLiteral("S [J/molK]"),
-	QStringLiteral("Cp [J/molK]"),
-	QStringLiteral("c [G/RT]")
-};
-extern const QStringList phases_names = {
-	QStringLiteral("G"),
-	QStringLiteral("L"),
-	QStringLiteral("S"),
-	QStringLiteral("Error")
-};
-} // Models
-
 namespace SQL {
 const QString available_elements = QStringLiteral(
 "SELECT Elements.Symbol "
@@ -207,8 +168,8 @@ SubstancesData Database::GetSubstancesData(
 						name);
 	SubstancesData data;
 	while(q.next()) {
-		data.push_back(SubstanceData{q.value(0).toInt(),		// ID
-									 q.value(1).toString(),		// Formula
+		data.push_back(SubstanceData{{q.value(0).toInt(),		// ID
+									 q.value(1).toString()},	// Formula
 									 q.value(2).toString(),		// Name
 									 q.value(3).toDouble(),		// T_min
 									 q.value(4).toDouble()});	// T_max
@@ -223,17 +184,17 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 	SubstanceTempRangeData data;
 	while(q.next()) {
 		data.push_back(TempRangeData{q.value(0).toDouble(), // T_min
-											  q.value(1).toDouble(), // T_max
-											  q.value(2).toDouble(), // H
-											  q.value(3).toDouble(), // S
-											  q.value(4).toDouble(), // f1
-											  q.value(5).toDouble(), // f2
-											  q.value(6).toDouble(), // f3
-											  q.value(7).toDouble(), // f4
-											  q.value(8).toDouble(), // f5
-											  q.value(9).toDouble(), // f6
-											  q.value(10).toDouble(), // f7
-								  ToPhase(q.value(11).toString())}); // phase
+									 q.value(1).toDouble(), // T_max
+									 q.value(2).toDouble(), // H
+									 q.value(3).toDouble(), // S
+									 q.value(4).toDouble(), // f1
+									 q.value(5).toDouble(), // f2
+									 q.value(6).toDouble(), // f3
+									 q.value(7).toDouble(), // f4
+									 q.value(8).toDouble(), // f5
+									 q.value(9).toDouble(), // f6
+									 q.value(10).toDouble(), // f7
+								 q.value(11).toString().toUpper()}); // phase
 	}
 	return data;
 }
@@ -263,19 +224,6 @@ QString Database::GetPhasesString(const ParametersNS::ShowPhases& phases)
 		return QString{};
 	} else {
 		return QStringLiteral("'") + list.join("','") + QStringLiteral("'");
-	}
-}
-
-Models::Phase Database::ToPhase(const QString& phase)
-{
-	if(phase == QStringLiteral("s") || phase == QStringLiteral("S")) {
-		return Models::Phase::S;
-	} else if (phase == QStringLiteral("l") || phase == QStringLiteral("L")) {
-		return Models::Phase::L;
-	} else if (phase == QStringLiteral("g") || phase == QStringLiteral("G")) {
-		return Models::Phase::G;
-	} else {
-		return Models::Phase::Error;
 	}
 }
 

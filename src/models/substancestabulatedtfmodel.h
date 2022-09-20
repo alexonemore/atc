@@ -28,9 +28,20 @@ class SubstancesTabulatedTFModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTabulatedTFModel)
 private:
+	enum class SubstancesTabulatedTFFields {
+		T,
+		G_kJ,
+		H_kJ,
+		F_J,
+		S_J,
+		Cp_J,
+		c
+	};
+	static const QStringList substance_tabulated_tf_field_names;
+private:
 	SubstancesTabulatedTFData data_;
 	int row_count{0};
-	const int col_count{Models::substance_tabulated_tf_field_names.size()};
+	const int col_count{substance_tabulated_tf_field_names.size()};
 public:
 	explicit SubstancesTabulatedTFModel(QObject *parent = nullptr);
 	~SubstancesTabulatedTFModel() override;

@@ -20,6 +20,14 @@
 #include "substancestablemodel.h"
 #include "utilities.h"
 
+const QStringList SubstancesTableModel::substances_field_names = {
+	QStringLiteral("ID"),
+	QStringLiteral("Formula"),
+	QStringLiteral("Name"),
+	QStringLiteral("T min"),
+	QStringLiteral("T max")
+};
+
 SubstancesTableModel::SubstancesTableModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
@@ -72,12 +80,12 @@ QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 		return QVariant{};
 	}
 	auto&& data_at = data_.at(index.row());
-	switch(static_cast<Models::SubstanceFields>(index.column())) {
-	case Models::SubstanceFields::ID:		return data_at.id;
-	case Models::SubstanceFields::Formula:	return data_at.formula;
-	case Models::SubstanceFields::Name:		return data_at.name;
-	case Models::SubstanceFields::T_min:	return data_at.T_min;
-	case Models::SubstanceFields::T_max:	return data_at.T_max;
+	switch(static_cast<SubstanceFields>(index.column())) {
+	case SubstanceFields::ID:		return data_at.id;
+	case SubstanceFields::Formula:	return data_at.formula;
+	case SubstanceFields::Name:		return data_at.name;
+	case SubstanceFields::T_min:	return data_at.T_min;
+	case SubstanceFields::T_max:	return data_at.T_max;
 	}
 	LOG("ERROR in SubstancesTableModel::data")
 	return QVariant{};
@@ -88,7 +96,7 @@ QVariant SubstancesTableModel::headerData(int section,
 {
 	if(role == Qt::DisplayRole) {
 		if(orientation == Qt::Horizontal) {
-			return Models::substances_field_names.at(section);
+			return substances_field_names.at(section);
 		} else {
 			return section;
 		}

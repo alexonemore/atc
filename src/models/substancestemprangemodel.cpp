@@ -20,6 +20,21 @@
 #include "substancestemprangemodel.h"
 #include "utilities.h"
 
+const QStringList SubstancesTempRangeModel::substances_temprange_field_names = {
+	QStringLiteral("T min"),
+	QStringLiteral("T max"),
+	QStringLiteral("H"),
+	QStringLiteral("S"),
+	QStringLiteral("f1"),
+	QStringLiteral("f2"),
+	QStringLiteral("f3"),
+	QStringLiteral("f4"),
+	QStringLiteral("f5"),
+	QStringLiteral("f6"),
+	QStringLiteral("f7"),
+	QStringLiteral("Phase")
+};
+
 SubstancesTempRangeModel::SubstancesTempRangeModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
@@ -73,20 +88,19 @@ QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) cons
 		return QVariant{};
 	}
 	auto&& data_at = data_.at(col);
-	switch(static_cast<Models::SubstanceTempRangeFields>(index.row())) {
-	case Models::SubstanceTempRangeFields::T_min:	return data_at.T_min;
-	case Models::SubstanceTempRangeFields::T_max:	return data_at.T_max;
-	case Models::SubstanceTempRangeFields::H:		return data_at.H;
-	case Models::SubstanceTempRangeFields::S:		return data_at.S;
-	case Models::SubstanceTempRangeFields::f1:		return data_at.f1;
-	case Models::SubstanceTempRangeFields::f2:		return data_at.f2;
-	case Models::SubstanceTempRangeFields::f3:		return data_at.f3;
-	case Models::SubstanceTempRangeFields::f4:		return data_at.f4;
-	case Models::SubstanceTempRangeFields::f5:		return data_at.f5;
-	case Models::SubstanceTempRangeFields::f6:		return data_at.f6;
-	case Models::SubstanceTempRangeFields::f7:		return data_at.f7;
-	case Models::SubstanceTempRangeFields::phase:
-		return Models::phases_names.at(static_cast<int>(data_at.phase));
+	switch(static_cast<SubstanceTempRangeFields>(index.row())) {
+	case SubstanceTempRangeFields::T_min:	return data_at.T_min;
+	case SubstanceTempRangeFields::T_max:	return data_at.T_max;
+	case SubstanceTempRangeFields::H:		return data_at.H;
+	case SubstanceTempRangeFields::S:		return data_at.S;
+	case SubstanceTempRangeFields::f1:		return data_at.f1;
+	case SubstanceTempRangeFields::f2:		return data_at.f2;
+	case SubstanceTempRangeFields::f3:		return data_at.f3;
+	case SubstanceTempRangeFields::f4:		return data_at.f4;
+	case SubstanceTempRangeFields::f5:		return data_at.f5;
+	case SubstanceTempRangeFields::f6:		return data_at.f6;
+	case SubstanceTempRangeFields::f7:		return data_at.f7;
+	case SubstanceTempRangeFields::phase:	return data_at.phase;
 	}
 	LOG("ERROR in SubstancesTempRangeModel::data")
 	return QVariant{};
@@ -97,7 +111,7 @@ QVariant SubstancesTempRangeModel::headerData(int section,
 {
 	if(role == Qt::DisplayRole) {
 		if(orientation == Qt::Vertical) {
-			return Models::substances_temprange_field_names.at(section);
+			return substances_temprange_field_names.at(section);
 		} else {
 			return section+1;
 		}

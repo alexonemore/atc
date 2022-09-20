@@ -20,6 +20,16 @@
 #include "substancestabulatedtfmodel.h"
 #include "utilities.h"
 
+const QStringList SubstancesTabulatedTFModel::substance_tabulated_tf_field_names = {
+	QStringLiteral("T [%1]"),
+	QStringLiteral("G [kJ/mol]"),
+	QStringLiteral("H [kJ/mol]"),
+	QStringLiteral("F [J/molK]"),
+	QStringLiteral("S [J/molK]"),
+	QStringLiteral("Cp [J/molK]"),
+	QStringLiteral("c [G/RT]")
+};
+
 SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
 {
@@ -74,14 +84,14 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 	}
 	auto col = index.column();
 	auto row = index.row();
-	switch(static_cast<Models::SubstancesTabulatedTFFields>(col)) {
-	case Models::SubstancesTabulatedTFFields::T:	return data_.temperatures.at(row);
-	case Models::SubstancesTabulatedTFFields::G_kJ:	return data_.G_kJ.at(row);
-	case Models::SubstancesTabulatedTFFields::H_kJ:	return data_.H_kJ.at(row);
-	case Models::SubstancesTabulatedTFFields::F_J:	return data_.F_J.at(row);
-	case Models::SubstancesTabulatedTFFields::S_J:	return data_.S_J.at(row);
-	case Models::SubstancesTabulatedTFFields::Cp_J:	return data_.Cp_J.at(row);
-	case Models::SubstancesTabulatedTFFields::c:	return data_.c.at(row);
+	switch(static_cast<SubstancesTabulatedTFFields>(col)) {
+	case SubstancesTabulatedTFFields::T:	return data_.temperatures.at(row);
+	case SubstancesTabulatedTFFields::G_kJ:	return data_.G_kJ.at(row);
+	case SubstancesTabulatedTFFields::H_kJ:	return data_.H_kJ.at(row);
+	case SubstancesTabulatedTFFields::F_J:	return data_.F_J.at(row);
+	case SubstancesTabulatedTFFields::S_J:	return data_.S_J.at(row);
+	case SubstancesTabulatedTFFields::Cp_J:	return data_.Cp_J.at(row);
+	case SubstancesTabulatedTFFields::c:	return data_.c.at(row);
 	}
 	LOG("ERROR in SubstancesTabulatedTFModel::data")
 	return QVariant{};
@@ -96,12 +106,12 @@ QVariant SubstancesTabulatedTFModel::headerData(int section,
 	if(orientation != Qt::Horizontal) {
 		return section;
 	}
-	switch(static_cast<Models::SubstancesTabulatedTFFields>(section)) {
-	case Models::SubstancesTabulatedTFFields::T:
-		return Models::substance_tabulated_tf_field_names.at(section).
+	switch(static_cast<SubstancesTabulatedTFFields>(section)) {
+	case SubstancesTabulatedTFFields::T:
+		return substance_tabulated_tf_field_names.at(section).
 				arg(ParametersNS::temperature_units.at(
 						static_cast<int>(data_.temperature_unit)));
 	default:
-		return Models::substance_tabulated_tf_field_names.at(section);
+		return substance_tabulated_tf_field_names.at(section);
 	}
 }

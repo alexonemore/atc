@@ -23,42 +23,6 @@
 #include <QString>
 #include "parameters.h"
 
-namespace Models {
-enum class SubstanceFields {
-	ID,
-	Formula,
-	Name,
-	T_min,
-	T_max
-};
-extern const QStringList substances_field_names;
-
-enum class SubstanceTempRangeFields {
-	T_min, T_max,
-	H, S,
-	f1, f2, f3, f4, f5, f6, f7,
-	phase
-};
-extern const QStringList substances_temprange_field_names;
-
-enum class SubstancesTabulatedTFFields {
-	T,
-	G_kJ,
-	H_kJ,
-	F_J,
-	S_J,
-	Cp_J,
-	c
-};
-extern const QStringList substance_tabulated_tf_field_names;
-
-enum class Phase {
-	G, L, S,
-	Error
-};
-extern const QStringList phases_names;
-} // namespace Models
-
 namespace SQL {
 extern const QString available_elements;
 extern const QString hsc_substances_template;
@@ -90,7 +54,7 @@ using SubstancesData = QVector<SubstanceData>;
 struct TempRangeData
 {
 	double T_min, T_max, H, S, f1, f2, f3, f4, f5, f6, f7;
-	Models::Phase phase;
+	QString phase;
 };
 using SubstanceTempRangeData = QVector<TempRangeData>;
 
@@ -126,7 +90,6 @@ protected:
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
 	virtual const QString& GetSubstancesNameString() const = 0;
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
-	Models::Phase ToPhase(const QString& phase);
 };
 
 /****************************************************************************
