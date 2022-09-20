@@ -26,7 +26,13 @@
 
 enum class PlotTFModelFields {
 	ID,
-	Formula
+	Formula,
+	G_kJ,
+	H_kJ,
+	F_J,
+	S_J,
+	Cp_J,
+	c
 };
 
 class PlotTFModel : public QAbstractTableModel
@@ -39,9 +45,13 @@ private:
 		QColor color{Qt::white};
 		Qt::CheckState checked{Qt::Unchecked};
 	};
-
+	struct Row {
+		Cell G, H, F, S, Cp, c;
+	};
 private:
-	SubstanceNames data_;
+	SubstanceNames data_names;
+	std::unordered_map<int, Row> data_tf; // int = id from data_names
+	std::unordered_map<int, Row> data_tf_new;
 	int row_count{0};
 	const int col_count{plot_TF_model_field_names.size()};
 public:

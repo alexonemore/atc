@@ -19,10 +19,17 @@
 
 #include "plottfmodel.h"
 #include "utilities.h"
+#include <execution>
 
 const QStringList PlotTFModel::plot_TF_model_field_names = {
 	QStringLiteral("ID"),
-	QStringLiteral("Formula")
+	QStringLiteral("Formula"),
+	QStringLiteral("G"),
+	QStringLiteral("H"),
+	QStringLiteral("F"),
+	QStringLiteral("S"),
+	QStringLiteral("Cp"),
+	QStringLiteral("c")
 };
 
 PlotTFModel::PlotTFModel(QObject *parent)
@@ -39,15 +46,28 @@ PlotTFModel::~PlotTFModel()
 void PlotTFModel::SetNewData(SubstanceNames&& data)
 {
 	beginResetModel();
-	data_ = std::move(data);
-	row_count = data_.size();
+	data_names = std::move(data);
+	for(auto i = data_names.cbegin(), end = data_names.cend(); i != end; ++i) {
+		data_tf_new.emplace(i->id, Row{});
+	}
+	assert(data_names.size() == static_cast<int>(data_tf_new.size()));
+
+	if(data_tf_new.size() > data_tf.size()) {
+		data_tf.merge(data_tf_new);
+	} else {
+		data_tf_new.merge(data_tf);
+	}
+	assert(data_names.size() == static_cast<int>(data_tf.size()));
+	data_tf_new.clear();
+	row_count = data_names.size();
 	endResetModel();
 }
 
 void PlotTFModel::Clear()
 {
 	beginResetModel();
-	data_.clear();
+	data_names.clear();
+	data_tf.clear();
 	endResetModel();
 }
 
@@ -75,10 +95,17 @@ QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
-	auto&& data_at = data_.at(index.row());
+	auto&& data_at = data_names.at(index.row());
 	switch(static_cast<PlotTFModelFields>(index.column())) {
 	case PlotTFModelFields::ID:			return data_at.id;
 	case PlotTFModelFields::Formula:	return data_at.formula;
+	case PlotTFModelFields::G_kJ:
+	case PlotTFModelFields::H_kJ:
+	case PlotTFModelFields::F_J:
+	case PlotTFModelFields::S_J:
+	case PlotTFModelFields::Cp_J:
+	case PlotTFModelFields::c:
+		break;
 	}
 	LOG("ERROR in PlotTFModel::data")
 	return QVariant{};
