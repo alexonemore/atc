@@ -96,7 +96,8 @@ constexpr bool is_pair_v = is_pair<T>::value;
 template<typename, typename = void>
 struct is_mapping : std::false_type {};
 template <typename Container>
-struct is_mapping<Container, std::enable_if_t<is_pair_v<typename Container::value_type>>>
+struct is_mapping<Container,
+		std::enable_if_t<is_pair_v<typename Container::value_type>>>
 		: std::true_type {};
 template <typename T>
 constexpr bool is_mapping_v = is_mapping<T>::value;
