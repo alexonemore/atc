@@ -134,15 +134,17 @@ bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value,
 						  int role)
 {
 	if(!CheckIndexValidParent(index)) return false;
-	auto&& cell = GetCell(index);
-	auto graph_id = MakeGraphId(index);
+	auto&& substance = data_names.at(index.row());
+	auto column = static_cast<PlotTFModelFields>(index.column());
+	auto&& cell = GetCell(substance.id, column);
+	auto graph_id = MakeGraphId(substance.id, column);
 	if(role == Qt::CheckStateRole) {
 		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
 			cell.color = GetRandomColor();
 		}
 		cell.checked = value.value<Qt::CheckState>();
 		if(cell.checked == Qt::CheckState::Checked) {
-			auto name = MakeGraphName(index);
+			auto name = MakeGraphName(substance.formula, column);
 			LOG(name)
 			emit AddGraph(graph_id, name, cell.color);
 		} else {
@@ -196,15 +198,22 @@ bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
 
-PlotTFModel::Cell& PlotTFModel::GetCell(const QModelIndex& index)
+PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
+										const PlotTFModelFields column)
 {
-	auto col = static_cast<PlotTFModelFields>(index.column());
-	auto&& at_id = data_tf.at(data_names.at(index.row()).id);
-	switch(col) {
+	auto&& at_id = data_tf.at(id);
+	switch(column) {
 	case PlotTFModelFields::ID:
-	case PlotTFModelFields::Formula:
-		LOG(index)
+	case PlotTFModelFields::Formula: {
+#ifndef NDEBUG
+		LOG(id, column)
+		assert(false && "Try to get cell to ID or Formula column");
+		static Cell error;
+		return error;
+#else
 		throw std::runtime_error("Try to get cell to ID or Formula column");
+#endif
+	}
 	case PlotTFModelFields::G_kJ:	return at_id.G;
 	case PlotTFModelFields::H_kJ:	return at_id.H;
 	case PlotTFModelFields::F_J:	return at_id.F;
@@ -214,19 +223,19 @@ PlotTFModel::Cell& PlotTFModel::GetCell(const QModelIndex& index)
 	}
 }
 
-GraphId PlotTFModel::MakeGraphId(const QModelIndex& index) const
+GraphId PlotTFModel::MakeGraphId(const int id,
+								 const PlotTFModelFields column) const
 {
 	static_assert(std::is_same_v<GraphId, int>, "");
-	static const int n = plot_TF_model_field_names.size() < 10 ? 10 : 100;
-	auto id = data_names.at(index.row()).id;
-	auto tf = index.column();
-	return (id * n + tf);
+	assert(plot_TF_model_field_names.size() < 10);
+	constexpr int n = 10; // if size above > 10 then 100
+	return (id * n + static_cast<int>(column));
 }
 
-QString PlotTFModel::MakeGraphName(const QModelIndex& index) const
+QString PlotTFModel::MakeGraphName(const QString& formula,
+								   const PlotTFModelFields column) const
 {
-	return data_names.at(index.row()).formula +
-			QStringLiteral(" <") +
-			plot_TF_model_field_names.at(index.column()) +
-			QStringLiteral(">");
+	return (formula + QStringLiteral(" <") +
+			plot_TF_model_field_names.at(static_cast<int>(column)) +
+			QStringLiteral(">"));
 }
