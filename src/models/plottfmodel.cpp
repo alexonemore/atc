@@ -19,7 +19,7 @@
 
 #include "plottfmodel.h"
 #include "utilities.h"
-#include <execution>
+#include <QBrush>
 
 const QStringList PlotTFModel::plot_TF_model_field_names = {
 	QStringLiteral("ID"),
@@ -92,23 +92,41 @@ int PlotTFModel::columnCount(const QModelIndex& parent) const
 
 QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 {
-	if(!index.isValid()) return QVariant{};
-	if(role != Qt::DisplayRole) {
-		return QVariant{};
+	if(!CheckIndexValidParent(index)) return QVariant{};
+	auto col = static_cast<PlotTFModelFields>(index.column());
+	auto&& at_row = data_names.at(index.row());
+	if(role == Qt::DisplayRole) {
+		switch(col) {
+		case PlotTFModelFields::ID:			return at_row.id;
+		case PlotTFModelFields::Formula:	return at_row.formula;
+		default:							return QVariant{};
+		}
 	}
-	auto&& data_at = data_names.at(index.row());
-	switch(static_cast<PlotTFModelFields>(index.column())) {
-	case PlotTFModelFields::ID:			return data_at.id;
-	case PlotTFModelFields::Formula:	return data_at.formula;
-	case PlotTFModelFields::G_kJ:
-	case PlotTFModelFields::H_kJ:
-	case PlotTFModelFields::F_J:
-	case PlotTFModelFields::S_J:
-	case PlotTFModelFields::Cp_J:
-	case PlotTFModelFields::c:
-		break;
+	auto&& at_id = data_tf.at(at_row.id);
+	if(role == Qt::CheckStateRole) {
+		switch(col) {
+		case PlotTFModelFields::ID:
+		case PlotTFModelFields::Formula:	return QVariant{};
+		case PlotTFModelFields::G_kJ:		return at_id.G.checked;
+		case PlotTFModelFields::H_kJ:		return at_id.H.checked;
+		case PlotTFModelFields::F_J:		return at_id.F.checked;
+		case PlotTFModelFields::S_J:		return at_id.S.checked;
+		case PlotTFModelFields::Cp_J:		return at_id.Cp.checked;
+		case PlotTFModelFields::c:			return at_id.c.checked;
+		}
 	}
-	LOG("ERROR in PlotTFModel::data")
+	if(role == Qt::BackgroundRole || role == Qt::EditRole) {
+		switch(col) {
+		case PlotTFModelFields::ID:
+		case PlotTFModelFields::Formula:	return QVariant{};
+		case PlotTFModelFields::G_kJ:		return QBrush(at_id.G.color);
+		case PlotTFModelFields::H_kJ:		return QBrush(at_id.H.color);
+		case PlotTFModelFields::F_J:		return QBrush(at_id.F.color);
+		case PlotTFModelFields::S_J:		return QBrush(at_id.S.color);
+		case PlotTFModelFields::Cp_J:		return QBrush(at_id.Cp.color);
+		case PlotTFModelFields::c:			return QBrush(at_id.c.color);
+		}
+	}
 	return QVariant{};
 }
 
@@ -124,4 +142,33 @@ QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
 	} else {
 		return QVariant{};
 	}
+}
+
+bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+	if(!CheckIndexValidParent(index)) return false;
+	return true;
+}
+
+Qt::ItemFlags PlotTFModel::flags(const QModelIndex& index) const
+{
+	if(!CheckIndexValidParent(index)) return Qt::ItemFlags{};
+	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
+	switch(static_cast<PlotTFModelFields>(index.column())) {
+	case PlotTFModelFields::ID:
+	case PlotTFModelFields::Formula:
+		return flags;
+	default:
+		flags |= Qt::ItemIsUserCheckable;
+		flags |= Qt::ItemIsEditable;
+		flags ^= Qt::ItemIsSelectable;
+		return  flags;
+	}
+}
+
+bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
+{
+	return checkIndex(index,
+					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
+					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
