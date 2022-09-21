@@ -50,6 +50,7 @@ private:
 	};
 private:
 	SubstanceNames data_names;
+	// using id_type = decltype(SubstanceNames::value_type::id);
 	std::unordered_map<int, Row> data_tf; // int = id from data_names
 	std::unordered_map<int, Row> data_tf_new;
 	int row_count{0};

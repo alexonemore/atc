@@ -25,7 +25,6 @@
 #include <QObject>
 #include <QThread>
 #include <QMetaEnum>
-#include <type_traits>
 #include <random>
 #ifndef NDEBUG
 #include <QDebug>
@@ -97,11 +96,11 @@ constexpr bool is_pair_v = is_pair<T>::value;
 template<typename, typename = void>
 struct is_mapping : std::false_type {};
 template <typename Container>
-struct is_mapping<Container, std::enable_if_t<is_pair_v<typename
-		std::iterator_traits<typename Container::iterator>::value_type>>>
+struct is_mapping<Container, std::enable_if_t<is_pair_v<typename Container::value_type>>>
 		: std::true_type {};
 template <typename T>
 constexpr bool is_mapping_v = is_mapping<T>::value;
+
 
 template<typename T1, typename T2, typename ...TN,
 	typename = std::void_t<decltype(std::declval<T1&>() == std::declval<T1&>()),

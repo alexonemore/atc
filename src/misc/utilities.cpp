@@ -23,8 +23,14 @@
 #include <QMetaProperty>
 #include <unordered_map>
 #include <vector>
+#include <set>
 
 namespace static_tests {
+static_assert(is_mapping_v<std::unordered_map<int, double>>, "");
+static_assert(is_mapping_v<std::vector<std::pair<int, double>>>, "");
+static_assert(!is_mapping_v<std::vector<int>>, "");
+static_assert(is_mapping_v<std::set<std::pair<int, float>>>, "");
+static_assert(!is_mapping_v<std::set<int>>, "");
 using vt = typename std::iterator_traits<decltype(std::declval<
 			std::unordered_map<int, double>>().cbegin())>::value_type;
 static_assert(is_pair_v<vt>, "is_pair");
