@@ -23,6 +23,7 @@
 #include <QAbstractTableModel>
 #include <QColor>
 #include "database.h"
+#include "plots.h"
 
 enum class PlotTFModelFields {
 	ID,
@@ -71,8 +72,18 @@ public:
 	bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+signals:
+	void AddGraph(const GraphId& id, const QString& name,
+				  const QColor& color);
+	void RemoveGraph(const GraphId& id);
+	void ChangeColorGraph(const GraphId& id, const QColor& color);
+
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
+	Cell& GetCell(const QModelIndex& index);
+	GraphId MakeGraphId(const QModelIndex& index) const;
+	QString MakeGraphName(const QModelIndex& index) const;
 };
+
 
 #endif // PLOTTFMODEL_H

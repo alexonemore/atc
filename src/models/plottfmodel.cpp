@@ -94,15 +94,15 @@ QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
 	auto col = static_cast<PlotTFModelFields>(index.column());
-	auto&& at_row = data_names.at(index.row());
+	auto&& data_name = data_names.at(index.row());
 	if(role == Qt::DisplayRole) {
 		switch(col) {
-		case PlotTFModelFields::ID:			return at_row.id;
-		case PlotTFModelFields::Formula:	return at_row.formula;
+		case PlotTFModelFields::ID:			return data_name.id;
+		case PlotTFModelFields::Formula:	return data_name.formula;
 		default:							return QVariant{};
 		}
 	}
-	auto&& at_id = data_tf.at(at_row.id);
+	auto&& at_id = data_tf.at(data_name.id);
 	if(role == Qt::CheckStateRole) {
 		switch(col) {
 		case PlotTFModelFields::ID:
@@ -130,6 +130,35 @@ QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
+bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value,
+						  int role)
+{
+	if(!CheckIndexValidParent(index)) return false;
+	auto&& cell = GetCell(index);
+	auto graph_id = MakeGraphId(index);
+	if(role == Qt::CheckStateRole) {
+		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
+			cell.color = GetRandomColor();
+		}
+		cell.checked = value.value<Qt::CheckState>();
+		if(cell.checked == Qt::CheckState::Checked) {
+			auto name = MakeGraphName(index);
+			LOG(name)
+			emit AddGraph(graph_id, name, cell.color);
+		} else {
+			cell.color = Qt::white;
+			emit RemoveGraph(graph_id);
+		}
+	} else if(role == Qt::EditRole) {
+		cell.color = value.value<QColor>();
+		emit ChangeColorGraph(graph_id, cell.color);
+	} else {
+		return false;
+	}
+	emit dataChanged(index, index);
+	return true;
+}
+
 QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
 								 int role) const
 {
@@ -142,12 +171,6 @@ QVariant PlotTFModel::headerData(int section, Qt::Orientation orientation,
 	} else {
 		return QVariant{};
 	}
-}
-
-bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value, int role)
-{
-	if(!CheckIndexValidParent(index)) return false;
-	return true;
 }
 
 Qt::ItemFlags PlotTFModel::flags(const QModelIndex& index) const
@@ -171,4 +194,39 @@ bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
 	return checkIndex(index,
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
+}
+
+PlotTFModel::Cell& PlotTFModel::GetCell(const QModelIndex& index)
+{
+	auto col = static_cast<PlotTFModelFields>(index.column());
+	auto&& at_id = data_tf.at(data_names.at(index.row()).id);
+	switch(col) {
+	case PlotTFModelFields::ID:
+	case PlotTFModelFields::Formula:
+		LOG(index)
+		throw std::runtime_error("Try to get cell to ID or Formula column");
+	case PlotTFModelFields::G_kJ:	return at_id.G;
+	case PlotTFModelFields::H_kJ:	return at_id.H;
+	case PlotTFModelFields::F_J:	return at_id.F;
+	case PlotTFModelFields::S_J:	return at_id.S;
+	case PlotTFModelFields::Cp_J:	return at_id.Cp;
+	case PlotTFModelFields::c:		return at_id.c;
+	}
+}
+
+GraphId PlotTFModel::MakeGraphId(const QModelIndex& index) const
+{
+	static_assert(std::is_same_v<GraphId, int>, "");
+	static const int n = plot_TF_model_field_names.size() < 10 ? 10 : 100;
+	auto id = data_names.at(index.row()).id;
+	auto tf = index.column();
+	return (id * n + tf);
+}
+
+QString PlotTFModel::MakeGraphName(const QModelIndex& index) const
+{
+	return data_names.at(index.row()).formula +
+			QStringLiteral(" <") +
+			plot_TF_model_field_names.at(index.column()) +
+			QStringLiteral(">");
 }
