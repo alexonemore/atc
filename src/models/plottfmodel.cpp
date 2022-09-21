@@ -203,10 +203,15 @@ PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
 {
 	auto&& at_id = data_tf.at(id);
 	switch(column) {
-	case PlotTFModelFields::ID:
-	case PlotTFModelFields::Formula: {
+	case PlotTFModelFields::G_kJ:	return at_id.G;
+	case PlotTFModelFields::H_kJ:	return at_id.H;
+	case PlotTFModelFields::F_J:	return at_id.F;
+	case PlotTFModelFields::S_J:	return at_id.S;
+	case PlotTFModelFields::Cp_J:	return at_id.Cp;
+	case PlotTFModelFields::c:		return at_id.c;
+	default: {
 #ifndef NDEBUG
-		LOG(id, column)
+		LOG(id)
 		assert(false && "Try to get cell to ID or Formula column");
 		static Cell error;
 		return error;
@@ -214,12 +219,6 @@ PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
 		throw std::runtime_error("Try to get cell to ID or Formula column");
 #endif
 	}
-	case PlotTFModelFields::G_kJ:	return at_id.G;
-	case PlotTFModelFields::H_kJ:	return at_id.H;
-	case PlotTFModelFields::F_J:	return at_id.F;
-	case PlotTFModelFields::S_J:	return at_id.S;
-	case PlotTFModelFields::Cp_J:	return at_id.Cp;
-	case PlotTFModelFields::c:		return at_id.c;
 	}
 }
 
