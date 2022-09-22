@@ -21,16 +21,16 @@
 #include "utilities.h"
 #include <QBrush>
 
-const QStringList PlotTFModel::plot_TF_model_field_names = {
-	QStringLiteral("ID"),
-	QStringLiteral("Formula"),
-	QStringLiteral("G"),
-	QStringLiteral("H"),
-	QStringLiteral("F"),
-	QStringLiteral("S"),
-	QStringLiteral("Cp"),
-	QStringLiteral("c")
+namespace PlotTFModelFields {
+extern const QStringList names{
+	QT_TR_NOOP("ID"),
+	QT_TR_NOOP("Formula")
 };
+};
+
+const QStringList PlotTFModel::plot_TF_model_field_names =
+		PlotTFModelFields::names + ParametersNS::thermodynamic_function;
+
 
 PlotTFModel::PlotTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
@@ -41,6 +41,11 @@ PlotTFModel::PlotTFModel(QObject *parent)
 PlotTFModel::~PlotTFModel()
 {
 
+}
+
+void PlotTFModel::SetDatabase(const ParametersNS::Database new_database)
+{
+	database = new_database;
 }
 
 void PlotTFModel::SetNewData(SubstanceNames&& data)
@@ -93,38 +98,37 @@ int PlotTFModel::columnCount(const QModelIndex& parent) const
 QVariant PlotTFModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
-	auto col = static_cast<PlotTFModelFields>(index.column());
+	auto col = index.column();
 	auto&& data_name = data_names.at(index.row());
-	if(role == Qt::DisplayRole) {
-		switch(col) {
-		case PlotTFModelFields::ID:			return data_name.id;
-		case PlotTFModelFields::Formula:	return data_name.formula;
-		default:							return QVariant{};
+	if(col < field_names_size) {
+		if(role == Qt::DisplayRole) {
+			switch(static_cast<PlotTFModelFields::Names>(col)) {
+			case PlotTFModelFields::Names::ID:		return data_name.id;
+			case PlotTFModelFields::Names::Formula:	return data_name.formula;
+			}
 		}
-	}
-	auto&& at_id = data_tf.at(data_name.id);
-	if(role == Qt::CheckStateRole) {
-		switch(col) {
-		case PlotTFModelFields::ID:
-		case PlotTFModelFields::Formula:	return QVariant{};
-		case PlotTFModelFields::G_kJ:		return at_id.G.checked;
-		case PlotTFModelFields::H_kJ:		return at_id.H.checked;
-		case PlotTFModelFields::F_J:		return at_id.F.checked;
-		case PlotTFModelFields::S_J:		return at_id.S.checked;
-		case PlotTFModelFields::Cp_J:		return at_id.Cp.checked;
-		case PlotTFModelFields::c:			return at_id.c.checked;
+	} else {
+		auto&& at_id = data_tf.at(data_name.id);
+		auto tf = static_cast<PlotTFModelFields::TF>(col - field_names_size);
+		if(role == Qt::CheckStateRole) {
+			switch(tf) {
+			case PlotTFModelFields::TF::G_kJ:	return at_id.G.checked;
+			case PlotTFModelFields::TF::H_kJ:	return at_id.H.checked;
+			case PlotTFModelFields::TF::F_J:	return at_id.F.checked;
+			case PlotTFModelFields::TF::S_J:	return at_id.S.checked;
+			case PlotTFModelFields::TF::Cp_J:	return at_id.Cp.checked;
+			case PlotTFModelFields::TF::c:		return at_id.c.checked;
+			}
 		}
-	}
-	if(role == Qt::BackgroundRole || role == Qt::EditRole) {
-		switch(col) {
-		case PlotTFModelFields::ID:
-		case PlotTFModelFields::Formula:	return QVariant{};
-		case PlotTFModelFields::G_kJ:		return QBrush(at_id.G.color);
-		case PlotTFModelFields::H_kJ:		return QBrush(at_id.H.color);
-		case PlotTFModelFields::F_J:		return QBrush(at_id.F.color);
-		case PlotTFModelFields::S_J:		return QBrush(at_id.S.color);
-		case PlotTFModelFields::Cp_J:		return QBrush(at_id.Cp.color);
-		case PlotTFModelFields::c:			return QBrush(at_id.c.color);
+		if(role == Qt::BackgroundRole || role == Qt::EditRole) {
+			switch(tf) {
+			case PlotTFModelFields::TF::G_kJ:	return QBrush(at_id.G.color);
+			case PlotTFModelFields::TF::H_kJ:	return QBrush(at_id.H.color);
+			case PlotTFModelFields::TF::F_J:	return QBrush(at_id.F.color);
+			case PlotTFModelFields::TF::S_J:	return QBrush(at_id.S.color);
+			case PlotTFModelFields::TF::Cp_J:	return QBrush(at_id.Cp.color);
+			case PlotTFModelFields::TF::c:		return QBrush(at_id.c.color);
+			}
 		}
 	}
 	return QVariant{};
@@ -135,16 +139,17 @@ bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value,
 {
 	if(!CheckIndexValidParent(index)) return false;
 	auto&& substance = data_names.at(index.row());
-	auto column = static_cast<PlotTFModelFields>(index.column());
-	auto&& cell = GetCell(substance.id, column);
-	auto graph_id = MakeGraphId(substance.id, column);
+	auto tf = static_cast<PlotTFModelFields::TF>(index.column() -
+												 field_names_size);
+	auto&& cell = GetCell(substance.id, tf);
+	auto graph_id = MakeGraphId(substance.id, tf);
 	if(role == Qt::CheckStateRole) {
 		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
 			cell.color = GetRandomColor();
 		}
 		cell.checked = value.value<Qt::CheckState>();
 		if(cell.checked == Qt::CheckState::Checked) {
-			auto name = MakeGraphName(substance.formula, column);
+			auto name = MakeGraphName(substance.formula, tf);
 			LOG(name)
 			emit AddGraph(graph_id, name, cell.color);
 		} else {
@@ -179,16 +184,27 @@ Qt::ItemFlags PlotTFModel::flags(const QModelIndex& index) const
 {
 	if(!CheckIndexValidParent(index)) return Qt::ItemFlags{};
 	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
-	switch(static_cast<PlotTFModelFields>(index.column())) {
-	case PlotTFModelFields::ID:
-	case PlotTFModelFields::Formula:
+	auto col = index.column();
+	if(col < field_names_size) {
 		return flags;
-	default:
+	} else {
 		flags |= Qt::ItemIsUserCheckable;
 		flags |= Qt::ItemIsEditable;
 		flags ^= Qt::ItemIsSelectable;
 		return  flags;
 	}
+}
+
+void PlotTFModel::SlotRemoveAllGraphs()
+{
+	beginResetModel();
+	data_tf.clear();
+	endResetModel();
+}
+
+void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
+{
+
 }
 
 bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
@@ -199,42 +215,31 @@ bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
 }
 
 PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
-										const PlotTFModelFields column)
+										const PlotTFModelFields::TF tf)
 {
 	auto&& at_id = data_tf.at(id);
-	switch(column) {
-	case PlotTFModelFields::G_kJ:	return at_id.G;
-	case PlotTFModelFields::H_kJ:	return at_id.H;
-	case PlotTFModelFields::F_J:	return at_id.F;
-	case PlotTFModelFields::S_J:	return at_id.S;
-	case PlotTFModelFields::Cp_J:	return at_id.Cp;
-	case PlotTFModelFields::c:		return at_id.c;
-	default: {
-#ifndef NDEBUG
-		LOG(id)
-		assert(false && "Try to get cell to ID or Formula column");
-		static Cell error;
-		return error;
-#else
-		throw std::runtime_error("Try to get cell to ID or Formula column");
-#endif
-	}
+	switch(tf) {
+	case PlotTFModelFields::TF::G_kJ:	return at_id.G;
+	case PlotTFModelFields::TF::H_kJ:	return at_id.H;
+	case PlotTFModelFields::TF::F_J:	return at_id.F;
+	case PlotTFModelFields::TF::S_J:	return at_id.S;
+	case PlotTFModelFields::TF::Cp_J:	return at_id.Cp;
+	case PlotTFModelFields::TF::c:		return at_id.c;
 	}
 }
 
 GraphId PlotTFModel::MakeGraphId(const int id,
-								 const PlotTFModelFields column) const
+								 const PlotTFModelFields::TF tf) const
 {
-	static_assert(std::is_same_v<GraphId, int>, "");
-	assert(plot_TF_model_field_names.size() < 10);
-	constexpr int n = 10; // if size above > 10 then 100
-	return (id * n + static_cast<int>(column));
+	return GraphId{id, tf, database};
 }
 
 QString PlotTFModel::MakeGraphName(const QString& formula,
-								   const PlotTFModelFields column) const
+								   const PlotTFModelFields::TF tf) const
 {
 	return (formula + QStringLiteral(" <") +
-			plot_TF_model_field_names.at(static_cast<int>(column)) +
-			QStringLiteral(">"));
+			ParametersNS::thermodynamic_function.at(static_cast<int>(tf)) +
+			QStringLiteral("> {") +
+			ParametersNS::databases.at(static_cast<int>(database)) +
+			QStringLiteral("}"));
 }

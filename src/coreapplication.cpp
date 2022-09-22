@@ -161,7 +161,7 @@ void CoreApplication::SlotHeavyCalculations()
 void CoreApplication::SlotMake2DGraphData()
 {
 	LOG()
-	static int id = 0;
+	static GraphId id{};
 	static RandomDouble rd{0.8, 1.2};
 	const int size = 1000;
 	QVector<double> x(size), y(size);
@@ -169,7 +169,8 @@ void CoreApplication::SlotMake2DGraphData()
 	std::transform(x.cbegin(), x.cend(), y.begin(), [](double i){
 		return (std::sin((i+rd())/50)*rd()+rd())/rd();
 	});
-	emit SignalShow2DGraphData(id++, x, y);
+	id.substance_id++;
+	emit SignalShow2DGraphData(id, x, y);
 }
 
 void CoreApplication::SlotMakeHeatMapData()
@@ -248,6 +249,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	});
 #endif
 	model_substances->SetNewData(std::move(data));
+	model_plot_tf->SetDatabase(parameters_.database);
 	model_plot_tf->SetNewData(std::move(names));
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());

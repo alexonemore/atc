@@ -66,6 +66,7 @@ set(PROJECT_SOURCES
 
 	# plots
 	src/plots/plots.h
+	src/plots/plots.cpp
 	src/plots/plot2dbase.h
 	src/plots/plot2dbase.cpp
 	src/plots/plot2dgraph.h

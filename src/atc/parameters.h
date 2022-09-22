@@ -24,6 +24,16 @@
 #include <QVector>
 
 namespace ParametersNS {
+enum class ThermodynamicFunction {
+	G_kJ,
+	H_kJ,
+	F_J,
+	S_J,
+	Cp_J,
+	c
+};
+extern const QStringList thermodynamic_function;
+
 enum class Workmode {
 	SinglePoint,
 	TemperatureRange,

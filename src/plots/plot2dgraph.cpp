@@ -224,7 +224,8 @@ void Plot2DGraph::AddGraphY2(const GraphId id, const QString& name,
 void Plot2DGraph::AddGraph(const GraphId id, QVector<double>&& x,
 					  QVector<double>&& y, YAxis axis)
 {
-	AddGraph(id, QString{">> %1"}.arg(id), std::move(x), std::move(y), axis);
+	AddGraph(id, QString{">> %1"}.arg(id.substance_id),
+			 std::move(x), std::move(y), axis);
 }
 
 void Plot2DGraph::AddGraph(const GraphId id, const QString& name,
@@ -626,7 +627,8 @@ void Plot2DGraph::ChangeSelectedGraphsSettings()
 void Plot2DGraph::ErrorInvalidGraphId(const GraphId id)
 {
 	QMessageBox::critical(this, tr("Error"),
-						  QString{tr("Invalid GraphId: ") + QString::number(id)},
+						  QString{tr("Invalid GraphId: ") +
+								  QString::number(id.substance_id)},
 						  QMessageBox::Ok, QMessageBox::Ok);
 }
 

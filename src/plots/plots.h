@@ -21,8 +21,29 @@
 #define PLOTS_H
 
 #include <unordered_map>
+#include "parameters.h"
 
-using GraphId = int;
+struct GraphIdImpl {
+	int substance_id{0};
+	ParametersNS::ThermodynamicFunction thermodynamic_function{
+		ParametersNS::ThermodynamicFunction::G_kJ};
+	ParametersNS::Database database{ParametersNS::Database::Thermo};
+};
+
+bool operator==(const GraphIdImpl& lhs, const GraphIdImpl& rhs);
+
+namespace std {
+template<> struct hash<GraphIdImpl> {
+	std::size_t operator()(const GraphIdImpl& rhs) const noexcept {
+		constexpr int n = 10;
+		return std::hash<int>{}((rhs.substance_id * n +
+			static_cast<int>(rhs.thermodynamic_function)) * n +
+			static_cast<int>(rhs.database));
+	}
+};
+}
+
+using GraphId = GraphIdImpl;
 static_assert(std::is_invocable_v<std::hash<GraphId>, GraphId>, "");
 
 template<typename GraphPointer,

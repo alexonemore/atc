@@ -24,16 +24,15 @@
 #include <QColor>
 #include "database.h"
 #include "plots.h"
+#include "parameters.h"
 
-enum class PlotTFModelFields {
+namespace PlotTFModelFields {
+enum class Names {
 	ID,
-	Formula,
-	G_kJ,
-	H_kJ,
-	F_J,
-	S_J,
-	Cp_J,
-	c
+	Formula
+};
+extern const QStringList names;
+using TF = ParametersNS::ThermodynamicFunction;
 };
 
 class PlotTFModel : public QAbstractTableModel
@@ -56,9 +55,14 @@ private:
 	std::unordered_map<int, Row> data_tf_new;
 	int row_count{0};
 	const int col_count{plot_TF_model_field_names.size()};
+	ParametersNS::Database database;
+private:
+	const int field_names_size{PlotTFModelFields::names.size()};
+	const int field_tf_size{ParametersNS::thermodynamic_function.size()};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);
 	~PlotTFModel() override;
+	void SetDatabase(const ParametersNS::Database new_database);
 	void SetNewData(SubstanceNames&& data);
 	void Clear();
 
@@ -72,17 +76,21 @@ public:
 	bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+public slots:
+	void SlotRemoveAllGraphs();
+	void SlotRemoveOneGraph(const GraphId id);
+
 signals:
-	void AddGraph(const GraphId& id, const QString& name,
-				  const QColor& color);
-	void RemoveGraph(const GraphId& id);
-	void ChangeColorGraph(const GraphId& id, const QColor& color);
+	void AddGraph(const GraphId id, const QString& name, const QColor& color);
+	void RemoveGraph(const GraphId id);
+	void ChangeColorGraph(const GraphId id, const QColor& color);
 
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-	Cell& GetCell(const int id, const PlotTFModelFields column);
-	GraphId MakeGraphId(const int id, const PlotTFModelFields column) const;
-	QString MakeGraphName(const QString& formula, const PlotTFModelFields column) const;
+	Cell& GetCell(const int id, const PlotTFModelFields::TF tf);
+	GraphId MakeGraphId(const int id, const PlotTFModelFields::TF tf) const;
+	QString MakeGraphName(const QString& formula,
+						  const PlotTFModelFields::TF tf) const;
 };
 
 

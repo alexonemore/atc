@@ -42,8 +42,8 @@ DialogChangeGraphSettings::DialogChangeGraphSettings(
 	std::transform(x.constBegin(), x.constEnd(), y.begin(), [](auto i){
 		return std::sin(i/10)/i;
 	});
-	ui->plot->AddGraphY1(0, previous.name, std::move(x), std::move(y));
-	ui->plot->SetGraphSettings(0, previous);
+	ui->plot->AddGraphY1(GraphId{}, previous.name, std::move(x), std::move(y));
+	ui->plot->SetGraphSettings(GraphId{}, previous);
 
 	ui->name->setText(previous.name);
 
@@ -96,82 +96,82 @@ DialogChangeGraphSettings::~DialogChangeGraphSettings()
 GraphSettings DialogChangeGraphSettings::GetGraphSettings() const
 {
 	LOG()
-	return ui->plot->GetGraphSettings(0);
+	return ui->plot->GetGraphSettings(GraphId{});
 }
 
 void DialogChangeGraphSettings::ChangeName(const QString& name)
 {
 	LOG()
-	ui->plot->SetGraphName(0, name);
+	ui->plot->SetGraphName(GraphId{}, name);
 }
 
 void DialogChangeGraphSettings::ChangeLineGraphStyle(int index)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	settings.line_style = static_cast<QCPGraph::LineStyle>(index);
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeLineStyle(int index)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	settings.line_pen.setStyle(static_cast<Qt::PenStyle>(index));
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeLineWidth(double width)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	settings.line_pen.setWidthF(width);
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeLineColor()
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	const QColor new_color = QColorDialog::getColor(settings.line_pen.color(),
 									this, tr("Select Line Color"));
 	if (new_color.isValid()) {
 		settings.line_pen.setColor(new_color);
-		ui->plot->SetGraphSettings(0, settings);
+		ui->plot->SetGraphSettings(GraphId{}, settings);
 	}
 }
 
 void DialogChangeGraphSettings::ChangeScatterShape(int index)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	settings.scatter_style.setShape(static_cast<QCPScatterStyle::ScatterShape>(index));
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeScatterSize(double width)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	settings.scatter_style.setSize(width);
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeScatterLineWidth(double width)
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	auto color = settings.scatter_style.pen().color();
 	QPen pen{color};
 	pen.setWidthF(width);
 	settings.scatter_style.setPen(pen);
-	ui->plot->SetGraphSettings(0, settings);
+	ui->plot->SetGraphSettings(GraphId{}, settings);
 }
 
 void DialogChangeGraphSettings::ChangeScatterLineColor()
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	auto prev_color = settings.scatter_style.pen().color();
 	const QColor new_color = QColorDialog::getColor(prev_color, this,
 												tr("Select Scatter Color"));
@@ -180,20 +180,20 @@ void DialogChangeGraphSettings::ChangeScatterLineColor()
 		QPen pen{new_color};
 		pen.setWidthF(width);
 		settings.scatter_style.setPen(pen);
-		ui->plot->SetGraphSettings(0, settings);
+		ui->plot->SetGraphSettings(GraphId{}, settings);
 	}
 }
 
 void DialogChangeGraphSettings::ChangeScatterFillColor()
 {
 	LOG()
-	auto settings = ui->plot->GetGraphSettings(0);
+	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	auto prev_color = settings.scatter_style.brush().color();
 	const QColor new_color = QColorDialog::getColor(prev_color, this,
 												tr("Select Scatter Color"));
 	if (new_color.isValid()) {
 		settings.scatter_style.setBrush(QBrush{new_color});
-		ui->plot->SetGraphSettings(0, settings);
+		ui->plot->SetGraphSettings(GraphId{}, settings);
 	}
 }
 

@@ -21,6 +21,14 @@
 #include <QThread>
 
 namespace ParametersNS {
+const QStringList thermodynamic_function{
+	QStringLiteral("G_kJ"),
+	QStringLiteral("H_kJ"),
+	QStringLiteral("F_J"),
+	QStringLiteral("S_J"),
+	QStringLiteral("Cp_J"),
+	QStringLiteral("c")
+};
 const QStringList workmode{
 	QT_TR_NOOP("Single point"),
 	QT_TR_NOOP("Temperature range"),
