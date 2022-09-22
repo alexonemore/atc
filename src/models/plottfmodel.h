@@ -91,6 +91,7 @@ private:
 	GraphId MakeGraphId(const int id, const PlotTFModelFields::TF tf) const;
 	QString MakeGraphName(const QString& formula,
 						  const PlotTFModelFields::TF tf) const;
+	QModelIndex GetIndex(const GraphId& id) const;
 };
 
 

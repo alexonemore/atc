@@ -204,7 +204,21 @@ void PlotTFModel::SlotRemoveAllGraphs()
 
 void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
 {
-
+	if(id.database != database) return;
+	auto row = data_tf.find(id.substance_id);
+	if(row == data_tf.end()) return;
+	auto&& cell = row->second;
+	switch(id.thermodynamic_function) {
+	case PlotTFModelFields::TF::G_kJ:	cell.G = Cell{}; break;
+	case PlotTFModelFields::TF::H_kJ:	cell.H = Cell{}; break;
+	case PlotTFModelFields::TF::F_J:	cell.F = Cell{}; break;
+	case PlotTFModelFields::TF::S_J:	cell.S = Cell{}; break;
+	case PlotTFModelFields::TF::Cp_J:	cell.Cp = Cell{}; break;
+	case PlotTFModelFields::TF::c:		cell.c = Cell{}; break;
+	}
+	auto index = GetIndex(id);
+	assert(CheckIndexValidParent(index));
+	emit dataChanged(index, index);
 }
 
 bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
@@ -226,6 +240,7 @@ PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
 	case PlotTFModelFields::TF::Cp_J:	return at_id.Cp;
 	case PlotTFModelFields::TF::c:		return at_id.c;
 	}
+	throw std::runtime_error("PlotTFModel::GetCell");
 }
 
 GraphId PlotTFModel::MakeGraphId(const int id,
@@ -242,4 +257,15 @@ QString PlotTFModel::MakeGraphName(const QString& formula,
 			QStringLiteral("> {") +
 			ParametersNS::databases.at(static_cast<int>(database)) +
 			QStringLiteral("}"));
+}
+
+QModelIndex PlotTFModel::GetIndex(const GraphId& id) const
+{
+	auto find = std::find_if(data_names.cbegin(), data_names.cend(),
+				 [id](const auto& i){
+		return i.id == id.substance_id;
+	});
+	auto row = std::distance(data_names.cbegin(), find);
+	auto col = static_cast<int>(id.thermodynamic_function) + field_names_size;
+	return index(row, col);
 }
