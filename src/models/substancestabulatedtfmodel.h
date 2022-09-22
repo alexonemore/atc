@@ -23,25 +23,24 @@
 #include <QAbstractTableModel>
 #include "database.h"
 
-enum class SubstancesTabulatedTFFields {
-	T,
-	G_kJ,
-	H_kJ,
-	F_J,
-	S_J,
-	Cp_J,
-	c
+namespace SubstancesTabulatedTFFields {
+enum class Names {
+	T
 };
+extern const QStringList names;
+using TF = ParametersNS::ThermodynamicFunction;
+}
 
 class SubstancesTabulatedTFModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(SubstancesTabulatedTFModel)
 private:
-	static const QStringList substance_tabulated_tf_field_names;
 	SubstancesTabulatedTFData data_;
 	int row_count{0};
-	const int col_count{substance_tabulated_tf_field_names.size()};
+	int col_count;
+private:
+	QStringList substance_tabulated_tf_field_names;
 public:
 	explicit SubstancesTabulatedTFModel(QObject *parent = nullptr);
 	~SubstancesTabulatedTFModel() override;

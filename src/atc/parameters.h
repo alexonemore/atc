@@ -33,6 +33,8 @@ enum class ThermodynamicFunction {
 	c
 };
 extern const QStringList thermodynamic_function;
+extern const QStringList thermodynamic_function_long;
+extern const QStringList thermodynamic_function_full;
 
 enum class Workmode {
 	SinglePoint,

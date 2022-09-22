@@ -22,12 +22,28 @@
 
 namespace ParametersNS {
 const QStringList thermodynamic_function{
+	QStringLiteral("G"),
+	QStringLiteral("H"),
+	QStringLiteral("F"),
+	QStringLiteral("S"),
+	QStringLiteral("Cp"),
+	QStringLiteral("c")
+};
+const QStringList thermodynamic_function_long{
 	QStringLiteral("G_kJ"),
 	QStringLiteral("H_kJ"),
 	QStringLiteral("F_J"),
 	QStringLiteral("S_J"),
 	QStringLiteral("Cp_J"),
 	QStringLiteral("c")
+};
+const QStringList thermodynamic_function_full{
+	QStringLiteral("G [kJ/mol]"),
+	QStringLiteral("H [kJ/mol]"),
+	QStringLiteral("F [J/molK]"),
+	QStringLiteral("S [J/molK]"),
+	QStringLiteral("Cp [J/molK]"),
+	QStringLiteral("c [G/RT]")
 };
 const QStringList workmode{
 	QT_TR_NOOP("Single point"),

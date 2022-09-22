@@ -22,6 +22,7 @@
 
 #include <chrono>
 #include <QString>
+#include <QLatin1String>
 #include <QObject>
 #include <QThread>
 #include <QMetaEnum>
@@ -154,6 +155,13 @@ QStringList MetaEnumToQStringList() {
 		list.append(me.valueToKey(me.value(i)));
 	}
 	return list;
+}
+
+
+template<int size>
+constexpr QLatin1String MakeQLatin1String(const char (&str)[size])
+{
+	return QLatin1String(str, size);
 }
 
 #endif // UTILITIES_H

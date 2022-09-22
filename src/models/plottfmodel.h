@@ -58,7 +58,6 @@ private:
 	ParametersNS::Database database;
 private:
 	const int field_names_size{PlotTFModelFields::names.size()};
-	const int field_tf_size{ParametersNS::thermodynamic_function.size()};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);
 	~PlotTFModel() override;

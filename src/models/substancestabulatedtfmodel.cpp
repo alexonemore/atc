@@ -19,20 +19,25 @@
 
 #include "substancestabulatedtfmodel.h"
 #include "utilities.h"
+#include <array>
 
-const QStringList SubstancesTabulatedTFModel::substance_tabulated_tf_field_names = {
-	QStringLiteral("T [%1]"),
-	QStringLiteral("G [kJ/mol]"),
-	QStringLiteral("H [kJ/mol]"),
-	QStringLiteral("F [J/molK]"),
-	QStringLiteral("S [J/molK]"),
-	QStringLiteral("Cp [J/molK]"),
-	QStringLiteral("c [G/RT]")
+namespace SubstancesTabulatedTFFields {
+const QStringList names {
+	QStringLiteral("T [%1]")
 };
+constexpr std::array names_{
+	MakeQLatin1String("T [%1]")
+};
+static constexpr auto names_size = static_cast<int>(names_.size());
+}
 
 SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
+	, col_count{SubstancesTabulatedTFFields::names_size +
+				ParametersNS::thermodynamic_function_full.size()}
 {
+	substance_tabulated_tf_field_names = SubstancesTabulatedTFFields::names +
+			ParametersNS::thermodynamic_function_full;
 
 }
 
@@ -84,16 +89,22 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 	}
 	auto col = index.column();
 	auto row = index.row();
-	switch(static_cast<SubstancesTabulatedTFFields>(col)) {
-	case SubstancesTabulatedTFFields::T:	return data_.temperatures.at(row);
-	case SubstancesTabulatedTFFields::G_kJ:	return data_.G_kJ.at(row);
-	case SubstancesTabulatedTFFields::H_kJ:	return data_.H_kJ.at(row);
-	case SubstancesTabulatedTFFields::F_J:	return data_.F_J.at(row);
-	case SubstancesTabulatedTFFields::S_J:	return data_.S_J.at(row);
-	case SubstancesTabulatedTFFields::Cp_J:	return data_.Cp_J.at(row);
-	case SubstancesTabulatedTFFields::c:	return data_.c.at(row);
+	if(col < SubstancesTabulatedTFFields::names_size) {
+		switch(static_cast<SubstancesTabulatedTFFields::Names>(col)) {
+		case SubstancesTabulatedTFFields::Names::T: return data_.temperatures.at(row);
+		}
+	} else {
+		switch(static_cast<SubstancesTabulatedTFFields::TF>(col)) {
+		case SubstancesTabulatedTFFields::TF::G_kJ:	return data_.G_kJ.at(row);
+		case SubstancesTabulatedTFFields::TF::H_kJ:	return data_.H_kJ.at(row);
+		case SubstancesTabulatedTFFields::TF::F_J:	return data_.F_J.at(row);
+		case SubstancesTabulatedTFFields::TF::S_J:	return data_.S_J.at(row);
+		case SubstancesTabulatedTFFields::TF::Cp_J:	return data_.Cp_J.at(row);
+		case SubstancesTabulatedTFFields::TF::c:	return data_.c.at(row);
+		}
 	}
-	LOG("ERROR in SubstancesTabulatedTFModel::data")
+	LOG("ERROR in SubstancesTabulatedTFModel::data, index:", index)
+	assert(false && "ERROR in SubstancesTabulatedTFModel::data");
 	return QVariant{};
 }
 
@@ -106,12 +117,14 @@ QVariant SubstancesTabulatedTFModel::headerData(int section,
 	if(orientation != Qt::Horizontal) {
 		return section;
 	}
-	switch(static_cast<SubstancesTabulatedTFFields>(section)) {
-	case SubstancesTabulatedTFFields::T:
-		return substance_tabulated_tf_field_names.at(section).
-				arg(ParametersNS::temperature_units.at(
-						static_cast<int>(data_.temperature_unit)));
-	default:
+	if(section < SubstancesTabulatedTFFields::names_size) {
+		switch(static_cast<SubstancesTabulatedTFFields::Names>(section)) {
+		case SubstancesTabulatedTFFields::Names::T:
+			return substance_tabulated_tf_field_names.at(section).
+					arg(ParametersNS::temperature_units.at(
+							static_cast<int>(data_.temperature_unit)));
+		}
+	} else {
 		return substance_tabulated_tf_field_names.at(section);
 	}
 }

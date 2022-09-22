@@ -22,7 +22,7 @@
 #include <QBrush>
 
 namespace PlotTFModelFields {
-extern const QStringList names{
+const QStringList names{
 	QT_TR_NOOP("ID"),
 	QT_TR_NOOP("Formula")
 };
