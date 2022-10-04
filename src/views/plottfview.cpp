@@ -49,6 +49,15 @@ PlotTFView::PlotTFView(QWidget *parent)
 	plot->SetAxisY2Name(QStringLiteral("F, S, Cp, c [J/molK]"));
 	SetXAxisUnit(ParametersNS::TemperatureUnit::Kelvin);
 
+	connect(plot, &Plot2DGraph::SignalAllGraphsRemoved,
+			this, &PlotTFView::SignalAllGraphsRemoved);
+	connect(plot, &Plot2DGraph::SignalGraphColorChanged,
+			this, &PlotTFView::SignalGraphColorChanged);
+	connect(plot, &Plot2DGraph::SignalGraphRemoved,
+			this, &PlotTFView::SignalGraphRemoved);
+	connect(plot, &Plot2DGraph::SignalGraphsRemoved,
+			this, &PlotTFView::SignalGraphsRemoved);
+
 }
 
 PlotTFView::~PlotTFView()

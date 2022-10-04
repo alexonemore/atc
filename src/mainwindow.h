@@ -63,11 +63,17 @@ public:
 	void SetModel_2(QAbstractItemModel* model);
 	void SetSelectonModel(QItemSelectionModel* selection);
 
+	// plot TF
 public slots:
 	void SlotAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color,
 				  QVector<double>& x, QVector<double>& y);
 	void SlotRemoveGraphPlotTF(const GraphId id);
 	void SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color);
+signals:
+	void SignalAllGraphsRemovedPlotTF();
+	void SignalGraphColorChangedPlotTF(const GraphId, const QColor&);
+	void SignalGraphRemovedPlotTF(const GraphId);
+	void SignalGraphsRemovedPlotTF(const QVector<GraphId>&);
 
 
 	// demo

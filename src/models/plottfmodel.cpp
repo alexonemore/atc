@@ -221,6 +221,25 @@ void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
 	emit dataChanged(index, index);
 }
 
+void PlotTFModel::SlotChangeColotGraph(const GraphId id, const QColor& color)
+{
+	if(id.database != database) return;
+	auto row = data_tf.find(id.substance_id);
+	if(row == data_tf.end()) return;
+	auto&& cell = row->second;
+	switch(id.thermodynamic_function) {
+	case PlotTFModelFields::TF::G_kJ:	cell.G.color = color; break;
+	case PlotTFModelFields::TF::H_kJ:	cell.H.color = color; break;
+	case PlotTFModelFields::TF::F_J:	cell.F.color = color; break;
+	case PlotTFModelFields::TF::S_J:	cell.S.color = color; break;
+	case PlotTFModelFields::TF::Cp_J:	cell.Cp.color = color; break;
+	case PlotTFModelFields::TF::c:		cell.c.color = color; break;
+	}
+	auto index = GetIndex(id);
+	assert(CheckIndexValidParent(index));
+	emit dataChanged(index, index);
+}
+
 bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
 {
 	return checkIndex(index,

@@ -36,6 +36,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<ParametersNS::Parameters>("ParametersNS::Parameters");
 	qRegisterMetaType<ParametersNS::TemperatureUnit>("ParametersNS::TemperatureUnit");
 	qRegisterMetaType<GraphId>("GraphId");
+	qRegisterMetaType<QVector<GraphId>>("QVector<GraphId>&");
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
 	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
@@ -125,6 +126,10 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalChangeColorGraphPlotTF,
 			gui, &MainWindow::SlotChangeColorGraphPlotTF);
 
+	connect(gui, &MainWindow::SignalAllGraphsRemovedPlotTF,
+			model_plot_tf, &PlotTFModel::SlotRemoveAllGraphs);
+	connect(gui, &MainWindow::SignalGraphColorChangedPlotTF,
+			model_plot_tf, &PlotTFModel::SlotChangeColotGraph);
 
 }
 

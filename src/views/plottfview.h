@@ -45,6 +45,10 @@ public slots:
 	void SetXAxisUnit(const ParametersNS::TemperatureUnit unit);
 
 signals:
+	void SignalAllGraphsRemoved();
+	void SignalGraphColorChanged(const GraphId, const QColor&);
+	void SignalGraphRemoved(const GraphId);
+	void SignalGraphsRemoved(const QVector<GraphId>&);
 
 };
 

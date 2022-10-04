@@ -85,8 +85,8 @@ signals:
 	void SignalAllGraphsRemoved();
 	void SignalGraphRemoved(const GraphId);
 	void SignalGraphsRemoved(const QVector<GraphId>&);
-	void SignalGraphColorChanged(const QColor&);
-	void SignalGraphNameChanged(const QString&);
+	void SignalGraphColorChanged(const GraphId, const QColor&);
+	void SignalGraphNameChanged(const GraphId, const QString&);
 
 private slots:
 	void PlotLegendDoubleClick(QCPLegend*, QCPAbstractLegendItem* item);

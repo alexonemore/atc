@@ -103,6 +103,16 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->view_substances, &SubstancesTableView::SelectSubstance,
 			this, &MainWindow::SignalSubstancesTableSelection);
 
+	// plot TF
+	connect(ui->plot_tf_view, &PlotTFView::SignalAllGraphsRemoved,
+			this, &MainWindow::SignalAllGraphsRemovedPlotTF);
+	connect(ui->plot_tf_view, &PlotTFView::SignalGraphColorChanged,
+			this, &MainWindow::SignalGraphColorChangedPlotTF);
+	connect(ui->plot_tf_view, &PlotTFView::SignalGraphRemoved,
+			this, &MainWindow::SignalGraphRemovedPlotTF);
+	connect(ui->plot_tf_view, &PlotTFView::SignalGraphsRemoved,
+			this, &MainWindow::SignalGraphsRemovedPlotTF);
+
 }
 
 MainWindow::~MainWindow()
