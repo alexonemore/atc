@@ -27,6 +27,7 @@ constexpr double y_default_min = 0.0;
 constexpr double y_default_max = 500.0;
 constexpr double x_default_min = 300.0;
 constexpr double x_default_max = 1000.0;
+constexpr double default_graph_width = 2;
 }
 
 namespace Plot {
@@ -198,38 +199,39 @@ void Plot2DGraph::SetAxisY2Range(double min, double max)
 }
 
 void Plot2DGraph::AddGraphY1(const GraphId id, QVector<double>&& x,
-						QVector<double>&& y)
+							 QVector<double>&& y)
 {
 	AddGraph(id, std::move(x), std::move(y), YAxis::y1);
 }
 
 void Plot2DGraph::AddGraphY1(const GraphId id, const QString& name,
-						QVector<double>&& x, QVector<double>&& y)
+							 QVector<double>&& x, QVector<double>&& y, QColor color)
 {
-	AddGraph(id, name, std::move(x), std::move(y), YAxis::y1);
+	AddGraph(id, name, std::move(x), std::move(y), YAxis::y1, color);
 }
 
 void Plot2DGraph::AddGraphY2(const GraphId id, QVector<double>&& x,
-						QVector<double>&& y)
+							 QVector<double>&& y)
 {
 	AddGraph(id, std::move(x), std::move(y), YAxis::y2);
 }
 
 void Plot2DGraph::AddGraphY2(const GraphId id, const QString& name,
-						QVector<double>&& x, QVector<double>&& y)
+							 QVector<double>&& x, QVector<double>&& y, QColor color)
 {
-	AddGraph(id, name, std::move(x), std::move(y), YAxis::y2);
+	AddGraph(id, name, std::move(x), std::move(y), YAxis::y2, color);
 }
 
 void Plot2DGraph::AddGraph(const GraphId id, QVector<double>&& x,
-					  QVector<double>&& y, YAxis axis)
+						   QVector<double>&& y, YAxis axis)
 {
 	AddGraph(id, QString{">> %1"}.arg(id.substance_id),
 			 std::move(x), std::move(y), axis);
 }
 
 void Plot2DGraph::AddGraph(const GraphId id, const QString& name,
-					  QVector<double>&& x, QVector<double>&& y, YAxis axis)
+						   QVector<double>&& x, QVector<double>&& y, YAxis axis,
+						   QColor color)
 {
 	QCPGraph* pgraph;
 	switch(axis) {
@@ -245,7 +247,7 @@ void Plot2DGraph::AddGraph(const GraphId id, const QString& name,
 	pgraph->setName(name);
 	pgraph->setLineStyle(QCPGraph::LineStyle::lsLine);
 	pgraph->setScatterStyle(QCPScatterStyle::ScatterShape::ssNone);
-	pgraph->setPen(QPen{GetRandomColor()});
+	pgraph->setPen(QPen{color, default_graph_width});
 	auto it = graph_map.find(id);
 	if(it != graph_map.end()) {
 		plot->removeGraph(it->second);
@@ -494,10 +496,10 @@ void Plot2DGraph::PlotGraphClicked(QCPAbstractPlottable* plottable_, int data_in
 {
 	// TODO not call while tracer is shown, possible due to different layer
 	LOG("data index:", data_index)
-	// since we know we only have QCPGraphs in the plot, we can immediately
-	// access interface1D() usually it's better to first check whether
-	// interface1D() returns non-zero, and only then use it.
-	auto interface_ = plottable_->interface1D();
+			// since we know we only have QCPGraphs in the plot, we can immediately
+			// access interface1D() usually it's better to first check whether
+			// interface1D() returns non-zero, and only then use it.
+			auto interface_ = plottable_->interface1D();
 	if(interface_) {
 		double x = interface_->dataMainKey(data_index);
 		double y = interface_->dataMainValue(data_index);
@@ -512,7 +514,7 @@ void Plot2DGraph::PlotGraphClicked(QCPAbstractPlottable* plottable_, int data_in
 void Plot2DGraph::keyPressEvent(QKeyEvent* event)
 {
 	LOG(event)
-	auto key = static_cast<QKeyEvent*>(event)->key();
+			auto key = static_cast<QKeyEvent*>(event)->key();
 	if(key == Qt::Key_Delete || key == Qt::Key_Backspace) {
 		RemoveSelectedGraphs();
 	} else {
@@ -526,9 +528,9 @@ QString Plot2DGraph::MakeTextForTracer(const QPoint& cursor_px) const
 	double y1 = plot->yAxis ->pixelToCoord(cursor_px.y());
 	double y2 = plot->yAxis2->pixelToCoord(cursor_px.y());
 	return QString{"%1: %2\n%3: %4\n%5: %6"}.arg(
-		GetAxisXName(), QString::number(x),
-		GetAxisY1Name(), QString::number(y1),
-		GetAxisY2Name(), QString::number(y2));
+	GetAxisXName(), QString::number(x),
+	GetAxisY1Name(), QString::number(y1),
+	GetAxisY2Name(), QString::number(y2));
 }
 
 void Plot::MakePositionIcons()
@@ -600,7 +602,7 @@ void Plot2DGraph::PlotLegendDoubleClick(QCPLegend*, QCPAbstractLegendItem* item)
 		auto pgraph = qobject_cast<QCPGraph*>(pl_item->plottable());
 		if(pgraph) {
 			DialogChangeGraphSettings dialog(GetGraphSettings(pgraph),
-										tr("Graph Settings"), this);
+											 tr("Graph Settings"), this);
 			if(dialog.exec() == QDialog::Accepted) {
 				SetGraphSettings(pgraph, dialog.GetGraphSettings());
 			}

@@ -60,17 +60,19 @@ public:
 	void SetAxisY2Range(double min, double max);
 	void AddGraphY1(const GraphId id, QVector<double>&& x, QVector<double>&& y);
 	void AddGraphY1(const GraphId id, const QString& name,
-					QVector<double>&& x, QVector<double>&& y);
+					QVector<double>&& x, QVector<double>&& y,
+					QColor color = Qt::black);
 	void AddGraphY2(const GraphId id, QVector<double>&& x, QVector<double>&& y);
 	void AddGraphY2(const GraphId id, const QString& name,
-					QVector<double>&& x, QVector<double>&& y);
+					QVector<double>&& x, QVector<double>&& y,
+					QColor color = Qt::black);
 	void SetGraphName(const GraphId id, const QString& name);
 	void SetGraphColor(const GraphId id, const QColor& color);
 	void RemoveGraph(const GraphId id);
 	void RemoveSelectedGraphs();
-	void RemoveAllGraphs();	
+	void RemoveAllGraphs();
 	void SetLegendVisible(const bool is_visible);
-	void SetLegendPosition(const Qt::Alignment alignment);	
+	void SetLegendPosition(const Qt::Alignment alignment);
 	QString GetAxisXName() const;
 	QString GetAxisY1Name() const;
 	QString GetAxisY2Name() const;
@@ -86,8 +88,8 @@ signals:
 	void SignalGraphColorChanged(const QColor&);
 	void SignalGraphNameChanged(const QString&);
 
-private slots:	
-	void PlotLegendDoubleClick(QCPLegend*, QCPAbstractLegendItem* item);	
+private slots:
+	void PlotLegendDoubleClick(QCPLegend*, QCPAbstractLegendItem* item);
 	void PlotGraphClicked(QCPAbstractPlottable* plottable_, int data_index);
 	void SetLegendPosition();
 	void ChangeSelectedGraphsSettings();
@@ -106,7 +108,8 @@ private:
 	void AddGraph(const GraphId id, QVector<double>&& x, QVector<double>&& y,
 				  YAxis axis);
 	void AddGraph(const GraphId id, const QString& name,
-				  QVector<double>&& x, QVector<double>&& y, YAxis axis);
+				  QVector<double>&& x, QVector<double>&& y, YAxis axis,
+				  QColor color = Qt::black);
 	const QIcon& GetLegendPositionIcon() const;
 	GraphSettings GetGraphSettings(const GraphPointer pgraph) const;
 	void SetGraphSettings(const GraphPointer pgraph, const GraphSettings gs);

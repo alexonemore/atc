@@ -64,8 +64,18 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 void PlotTFView::AddGraph(const GraphId id, const QString& name,
 						  const QColor& color, QVector<double>& x, QVector<double>& y)
 {
-	plot->AddGraphY1(id, name, std::move(x), std::move(y));
-	plot->SetGraphColor(id, color);
+	switch(id.thermodynamic_function) {
+	case ParametersNS::ThermodynamicFunction::G_kJ:
+	case ParametersNS::ThermodynamicFunction::H_kJ:
+		plot->AddGraphY1(id, name, std::move(x), std::move(y), color);
+		break;
+	case ParametersNS::ThermodynamicFunction::F_J:
+	case ParametersNS::ThermodynamicFunction::S_J:
+	case ParametersNS::ThermodynamicFunction::Cp_J:
+	case ParametersNS::ThermodynamicFunction::c:
+		plot->AddGraphY2(id, name, std::move(x), std::move(y), color);
+		break;
+	}
 }
 
 void PlotTFView::RemoveGraph(const GraphId id)
