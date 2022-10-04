@@ -64,6 +64,14 @@ public:
 	void SetSelectonModel(QItemSelectionModel* selection);
 
 public slots:
+	void SlotAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void SlotRemoveGraphPlotTF(const GraphId id);
+	void SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color);
+
+
+	// demo
+public slots:
 	void SlotHeavyComputations(QVector<HeavyContainer>& ho);
 
 public slots:

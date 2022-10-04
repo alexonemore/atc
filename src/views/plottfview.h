@@ -37,6 +37,11 @@ public:
 	~PlotTFView() override;
 	void SetModel(QAbstractItemModel* model);
 public slots:
+	void AddGraph(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void RemoveGraph(const GraphId id);
+	void ChangeColorGraph(const GraphId id, const QColor& color);
+
 	void SetXAxisUnit(const ParametersNS::TemperatureUnit unit);
 
 signals:

@@ -159,6 +159,22 @@ void MainWindow::SetSelectonModel(QItemSelectionModel* selection)
 	ui->list_view->setSelectionModel(selection);
 }
 
+void MainWindow::SlotAddGraphPlotTF(const GraphId id, const QString& name,
+								const QColor& color, QVector<double>& x, QVector<double>& y)
+{
+	ui->plot_tf_view->AddGraph(id, name, color, std::move(x), std::move(y));
+}
+
+void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
+{
+	ui->plot_tf_view->RemoveGraph(id);
+}
+
+void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
+{
+	ui->plot_tf_view->ChangeColorGraph(id, color);
+}
+
 void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)
 {
 	LOG(">> HEAVY START <<")

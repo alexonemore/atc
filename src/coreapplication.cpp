@@ -111,6 +111,20 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalSetPlotXAxisUnit,
 			gui, &MainWindow::SlotSetPlotXAxisUnit);
 
+	// model plot TF
+	connect(model_plot_tf, &PlotTFModel::AddGraph,
+			this, &CoreApplication::SlotAddGraphPlotTF);
+	connect(model_plot_tf, &PlotTFModel::RemoveGraph,
+			this, &CoreApplication::SlotRemoveGraphPlotTF);
+	connect(model_plot_tf, &PlotTFModel::ChangeColorGraph,
+			this, &CoreApplication::SlotChangeColorGraphPlotTF);
+	connect(this, &CoreApplication::SignalAddGraphPlotTF,
+			gui, &MainWindow::SlotAddGraphPlotTF);
+	connect(this, &CoreApplication::SignalRemoveGraphPlotTF,
+			gui, &MainWindow::SlotRemoveGraphPlotTF);
+	connect(this, &CoreApplication::SignalChangeColorGraphPlotTF,
+			gui, &MainWindow::SlotChangeColorGraphPlotTF);
+
 
 }
 
@@ -261,6 +275,31 @@ void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 	selected_substance_id = id;
 	is_selected = true;
 	UpdateRangeTabulatedModels();
+}
+
+void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
+										 const QColor& color)
+{
+	graphs_tf_view[id] = color;
+	QVector<double> x, y;
+	// fill x, y
+	x = {1, 2, 3};
+	y = {1, 4, 9};
+
+	emit SignalAddGraphPlotTF(id, name, color, x, y);
+	emit SignalChangeColorGraphPlotTF(id, color);
+}
+
+void CoreApplication::SlotRemoveGraphPlotTF(const GraphId id)
+{
+	graphs_tf_view.erase(id);
+	emit SignalRemoveGraphPlotTF(id);
+}
+
+void CoreApplication::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
+{
+	graphs_tf_view.at(id) = color;
+	emit SignalChangeColorGraphPlotTF(id, color);
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()

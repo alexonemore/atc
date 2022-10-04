@@ -61,6 +61,23 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 	table->setModel(model);
 }
 
+void PlotTFView::AddGraph(const GraphId id, const QString& name,
+						  const QColor& color, QVector<double>& x, QVector<double>& y)
+{
+	plot->AddGraphY1(id, name, std::move(x), std::move(y));
+	plot->SetGraphColor(id, color);
+}
+
+void PlotTFView::RemoveGraph(const GraphId id)
+{
+	plot->RemoveGraph(id);
+}
+
+void PlotTFView::ChangeColorGraph(const GraphId id, const QColor& color)
+{
+	plot->SetGraphColor(id, color);
+}
+
 void PlotTFView::SetXAxisUnit(const ParametersNS::TemperatureUnit unit)
 {
 	auto&& str = ParametersNS::temperature_units.at(static_cast<int>(unit));

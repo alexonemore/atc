@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QtDataVisualization>
+#include <unordered_map>
+#include <QColor>
 #include "mainwindow.h"
 #include "heavycontainer.h"
 #include "database.h"
@@ -50,6 +52,7 @@ private:
 	int selected_substance_id;
 	bool is_selected{false};
 
+	std::unordered_map<GraphId, QColor> graphs_tf_view;
 
 	// demo
 	QAbstractItemModel* table_1;
@@ -76,6 +79,18 @@ signals:
 private slots:
 	void SlotUpdate(const ParametersNS::Parameters parameters);
 	void SlotSubstancesTableSelectionHandler(int id);
+
+	// tf plots
+private slots:
+	void SlotAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color);
+	void SlotRemoveGraphPlotTF(const GraphId id);
+	void SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color);
+signals:
+	void SignalAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void SignalRemoveGraphPlotTF(const GraphId id);
+	void SignalChangeColorGraphPlotTF(const GraphId id, const QColor& color);
+
 
 public slots:
 	void Initialize();

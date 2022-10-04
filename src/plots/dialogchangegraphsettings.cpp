@@ -135,7 +135,7 @@ void DialogChangeGraphSettings::ChangeLineColor()
 	auto settings = ui->plot->GetGraphSettings(GraphId{});
 	const QColor new_color = QColorDialog::getColor(settings.line_pen.color(),
 									this, tr("Select Line Color"));
-	if (new_color.isValid()) {
+	if(new_color.isValid()) {
 		settings.line_pen.setColor(new_color);
 		ui->plot->SetGraphSettings(GraphId{}, settings);
 	}
