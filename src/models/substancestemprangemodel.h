@@ -37,7 +37,7 @@ class SubstancesTempRangeModel : public QAbstractTableModel
 private:
 	static const QStringList substances_temprange_field_names;
 	SubstanceTempRangeData data_;
-	const int row_count{substances_temprange_field_names.size()};
+	const int row_count{static_cast<int>(substances_temprange_field_names.size())};
 	int col_count{0};
 public:
 	explicit SubstancesTempRangeModel(QObject *parent = nullptr);

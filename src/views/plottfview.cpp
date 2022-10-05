@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include "parameters.h"
 #include "utilities.h"
+#include "plottfmodel.h"
 
 PlotTFView::PlotTFView(QWidget *parent)
 	: QWidget(parent)
@@ -58,6 +59,12 @@ PlotTFView::PlotTFView(QWidget *parent)
 	connect(plot, &Plot2DGraph::SignalGraphsRemoved,
 			this, &PlotTFView::SignalGraphsRemoved);
 
+	color_delegate = new ColorPickerDelegate(this);
+	int i = PlotTFModelFields::names.size();
+	int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
+	for(; i <= max; ++i) {
+		table->setItemDelegateForColumn(i, color_delegate);
+	}
 }
 
 PlotTFView::~PlotTFView()

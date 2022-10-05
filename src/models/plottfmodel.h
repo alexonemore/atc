@@ -54,10 +54,10 @@ private:
 	std::unordered_map<int, Row> data_tf; // int = id from data_names
 	std::unordered_map<int, Row> data_tf_new;
 	int row_count{0};
-	const int col_count{plot_TF_model_field_names.size()};
+	const int col_count{static_cast<int>(plot_TF_model_field_names.size())};
 	ParametersNS::Database database;
 private:
-	const int field_names_size{PlotTFModelFields::names.size()};
+	const int field_names_size{static_cast<int>(PlotTFModelFields::names.size())};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);
 	~PlotTFModel() override;
@@ -78,6 +78,7 @@ public:
 public slots:
 	void SlotRemoveAllGraphs();
 	void SlotRemoveOneGraph(const GraphId id);
+	void SlotRemoveGraphs(const QVector<GraphId>& ids);
 	void SlotChangeColotGraph(const GraphId id, const QColor& color);
 
 signals:

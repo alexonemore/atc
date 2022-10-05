@@ -274,12 +274,13 @@ void Plot2DGraph::SetGraphName(const GraphId id, const QString& name)
 
 void Plot2DGraph::SetGraphColor(const GraphId id, const QColor& color)
 {
+	LOG(color)
 	auto it = graph_map.find(id);
 	if(it != graph_map.end()) {
 		auto pgraph = it->second;
-		auto brush = pgraph->brush();
-		brush.setColor(color);
-		pgraph->setBrush(brush);
+		auto pen = pgraph->pen();
+		pen.setColor(color);
+		pgraph->setPen(pen);
 		plot->replot();
 	} else {
 		ErrorInvalidGraphId(id);
@@ -591,6 +592,12 @@ void Plot2DGraph::SetGraphSettings(const GraphPointer pgraph,
 	pgraph->setPen(gs.line_pen);
 	pgraph->setScatterStyle(gs.scatter_style);
 	plot->replot();
+
+	auto it = std::find_if(graph_map.cbegin(), graph_map.cend(),
+			[pgraph](const auto& i){ return pgraph == i.second; });
+	if(it != graph_map.cend()) {
+		emit SignalGraphColorChanged(it->first, gs.line_pen.color());
+	}
 }
 
 void Plot2DGraph::PlotLegendDoubleClick(QCPLegend*, QCPAbstractLegendItem* item)

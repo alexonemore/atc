@@ -158,6 +158,7 @@ bool PlotTFModel::setData(const QModelIndex& index, const QVariant& value,
 		}
 	} else if(role == Qt::EditRole) {
 		cell.color = value.value<QColor>();
+		LOG(cell.color)
 		emit ChangeColorGraph(graph_id, cell.color);
 	} else {
 		return false;
@@ -219,6 +220,13 @@ void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
 	auto index = GetIndex(id);
 	assert(CheckIndexValidParent(index));
 	emit dataChanged(index, index);
+}
+
+void PlotTFModel::SlotRemoveGraphs(const QVector<GraphId>& ids)
+{
+	for(auto&& id : ids) {
+		SlotRemoveOneGraph(id);
+	}
 }
 
 void PlotTFModel::SlotChangeColotGraph(const GraphId id, const QColor& color)

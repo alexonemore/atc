@@ -33,8 +33,8 @@ static constexpr auto names_size = static_cast<int>(names_.size());
 
 SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 	: QAbstractTableModel(parent)
-	, col_count{SubstancesTabulatedTFFields::names_size +
-				ParametersNS::thermodynamic_function_full.size()}
+	, col_count{static_cast<int>(SubstancesTabulatedTFFields::names_size +
+				ParametersNS::thermodynamic_function_full.size())}
 {
 	substance_tabulated_tf_field_names = SubstancesTabulatedTFFields::names +
 			ParametersNS::thermodynamic_function_full;

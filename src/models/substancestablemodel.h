@@ -39,7 +39,7 @@ private:
 	static const QStringList substances_field_names;
 	SubstancesData data_;
 	int row_count{0};
-	const int col_count{substances_field_names.size()};
+	const int col_count{static_cast<int>(substances_field_names.size())};
 public:
 	explicit SubstancesTableModel(QObject *parent = nullptr);
 	~SubstancesTableModel() override;

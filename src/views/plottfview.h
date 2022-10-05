@@ -24,6 +24,7 @@
 #include <QTableView>
 #include "plot2dgraph.h"
 #include "parameters.h"
+#include "specialdelegates.h"
 
 class PlotTFView : public QWidget
 {
@@ -32,6 +33,7 @@ class PlotTFView : public QWidget
 private:
 	QTableView* table;
 	Plot2DGraph* plot;
+	ColorPickerDelegate* color_delegate;
 public:
 	explicit PlotTFView(QWidget *parent = nullptr);
 	~PlotTFView() override;

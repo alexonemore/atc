@@ -172,7 +172,7 @@ void MainWindow::SetSelectonModel(QItemSelectionModel* selection)
 void MainWindow::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 								const QColor& color, QVector<double>& x, QVector<double>& y)
 {
-	ui->plot_tf_view->AddGraph(id, name, color, std::move(x), std::move(y));
+	ui->plot_tf_view->AddGraph(id, name, color, x, y);
 }
 
 void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
@@ -182,6 +182,7 @@ void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
 
 void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
 {
+	LOG(color)
 	ui->plot_tf_view->ChangeColorGraph(id, color);
 }
 
@@ -197,7 +198,7 @@ void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)
 #ifndef NDEBUG
 	qDebug() << "isFinished" << fw->future().isFinished();
 	qDebug() << "isCanceled" << fw->future().isCanceled();
-	qDebug() << "isPaused  " << fw->future().isPaused();
+	qDebug() << "isPaused  " << fw->future().isSuspended();
 	qDebug() << "isRunning " << fw->future().isRunning();
 	qDebug() << "isStarted " << fw->future().isStarted();
 #endif
@@ -267,7 +268,8 @@ void MainWindow::SlotAdd2DGraph(const GraphId& id, QVector<double>& x,
 								QVector<double>& y)
 {
 	LOG()
-	ui->plot2d->AddGraphY1(id, std::move(x), std::move(y));
+	ui->plot2d->AddGraphY1(id, QString::number(id.substance_id), std::move(x),
+						   std::move(y), GetRandomColor());
 }
 
 void MainWindow::SlotAddHeatMap(const QString& name, QVector<double>& x,

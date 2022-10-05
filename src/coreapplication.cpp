@@ -130,6 +130,10 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			model_plot_tf, &PlotTFModel::SlotRemoveAllGraphs);
 	connect(gui, &MainWindow::SignalGraphColorChangedPlotTF,
 			model_plot_tf, &PlotTFModel::SlotChangeColotGraph);
+	connect(gui, &MainWindow::SignalGraphRemovedPlotTF,
+			model_plot_tf, &PlotTFModel::SlotRemoveOneGraph);
+	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
+			model_plot_tf, &PlotTFModel::SlotRemoveGraphs);
 
 }
 
@@ -186,7 +190,7 @@ void CoreApplication::SlotMake2DGraphData()
 	QVector<double> x(size), y(size);
 	std::iota(x.begin(), x.end(), 0);
 	std::transform(x.cbegin(), x.cend(), y.begin(), [](double i){
-		return (std::sin((i+rd())/50)*rd()+rd())/rd();
+		return (std::sin((i+rd())/50)+1)/rd();
 	});
 	id.substance_id++;
 	emit SignalShow2DGraphData(id, x, y);
@@ -287,12 +291,11 @@ void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 {
 	graphs_tf_view[id] = color;
 	QVector<double> x, y;
-	// fill x, y
+	// TODO fill x, y
 	x = {1, 2, 3};
 	y = {1, 4, 9};
 
 	emit SignalAddGraphPlotTF(id, name, color, x, y);
-	emit SignalChangeColorGraphPlotTF(id, color);
 }
 
 void CoreApplication::SlotRemoveGraphPlotTF(const GraphId id)
@@ -301,10 +304,15 @@ void CoreApplication::SlotRemoveGraphPlotTF(const GraphId id)
 	emit SignalRemoveGraphPlotTF(id);
 }
 
-void CoreApplication::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
+void CoreApplication::SlotChangeColorGraphPlotTF(const GraphId id,
+												 const QColor& color)
 {
-	graphs_tf_view.at(id) = color;
-	emit SignalChangeColorGraphPlotTF(id, color);
+	LOG(color)
+	auto it = graphs_tf_view.find(id);
+	if(it != graphs_tf_view.end()) {
+		it->second = color;
+		emit SignalChangeColorGraphPlotTF(id, color);
+	}
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()
