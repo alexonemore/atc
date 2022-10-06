@@ -288,7 +288,6 @@ void CoreApplication::SlotUpdateButtonHandler(
 
 	// plots TF update
 	for(auto&& [id, params] : graphs_tf_view) {
-		emit SignalRemoveGraphPlotTF(id);
 		SlotAddGraphPlotTF(id, params.name, params.color);
 	}
 }
