@@ -332,6 +332,7 @@ void Plot2DGraph::RemoveAllGraphs()
 	if(plot->graphCount() > 0) plot->legend->setVisible(true);
 	else plot->legend->setVisible(false);
 	plot->replot();
+	LOG()
 	emit SignalAllGraphsRemoved();
 }
 

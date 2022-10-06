@@ -22,9 +22,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 #include <QKeyEvent>
-#ifndef NDEBUG
-#include <QDebug>
-#endif
+#include "utilities.h"
 
 DoubleNumberDelegate::DoubleNumberDelegate(QObject* parent)
 	: QStyledItemDelegate(parent)
@@ -105,7 +103,6 @@ void ColorPickerDelegate::setModelData(
 		model->setData(index, color, Qt::EditRole);
 	}
 }
-
 
 #if 0
 SpinBoxDelegate::SpinBoxDelegate(QObject* parent) : QStyledItemDelegate(parent)

@@ -198,9 +198,7 @@ Qt::ItemFlags PlotTFModel::flags(const QModelIndex& index) const
 
 void PlotTFModel::SlotRemoveAllGraphs()
 {
-	beginResetModel();
-	data_tf.clear();
-	endResetModel();
+	Clear();
 }
 
 void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
