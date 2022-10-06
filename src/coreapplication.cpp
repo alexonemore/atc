@@ -71,6 +71,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// connects
 	connect(gui, &MainWindow::SignalUpdate,
 			this, &CoreApplication::SlotUpdate);
+	connect(gui, &MainWindow::SignalUpdateButtonClicked,
+			this, &CoreApplication::SlotUpdateButtonHandler);
 	connect(this, &CoreApplication::SignalSetAvailableElements,
 			gui, &MainWindow::SlotSetAvailableElements);
 	connect(gui, &MainWindow::SignalSubstancesTableSelection,
@@ -279,6 +281,18 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	emit SignalSetPlotXAxisUnit(parameters_.temperature_range_unit);
 }
 
+void CoreApplication::SlotUpdateButtonHandler(
+		const ParametersNS::Parameters parameters)
+{
+	SlotUpdate(parameters);
+
+	// plots TF update
+	for(auto&& [id, params] : graphs_tf_view) {
+		emit SignalRemoveGraphPlotTF(id);
+		SlotAddGraphPlotTF(id, params.name, params.color);
+	}
+}
+
 void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 {
 	selected_substance_id = id;
@@ -289,12 +303,17 @@ void CoreApplication::SlotSubstancesTableSelectionHandler(int id)
 void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 										 const QColor& color)
 {
-	graphs_tf_view[id] = color;
+	graphs_tf_view[id].color = color;
+	graphs_tf_view[id].name = name;
 	QVector<double> x, y;
-	// TODO fill x, y
-	x = {1, 2, 3};
-	y = {1, 4, 9};
-
+	auto db = CurrentDatabase();
+	auto data_temp_range = db->GetSubstancesTempRangeData(id.substance_id);
+	Thermodynamics::TabulateOneTF(parameters_.temperature_range,
+								  parameters_.temperature_range_unit,
+								  parameters_.extrapolation,
+								  parameters_.database,
+								  id.thermodynamic_function,
+								  data_temp_range, x, y);
 	emit SignalAddGraphPlotTF(id, name, color, x, y);
 }
 
@@ -310,7 +329,7 @@ void CoreApplication::SlotChangeColorGraphPlotTF(const GraphId id,
 	LOG(color)
 	auto it = graphs_tf_view.find(id);
 	if(it != graphs_tf_view.end()) {
-		it->second = color;
+		it->second.color = color;
 		emit SignalChangeColorGraphPlotTF(id, color);
 	}
 }

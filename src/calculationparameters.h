@@ -42,9 +42,11 @@ private:
 private slots:
 	void SetupInitialParameters();
 	void Update();
+	void UpdateButtonHandler();
 	void Clear();
 signals:
 	void UpdateParameters(const ParametersNS::Parameters parameters);
+	void UpdateButtonClicked(const ParametersNS::Parameters parameters);
 	void StartCalculate();
 };
 

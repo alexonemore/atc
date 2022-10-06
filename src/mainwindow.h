@@ -104,6 +104,7 @@ private slots:
 
 signals:
 	void SignalUpdate(const ParametersNS::Parameters parameters);
+	void SignalUpdateButtonClicked(const ParametersNS::Parameters parameters);
 	void SignalSubstancesTableSelection(int id);
 	//demo
 	void SignalSendRequest(int);

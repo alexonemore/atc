@@ -43,7 +43,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->pressure_units->addItems(ParametersNS::pressure_units);
 
 	connect(ui->update, &QPushButton::clicked,
-			this, &CalculationParameters::Update);
+			this, &CalculationParameters::UpdateButtonHandler);
 
 	connect(ui->calculate, &QPushButton::clicked,
 			this, &CalculationParameters::StartCalculate);
@@ -169,6 +169,11 @@ void CalculationParameters::SetupInitialParameters()
 void CalculationParameters::Update()
 {
 	emit UpdateParameters(GetCurrentParameters());
+}
+
+void CalculationParameters::UpdateButtonHandler()
+{
+	emit UpdateButtonClicked(GetCurrentParameters());
 }
 
 void CalculationParameters::Clear()

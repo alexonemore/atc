@@ -40,7 +40,10 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator"));
 
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
-			this, &MainWindow::UpdateButtonHandler);
+			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
+	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
+			this, &MainWindow::SignalUpdateButtonClicked);
+
 	//demo
 	std::vector<QAbstractButton*> check_butons{
 		ui->check_button_1,

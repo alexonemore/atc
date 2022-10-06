@@ -74,6 +74,14 @@ Tabulate(const ParametersNS::Range& temperature_range,
 		 const ParametersNS::Extrapolation& extrapolation,
 		 const ParametersNS::Database& database,
 		 const SubstanceTempRangeData& coefs);
+void TabulateOneTF(const ParametersNS::Range& temperature_range,
+				   const ParametersNS::TemperatureUnit& unit,
+				   const ParametersNS::Extrapolation& extrapolation,
+				   const ParametersNS::Database& database,
+				   const ParametersNS::ThermodynamicFunction& tf,
+				   const SubstanceTempRangeData& coefs,
+				   QVector<double>& x, QVector<double>& y);
+
 
 void RangeTabulator(const ParametersNS::Range range, QVector<double>& x);
 

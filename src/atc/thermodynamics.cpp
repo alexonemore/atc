@@ -466,6 +466,90 @@ Tabulate(const ParametersNS::Range& temperature_range,
 	return data;
 }
 
+void TabulateOneTF(const ParametersNS::Range& temperature_range,
+				   const ParametersNS::TemperatureUnit& unit,
+				   const ParametersNS::Extrapolation& extrapolation,
+				   const ParametersNS::Database& database,
+				   const ParametersNS::ThermodynamicFunction& tf,
+				   const SubstanceTempRangeData& coefs,
+				   QVector<double>& x, QVector<double>& y)
+{
+	ParametersNS::Range range_in_unit{temperature_range};
+	if(extrapolation == ParametersNS::Extrapolation::Disable) {
+		auto T1 = FromKelvin(coefs.cbegin()->T_min, unit);
+		auto T2 = FromKelvin(coefs.crbegin()->T_max, unit);
+		range_in_unit.start = std::clamp(range_in_unit.start, T1, T2);
+		range_in_unit.stop = std::clamp(range_in_unit.stop, T1, T2);
+	}
+
+	x.clear();
+	RangeTabulator(range_in_unit, x);
+	auto size = x.size();
+	y.clear();
+	y.resize(size);
+	QVector<double> kelvins(size);
+	std::transform(x.cbegin(), x.cend(), kelvins.begin(), [unit](auto t){
+		return ToKelvin(t, unit); });
+	switch(database) {
+	case ParametersNS::Database::Thermo:
+		switch(tf) {
+		case ParametersNS::ThermodynamicFunction::G_kJ:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_G_kJ(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::H_kJ:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_H_kJ(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::F_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_F_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::S_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_S_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::Cp_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_Cp_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::c:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return Thermo::TF_c(t, coefs);});
+			break;
+		}
+		break;
+	case ParametersNS::Database::HSC:
+		switch(tf) {
+		case ParametersNS::ThermodynamicFunction::G_kJ:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_G_kJ(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::H_kJ:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_H_kJ(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::F_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_F_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::S_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_S_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::Cp_J:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_Cp_J(t, coefs);});
+			break;
+		case ParametersNS::ThermodynamicFunction::c:
+			std::transform(kelvins.cbegin(), kelvins.cend(), y.begin(),
+						   [coefs](auto t){return HSC::TF_c(t, coefs);});
+			break;
+		}
+		break;
+	}
+}
+
 void RangeTabulator(const ParametersNS::Range range, QVector<double>& x)
 {
 	const double start = range.start;

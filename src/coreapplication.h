@@ -52,7 +52,11 @@ private:
 	int selected_substance_id;
 	bool is_selected{false};
 
-	std::unordered_map<GraphId, QColor> graphs_tf_view;
+	struct GraphParams {
+		QColor color;
+		QString name;
+	};
+	std::unordered_map<GraphId, GraphParams> graphs_tf_view;
 
 	// demo
 	QAbstractItemModel* table_1;
@@ -78,6 +82,7 @@ signals:
 
 private slots:
 	void SlotUpdate(const ParametersNS::Parameters parameters);
+	void SlotUpdateButtonHandler(const ParametersNS::Parameters parameters);
 	void SlotSubstancesTableSelectionHandler(int id);
 
 	// tf plots
