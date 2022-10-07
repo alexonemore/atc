@@ -151,6 +151,10 @@ struct Parameters
 	Parameters();
 };
 
+enum GUISize {
+	table_column_width = 10
+};
+
 } // namespace ParametersNS
 
 #endif // PARAMETERS_H

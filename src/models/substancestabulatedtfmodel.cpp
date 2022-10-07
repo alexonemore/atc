@@ -94,7 +94,7 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 		case SubstancesTabulatedTFFields::Names::T: return data_.temperatures.at(row);
 		}
 	} else {
-		switch(static_cast<SubstancesTabulatedTFFields::TF>(col)) {
+		switch(static_cast<SubstancesTabulatedTFFields::TF>(col-1)) {
 		case SubstancesTabulatedTFFields::TF::G_kJ:	return data_.G_kJ.at(row);
 		case SubstancesTabulatedTFFields::TF::H_kJ:	return data_.H_kJ.at(row);
 		case SubstancesTabulatedTFFields::TF::F_J:	return data_.F_J.at(row);
@@ -127,4 +127,5 @@ QVariant SubstancesTabulatedTFModel::headerData(int section,
 	} else {
 		return substance_tabulated_tf_field_names.at(section);
 	}
+	return QVariant{};
 }

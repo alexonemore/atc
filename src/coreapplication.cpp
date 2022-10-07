@@ -137,6 +137,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
 			model_plot_tf, &PlotTFModel::SlotRemoveGraphs);
 
+
+
 }
 
 CoreApplication::~CoreApplication()

@@ -77,6 +77,15 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 	table->setModel(model);
 }
 
+void PlotTFView::SetWidth()
+{
+	int i = PlotTFModelFields::names.size();
+	int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
+	for(; i <= max; ++i) {
+		table->setColumnWidth(i, ParametersNS::GUISize::table_column_width);
+	}
+}
+
 void PlotTFView::AddGraph(const GraphId id, const QString& name,
 						  const QColor& color, QVector<double>& x, QVector<double>& y)
 {

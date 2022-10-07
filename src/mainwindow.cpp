@@ -127,6 +127,7 @@ MainWindow::~MainWindow()
 void MainWindow::Initialize()
 {
 	ui->view_substances->Initialize();
+	ui->plot_tf_view->SetWidth();
 }
 
 void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)

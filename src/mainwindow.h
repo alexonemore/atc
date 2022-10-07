@@ -51,7 +51,6 @@ private:
 public:
 	MainWindow(QWidget *parent = nullptr);
 	~MainWindow() override;
-
 public:
 	void Initialize();
 	void SetSubstancesTableModel(QAbstractItemModel* model);
