@@ -172,6 +172,10 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 
 bool AmountsModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+	if(!CheckIndexValidParent(index)) return false;
+
+
+
 	return false;
 }
 
