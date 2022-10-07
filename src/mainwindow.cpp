@@ -127,7 +127,7 @@ MainWindow::~MainWindow()
 void MainWindow::Initialize()
 {
 	ui->view_substances->Initialize();
-	ui->plot_tf_view->SetWidth();
+	ui->plot_tf_view->Initialize();
 }
 
 void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)
@@ -200,11 +200,15 @@ void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)
 	dialog->exec();
 	fw->waitForFinished();
 #ifndef NDEBUG
-	qDebug() << "isFinished" << fw->future().isFinished();
-	qDebug() << "isCanceled" << fw->future().isCanceled();
-	qDebug() << "isPaused  " << fw->future().isSuspended();
-	qDebug() << "isRunning " << fw->future().isRunning();
-	qDebug() << "isStarted " << fw->future().isStarted();
+	qDebug() << "isFinished " << fw->future().isFinished();
+	qDebug() << "isCanceled " << fw->future().isCanceled();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	qDebug() << "isPaused   " << fw->future().isPaused();
+#else
+	qDebug() << "isSuspended" << fw->future().isSuspended();
+#endif
+	qDebug() << "isRunning  " << fw->future().isRunning();
+	qDebug() << "isStarted  " << fw->future().isStarted();
 #endif
 	assert(fw->future().isFinished());
 	t.stop();

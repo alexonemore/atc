@@ -38,7 +38,7 @@ public:
 	explicit PlotTFView(QWidget *parent = nullptr);
 	~PlotTFView() override;
 	void SetModel(QAbstractItemModel* model);
-	void SetWidth();
+	void Initialize();
 public slots:
 	void AddGraph(const GraphId id, const QString& name, const QColor& color,
 				  QVector<double>& x, QVector<double>& y);
