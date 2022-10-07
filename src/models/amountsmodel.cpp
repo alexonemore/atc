@@ -215,7 +215,16 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 		}
 	case AmountsModelFields::Names::Included:
 		if(role == Qt::CheckStateRole) {
-
+			auto id = weights.at(row-1).id;
+			auto check = value.value<Qt::CheckState>();
+			if(check == Qt::Unchecked) {
+				excluded.insert(id);
+				amounts.at(id) = Amounts{};
+			} else {
+				excluded.erase(id);
+			}
+			RecalculateAndUpdate();
+			return true;
 		}
 	}
 	return false;
@@ -272,4 +281,19 @@ bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
 	return checkIndex(index,
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
+}
+
+void AmountsModel::Recalculate()
+{
+
+}
+
+void AmountsModel::RecalculateAndUpdate()
+{
+	Recalculate();
+	QModelIndex tl = QAbstractTableModel::index
+			(0, static_cast<int>(AmountsModelFields::Names::Group_1_mol));
+	QModelIndex br = QAbstractTableModel::index
+			(row_count, static_cast<int>(AmountsModelFields::Names::Included));
+	emit dataChanged(tl, br);
 }

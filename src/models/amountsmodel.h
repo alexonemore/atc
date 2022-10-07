@@ -85,7 +85,8 @@ public:
 
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-
+	void Recalculate();
+	void RecalculateAndUpdate();
 };
 
 #endif // AMOUNTSMODEL_H
