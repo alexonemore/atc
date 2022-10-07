@@ -170,16 +170,59 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
-bool AmountsModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
+						   int role)
 {
 	if(!CheckIndexValidParent(index)) return false;
+	auto col = static_cast<AmountsModelFields::Names>(index.column());
+	auto row = index.row();
+	switch(col) {
+	case AmountsModelFields::Names::ID:
+	case AmountsModelFields::Names::Formula:
+	case AmountsModelFields::Names::Weight:
+		return false;
+	case AmountsModelFields::Names::Group_1_mol:
+		if(role == Qt::EditRole) {
 
+		}
+	case AmountsModelFields::Names::Group_1_gram:
+		if(role == Qt::EditRole) {
 
+		}
+	case AmountsModelFields::Names::Group_2_mol:
+		if(role == Qt::EditRole) {
 
+		}
+	case AmountsModelFields::Names::Group_2_gram:
+		if(role == Qt::EditRole) {
+
+		}
+	case AmountsModelFields::Names::Sum_mol:
+		if(role == Qt::EditRole) {
+
+		}
+	case AmountsModelFields::Names::Sum_gram:
+		if(role == Qt::EditRole) {
+
+		}
+	case AmountsModelFields::Names::Sum_atpct:
+		if(role == Qt::EditRole) {
+
+		}
+	case AmountsModelFields::Names::Sum_wtpct:
+		if(role == Qt::EditRole) {
+
+		}
+	case AmountsModelFields::Names::Included:
+		if(role == Qt::CheckStateRole) {
+
+		}
+	}
 	return false;
 }
 
-QVariant AmountsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AmountsModel::headerData(int section, Qt::Orientation orientation,
+								  int role) const
 {
 	if(role == Qt::DisplayRole) {
 		if(orientation == Qt::Horizontal) {
