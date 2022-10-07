@@ -24,14 +24,14 @@ extern const QStringList names{
 	QT_TR_NOOP("ID"),
 	QT_TR_NOOP("Formula"),
 	QT_TR_NOOP("Weight"),
-	QT_TR_NOOP("Group_1_mol"),
-	QT_TR_NOOP("Group_1_gram"),
-	QT_TR_NOOP("Group_2_mol"),
-	QT_TR_NOOP("Group_2_gram"),
-	QT_TR_NOOP("Sum_mol"),
-	QT_TR_NOOP("Sum_gram"),
-	QT_TR_NOOP("Sum_atpct"),
-	QT_TR_NOOP("Sum_wtpct"),
+	QT_TR_NOOP("Group 1\nmol"),
+	QT_TR_NOOP("Group 1\ngram"),
+	QT_TR_NOOP("Group 2\nmol"),
+	QT_TR_NOOP("Group 2\ngram"),
+	QT_TR_NOOP("Sum\nmol"),
+	QT_TR_NOOP("Sum\ngram"),
+	QT_TR_NOOP("Sum\natpct"),
+	QT_TR_NOOP("Sum\nwtpct"),
 	QT_TR_NOOP("Included")
 };
 }
@@ -119,7 +119,29 @@ QVariant AmountsModel::headerData(int section, Qt::Orientation orientation, int 
 
 Qt::ItemFlags AmountsModel::flags(const QModelIndex& index) const
 {
-	return QAbstractTableModel::flags(index);
+	if(!CheckIndexValidParent(index)) return Qt::ItemFlags{};
+	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
+	auto col = static_cast<AmountsModelFields::Names>(index.column());
+	switch(col) {
+	case AmountsModelFields::Names::ID:
+	case AmountsModelFields::Names::Formula:
+	case AmountsModelFields::Names::Weight:
+		return flags;
+	case AmountsModelFields::Names::Group_1_mol:
+	case AmountsModelFields::Names::Group_1_gram:
+	case AmountsModelFields::Names::Group_2_mol:
+	case AmountsModelFields::Names::Group_2_gram:
+	case AmountsModelFields::Names::Sum_mol:
+	case AmountsModelFields::Names::Sum_gram:
+		flags |= Qt::ItemIsEditable;
+		return flags;
+	case AmountsModelFields::Names::Sum_atpct:
+	case AmountsModelFields::Names::Sum_wtpct:
+		return flags;
+	case AmountsModelFields::Names::Included:
+		flags |= Qt::ItemIsUserCheckable;
+		return flags;
+	}
 }
 
 bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
