@@ -41,6 +41,7 @@ struct SubstanceFormula
 {
 	int id;
 	QString formula;
+	double weight;
 };
 using SubstanceNames = QVector<SubstanceFormula>;
 

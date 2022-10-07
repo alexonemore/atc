@@ -32,6 +32,7 @@ const QString available_elements = QStringLiteral(
 
 const QString hsc_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
+"Species.Weight AS Weight, "
 "IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
 "IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
 "IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
@@ -53,6 +54,7 @@ const QString hsc_substances_template = QStringLiteral(
 const QString thermo_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', "
 "Species.Formula || '(' || State.Symbol || ')' AS 'Formula', "
+"Species.Weight AS Weight, "
 "Species.Name AS 'Name', "
 "Species.T_min AS 'T min', "
 "Species.T_max AS 'T max' "
@@ -169,7 +171,8 @@ SubstancesData Database::GetSubstancesData(
 	SubstancesData data;
 	while(q.next()) {
 		data.push_back(SubstanceData{{q.value(0).toInt(),		// ID
-									 q.value(1).toString()},	// Formula
+									 q.value(1).toString(),		// Formula
+									 q.value(2).toDouble()},	// Weight
 									 q.value(2).toString(),		// Name
 									 q.value(3).toDouble(),		// T_min
 									 q.value(4).toDouble()});	// T_max

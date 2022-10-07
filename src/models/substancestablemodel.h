@@ -27,6 +27,7 @@ enum class SubstanceFields {
 	ID,
 	Formula,
 	Name,
+	Weight,
 	T_min,
 	T_max
 };

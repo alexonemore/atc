@@ -24,6 +24,7 @@ const QStringList SubstancesTableModel::substances_field_names = {
 	QStringLiteral("ID"),
 	QStringLiteral("Formula"),
 	QStringLiteral("Name"),
+	QStringLiteral("Weight"),
 	QStringLiteral("T min"),
 	QStringLiteral("T max")
 };
@@ -84,6 +85,7 @@ QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 	case SubstanceFields::ID:		return data_at.id;
 	case SubstanceFields::Formula:	return data_at.formula;
 	case SubstanceFields::Name:		return data_at.name;
+	case SubstanceFields::Weight:	return data_at.weight;
 	case SubstanceFields::T_min:	return data_at.T_min;
 	case SubstanceFields::T_max:	return data_at.T_max;
 	}
