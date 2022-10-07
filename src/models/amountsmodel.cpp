@@ -47,14 +47,50 @@ AmountsModel::~AmountsModel()
 
 }
 
+void AmountsModel::SetNewData(SubstanceWeights&& new_weights)
+{
+	beginResetModel();
+	weights = std::move(new_weights);
+	for(auto i = weights.cbegin(), end = weights.cend(); i != end; ++i) {
+		amounts_new.emplace(i->id, Amounts{});
+	}
+	assert(weights.size() == amounts_new.size());
+
+	if(amounts_new.size() > amounts.size()) {
+		amounts.merge(amounts_new);
+	} else {
+		amounts_new.merge(amounts);
+	}
+	assert(weights.size() == amounts.size());
+	amounts_new.clear();
+	row_count = weights.size()+1;
+	endResetModel();
+}
+
+void AmountsModel::Clear()
+{
+	beginResetModel();
+	weights.clear();
+	row_count = 1;
+	endResetModel();
+}
+
 int AmountsModel::rowCount(const QModelIndex& parent) const
 {
-	return 0;
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return row_count;
+	}
 }
 
 int AmountsModel::columnCount(const QModelIndex& parent) const
 {
-	return 0;
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return col_count;
+	}
 }
 
 QVariant AmountsModel::data(const QModelIndex& index, int role) const

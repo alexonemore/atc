@@ -23,6 +23,7 @@
 #include <QAbstractTableModel>
 #include <unordered_map>
 #include <set>
+#include "database.h"
 
 namespace AmountsModelFields {
 enum class Names {
@@ -60,13 +61,18 @@ class AmountsModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(AmountsModel)
 private:
+	SubstanceWeights weights;
 	Composition amounts;
 	Composition amounts_new;
 	std::set<int> excluded;
 	Amounts sum;
+	int row_count{1};
+	const int col_count{static_cast<int>(AmountsModelFields::names.size())};
 public:
 	explicit AmountsModel(QObject *parent = nullptr);
 	~AmountsModel() override;
+	void SetNewData(SubstanceWeights&& new_weights);
+	void Clear();
 
 	// QAbstractItemModel interface
 public:
