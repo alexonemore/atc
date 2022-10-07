@@ -129,15 +129,13 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotChangeColorGraphPlotTF);
 
 	connect(gui, &MainWindow::SignalAllGraphsRemovedPlotTF,
-			model_plot_tf, &PlotTFModel::SlotRemoveAllGraphs);
+			this, &CoreApplication::SlotAllGraphsRemovedPlotTFVtM);
 	connect(gui, &MainWindow::SignalGraphColorChangedPlotTF,
-			model_plot_tf, &PlotTFModel::SlotChangeColotGraph);
+			this, &CoreApplication::SlotGraphColorChangedPlotTFVtM);
 	connect(gui, &MainWindow::SignalGraphRemovedPlotTF,
-			model_plot_tf, &PlotTFModel::SlotRemoveOneGraph);
+			this, &CoreApplication::SlotGraphRemovedPlotTFVtM);
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
-			model_plot_tf, &PlotTFModel::SlotRemoveGraphs);
-
-
+			this, &CoreApplication::SlotGraphsRemovedPlotTFVtM);
 
 }
 
@@ -256,6 +254,11 @@ Database* CoreApplication::CurrentDatabase()
 	return databases.at(static_cast<int>(parameters_.database));
 }
 
+Database* CoreApplication::Database(ParametersNS::Database database)
+{
+	return databases.at(static_cast<int>(database));
+}
+
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
 	if(parameters.database != parameters_.database) {
@@ -307,12 +310,12 @@ void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 	graphs_tf_view[id].color = color;
 	graphs_tf_view[id].name = name;
 	QVector<double> x, y;
-	auto db = CurrentDatabase();
+	auto db = Database(id.database);
 	auto data_temp_range = db->GetSubstancesTempRangeData(id.substance_id);
 	Thermodynamics::TabulateOneTF(parameters_.temperature_range,
 								  parameters_.temperature_range_unit,
 								  parameters_.extrapolation,
-								  parameters_.database,
+								  id.database,
 								  id.thermodynamic_function,
 								  data_temp_range, x, y);
 	emit SignalAddGraphPlotTF(id, name, color, x, y);
@@ -333,6 +336,36 @@ void CoreApplication::SlotChangeColorGraphPlotTF(const GraphId id,
 		it->second.color = color;
 		emit SignalChangeColorGraphPlotTF(id, color);
 	}
+}
+
+void CoreApplication::SlotAllGraphsRemovedPlotTFVtM()
+{
+	graphs_tf_view.clear();
+	model_plot_tf->SlotRemoveAllGraphs();
+}
+
+void CoreApplication::SlotGraphColorChangedPlotTFVtM(const GraphId id,
+													 const QColor& color)
+{
+	auto it = graphs_tf_view.find(id);
+	if(it != graphs_tf_view.end()) {
+		it->second.color = color;
+		model_plot_tf->SlotChangeColotGraph(id, color);
+	}
+}
+
+void CoreApplication::SlotGraphRemovedPlotTFVtM(const GraphId id)
+{
+	graphs_tf_view.erase(id);
+	model_plot_tf->SlotRemoveOneGraph(id);
+}
+
+void CoreApplication::SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids)
+{
+	for(auto&& id : ids) {
+		graphs_tf_view.erase(id);
+	}
+	model_plot_tf->SlotRemoveGraphs(ids);
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()

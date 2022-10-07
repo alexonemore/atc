@@ -85,7 +85,7 @@ private slots:
 	void SlotUpdateButtonHandler(const ParametersNS::Parameters parameters);
 	void SlotSubstancesTableSelectionHandler(int id);
 
-	// tf plots
+	// tf plots: model to view
 private slots:
 	void SlotAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color);
 	void SlotRemoveGraphPlotTF(const GraphId id);
@@ -95,6 +95,13 @@ signals:
 				  QVector<double>& x, QVector<double>& y);
 	void SignalRemoveGraphPlotTF(const GraphId id);
 	void SignalChangeColorGraphPlotTF(const GraphId id, const QColor& color);
+	// tf plots: view to model
+private slots:
+	void SlotAllGraphsRemovedPlotTFVtM();
+	void SlotGraphColorChangedPlotTFVtM(const GraphId id, const QColor& color);
+	void SlotGraphRemovedPlotTFVtM(const GraphId id);
+	void SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids);
+
 
 
 public slots:
@@ -110,6 +117,7 @@ public slots:
 private:
 	QVector<HeavyContainer> PrepareHeavyCalculations();
 	Database* CurrentDatabase();
+	Database* Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();
 };
 
