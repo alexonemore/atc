@@ -71,6 +71,7 @@ void AmountsModel::Clear()
 {
 	beginResetModel();
 	weights.clear();
+	amounts.clear();
 	row_count = 1;
 	endResetModel();
 }
@@ -105,10 +106,25 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value, int 
 
 QVariant AmountsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-	return QVariant{};
+	if(role == Qt::DisplayRole) {
+		if(orientation == Qt::Horizontal) {
+			return AmountsModelFields::names.at(section);
+		} else {
+			return section;
+		}
+	} else {
+		return QVariant{};
+	}
 }
 
 Qt::ItemFlags AmountsModel::flags(const QModelIndex& index) const
 {
 	return QAbstractTableModel::flags(index);
+}
+
+bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
+{
+	return checkIndex(index,
+					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
+					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
