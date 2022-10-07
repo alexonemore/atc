@@ -25,6 +25,8 @@
 #include <QtConcurrent>
 #include <cassert>
 #include "utilities.h"
+#include "amountsmodel.h"
+#include "specialdelegates.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 using namespace QtDataVisualization;
@@ -116,6 +118,15 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->plot_tf_view, &PlotTFView::SignalGraphsRemoved,
 			this, &MainWindow::SignalGraphsRemovedPlotTF);
 
+	// amounts
+	auto double_delegate = new DoubleNumberDelegate(this);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Group_1_mol), double_delegate);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Group_1_gram), double_delegate);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Group_2_mol), double_delegate);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Group_2_gram), double_delegate);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Sum_mol), double_delegate);
+	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Sum_gram), double_delegate);
+	ui->amounts_view->verticalHeader()->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -128,6 +139,7 @@ void MainWindow::Initialize()
 {
 	ui->view_substances->Initialize();
 	ui->plot_tf_view->Initialize();
+	ui->amounts_view->setColumnHidden(static_cast<int>(AmountsModelFields::Names::ID), true);
 }
 
 void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)
