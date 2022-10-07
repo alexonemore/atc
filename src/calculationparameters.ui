@@ -293,7 +293,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="label_37">
           <property name="text">
-           <string>Composition 2</string>
+           <string>Group 2</string>
           </property>
          </widget>
         </item>
@@ -453,7 +453,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="label_38">
           <property name="text">
-           <string>Composition 1</string>
+           <string>Group 1</string>
           </property>
          </widget>
         </item>
@@ -504,6 +504,9 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QCheckBox" name="show_gas">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Gas</string>
           </property>
@@ -511,6 +514,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="show_liquid">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Liquid</string>
           </property>
@@ -518,6 +524,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="show_solid">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Sollid</string>
           </property>

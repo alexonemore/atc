@@ -57,6 +57,7 @@ public:
 	void SetSubstancesTempRangeModel(QAbstractItemModel* model);
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 	void SetTFPlotModel(QAbstractItemModel* model);
+	void SetAmountsModel(QAbstractItemModel* model);
 	// demo
 	void SetModel_1(QAbstractItemModel* model);
 	void SetModel_2(QAbstractItemModel* model);

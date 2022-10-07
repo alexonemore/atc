@@ -19,6 +19,23 @@
 
 #include "amountsmodel.h"
 
+namespace AmountsModelFields {
+extern const QStringList names{
+	QT_TR_NOOP("ID"),
+	QT_TR_NOOP("Formula"),
+	QT_TR_NOOP("Weight"),
+	QT_TR_NOOP("Group_1_mol"),
+	QT_TR_NOOP("Group_1_gram"),
+	QT_TR_NOOP("Group_2_mol"),
+	QT_TR_NOOP("Group_2_gram"),
+	QT_TR_NOOP("Sum_mol"),
+	QT_TR_NOOP("Sum_gram"),
+	QT_TR_NOOP("Sum_atpct"),
+	QT_TR_NOOP("Sum_wtpct"),
+	QT_TR_NOOP("Included")
+};
+}
+
 AmountsModel::AmountsModel(QObject *parent)
 	: QAbstractTableModel{parent}
 {

@@ -154,6 +154,12 @@ void MainWindow::SetTFPlotModel(QAbstractItemModel* model)
 	ui->plot_tf_view->SetModel(model);
 }
 
+void MainWindow::SetAmountsModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->amounts_view->setModel(model);
+}
+
 void MainWindow::SetModel_1(QAbstractItemModel* model)
 {
 	LOG()
@@ -174,7 +180,7 @@ void MainWindow::SetSelectonModel(QItemSelectionModel* selection)
 }
 
 void MainWindow::SlotAddGraphPlotTF(const GraphId id, const QString& name,
-								const QColor& color, QVector<double>& x, QVector<double>& y)
+			const QColor& color, QVector<double>& x, QVector<double>& y)
 {
 	ui->plot_tf_view->AddGraph(id, name, color, x, y);
 }

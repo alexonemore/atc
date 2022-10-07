@@ -51,6 +51,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	model_substances_temp_range = new SubstancesTempRangeModel(this);
 	model_substances_tabulated_tf = new SubstancesTabulatedTFModel(this);
 	model_plot_tf = new PlotTFModel(this);
+	model_amounts = new AmountsModel(this);
 	// demo
 	table_1 = new QStringListModel(this);
 
@@ -60,6 +61,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	gui->SetSubstancesTempRangeModel(model_substances_temp_range);
 	gui->SetSubstancesTabulatedModel(model_substances_tabulated_tf);
 	gui->SetTFPlotModel(model_plot_tf);
+	gui->SetAmountsModel(model_amounts);
 	gui->Initialize(); // must be called after set models
 
 	// demo

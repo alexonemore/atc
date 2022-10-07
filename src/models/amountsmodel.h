@@ -21,13 +21,49 @@
 #define AMOUNTSMODEL_H
 
 #include <QAbstractTableModel>
+#include <unordered_map>
+#include <set>
+
+namespace AmountsModelFields {
+enum class Names {
+	ID,
+	Formula,
+	Weight,
+	Group_1_mol,
+	Group_1_gram,
+	Group_2_mol,
+	Group_2_gram,
+	Sum_mol,
+	Sum_gram,
+	Sum_atpct,
+	Sum_wtpct,
+	Included
+};
+extern const QStringList names;
+}
+
+struct Amounts {
+	double weight{0};
+	double group_1_mol{0};
+	double group_1_gram{0};
+	double group_2_mol{0};
+	double group_2_gram{0};
+	double sum_mol{0};
+	double sum_gram{0};
+	double sum_atpct{0};
+	double sum_wtpct{0};
+};
+using Composition = std::unordered_map<int, Amounts>;
 
 class AmountsModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(AmountsModel)
 private:
-
+	Composition amounts;
+	Composition amounts_new;
+	std::set<int> excluded;
+	Amounts sum;
 public:
 	explicit AmountsModel(QObject *parent = nullptr);
 	~AmountsModel() override;
