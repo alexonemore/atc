@@ -18,6 +18,7 @@
  */
 
 #include "amountsmodel.h"
+#include <QBrush>
 
 namespace AmountsModelFields {
 extern const QStringList names{
@@ -100,40 +101,43 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 	auto col = static_cast<AmountsModelFields::Names>(index.column());
 	auto row = index.row();
 	if(row == 0) {
-		switch(col) {
-		case AmountsModelFields::Names::ID:
-			break;
-		case AmountsModelFields::Names::Formula:
-			if(role == Qt::DisplayRole) return tr("Sum"); break;
-		case AmountsModelFields::Names::Weight:
-			break;
-		case AmountsModelFields::Names::Group_1_mol:
-			if(role == Qt::DisplayRole) return sum.group_1_mol; break;
-		case AmountsModelFields::Names::Group_1_gram:
-			if(role == Qt::DisplayRole) return sum.group_1_gram; break;
-		case AmountsModelFields::Names::Group_2_mol:
-			if(role == Qt::DisplayRole) return sum.group_2_mol; break;
-		case AmountsModelFields::Names::Group_2_gram:
-			if(role == Qt::DisplayRole) return sum.group_2_gram; break;
-		case AmountsModelFields::Names::Sum_mol:
-			if(role == Qt::DisplayRole) return sum.sum_mol; break;
-		case AmountsModelFields::Names::Sum_gram:
-			if(role == Qt::DisplayRole) return sum.sum_gram; break;
-		case AmountsModelFields::Names::Sum_atpct:
-			if(role == Qt::DisplayRole) return sum.sum_atpct; break;
-		case AmountsModelFields::Names::Sum_wtpct:
-			if(role == Qt::DisplayRole) return sum.sum_wtpct; break;
-		case AmountsModelFields::Names::Included:
-			if(role == Qt::DisplayRole) {
+		if(role == Qt::BackgroundRole) {
+			return QBrush(Qt::lightGray);
+		} else if(role == Qt::DisplayRole) {
+			switch(col) {
+			case AmountsModelFields::Names::ID:
+				break;
+			case AmountsModelFields::Names::Formula:
+				return tr("Sum");
+			case AmountsModelFields::Names::Weight:
+				break;
+			case AmountsModelFields::Names::Group_1_mol:
+				return sum.group_1_mol;
+			case AmountsModelFields::Names::Group_1_gram:
+				return sum.group_1_gram;
+			case AmountsModelFields::Names::Group_2_mol:
+				return sum.group_2_mol;
+			case AmountsModelFields::Names::Group_2_gram:
+				return sum.group_2_gram;
+			case AmountsModelFields::Names::Sum_mol:
+				return sum.sum_mol;
+			case AmountsModelFields::Names::Sum_gram:
+				return sum.sum_gram;
+			case AmountsModelFields::Names::Sum_atpct:
+				return sum.sum_atpct;
+			case AmountsModelFields::Names::Sum_wtpct:
+				return sum.sum_wtpct;
+			case AmountsModelFields::Names::Included: {
 				auto all = amounts.size();
 				auto ex = excluded.size();
 				return QString::number(all-ex) + "/" + QString::number(all);
 			}
-			break;
+			}
 		}
 	} else {
 		auto&& weight = weights.at(row-1); // -1 for Sum row
 		auto&& amount = amounts.at(weight.id);
+		auto zero = [](double d)->QVariant {return d > 0 ? d : QVariant{};};
 		switch(col) {
 		case AmountsModelFields::Names::ID:
 			if(role == Qt::DisplayRole) return weight.id; break;
@@ -142,21 +146,21 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 		case AmountsModelFields::Names::Weight:
 			if(role == Qt::DisplayRole) return weight.weight; break;
 		case AmountsModelFields::Names::Group_1_mol:
-			if(role == Qt::DisplayRole) return amount.group_1_mol; break;
+			if(role == Qt::DisplayRole) return zero(amount.group_1_mol); break;
 		case AmountsModelFields::Names::Group_1_gram:
-			if(role == Qt::DisplayRole) return amount.group_1_gram; break;
+			if(role == Qt::DisplayRole) return zero(amount.group_1_gram); break;
 		case AmountsModelFields::Names::Group_2_mol:
-			if(role == Qt::DisplayRole) return amount.group_2_mol; break;
+			if(role == Qt::DisplayRole) return zero(amount.group_2_mol); break;
 		case AmountsModelFields::Names::Group_2_gram:
-			if(role == Qt::DisplayRole) return amount.group_2_gram; break;
+			if(role == Qt::DisplayRole) return zero(amount.group_2_gram); break;
 		case AmountsModelFields::Names::Sum_mol:
-			if(role == Qt::DisplayRole) return amount.sum_mol; break;
+			if(role == Qt::DisplayRole) return zero(amount.sum_mol); break;
 		case AmountsModelFields::Names::Sum_gram:
-			if(role == Qt::DisplayRole) return amount.sum_gram; break;
+			if(role == Qt::DisplayRole) return zero(amount.sum_gram); break;
 		case AmountsModelFields::Names::Sum_atpct:
-			if(role == Qt::DisplayRole) return amount.sum_atpct; break;
+			if(role == Qt::DisplayRole) return zero(amount.sum_atpct); break;
 		case AmountsModelFields::Names::Sum_wtpct:
-			if(role == Qt::DisplayRole) return amount.sum_wtpct; break;
+			if(role == Qt::DisplayRole) return zero(amount.sum_wtpct); break;
 		case AmountsModelFields::Names::Included:
 			if(role == Qt::CheckStateRole)
 				return excluded.count(weight.id) ? Qt::Unchecked : Qt::Checked;
