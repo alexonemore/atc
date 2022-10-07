@@ -273,13 +273,16 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	auto data = db->GetSubstancesData(parameters_);
 
 	SubstanceNames names(data.size());
+	SubstanceWeights weights(data.size());
 #if 1 // structure slicing
+	std::copy(data.cbegin(), data.cend(), weights.begin());
 	std::copy(data.cbegin(), data.cend(), names.begin());
 #else // no slicing
 	std::transform(data.cbegin(), data.cend(), names.begin(),
+		[](const SubstanceData& i){ return SubstanceFormula{i.id, i.formula}; });
+	std::transform(data.cbegin(), data.cend(), weights.begin(),
 				   [](const SubstanceData& i){
-		return SubstanceFormula{i.id, i.formula};
-	});
+		return SubstanceWeight{i.id, i.formula, i.weight}; });
 #endif
 	model_substances->SetNewData(std::move(data));
 	model_plot_tf->SetDatabase(parameters_.database);

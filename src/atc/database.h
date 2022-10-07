@@ -41,11 +41,16 @@ struct SubstanceFormula
 {
 	int id;
 	QString formula;
-	double weight;
 };
 using SubstanceNames = QVector<SubstanceFormula>;
 
-struct SubstanceData : SubstanceFormula
+struct SubstanceWeight : SubstanceFormula
+{
+	double weight;
+};
+using SubstanceWeights = QVector<SubstanceWeight>;
+
+struct SubstanceData : SubstanceWeight
 {
 	QString name;
 	double T_min, T_max;

@@ -170,12 +170,12 @@ SubstancesData Database::GetSubstancesData(
 						name);
 	SubstancesData data;
 	while(q.next()) {
-		data.push_back(SubstanceData{{q.value(0).toInt(),		// ID
-									 q.value(1).toString(),		// Formula
+		data.push_back(SubstanceData{{{q.value(0).toInt(),		// ID
+									 q.value(1).toString()},	// Formula
 									 q.value(2).toDouble()},	// Weight
-									 q.value(2).toString(),		// Name
-									 q.value(3).toDouble(),		// T_min
-									 q.value(4).toDouble()});	// T_max
+									 q.value(3).toString(),		// Name
+									 q.value(4).toDouble(),		// T_min
+									 q.value(5).toDouble()});	// T_max
 	}
 	return data;
 }
