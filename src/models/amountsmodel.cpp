@@ -21,6 +21,7 @@
 #include <QBrush>
 #include <QKeyEvent>
 #include <QTableView>
+#include "utilities.h"
 
 namespace AmountsModelFields {
 extern const QStringList names{
@@ -37,6 +38,8 @@ extern const QStringList names{
 	QT_TR_NOOP("Sum\nwtpct"),
 	QT_TR_NOOP("Included")
 };
+const QColor group_1_color{171, 211, 255};
+const QColor group_2_color{255, 215, 171};
 }
 
 AmountsModel::AmountsModel(QObject *parent)
@@ -117,7 +120,7 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 	auto row = index.row();
 	if(row == 0) {
 		if(role == Qt::BackgroundRole) {
-			return QBrush(Qt::lightGray);
+			return QBrush{Qt::lightGray};
 		} else if(role == Qt::DisplayRole) {
 			switch(col) {
 			case AmountsModelFields::Names::ID:
@@ -161,13 +164,29 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 		case AmountsModelFields::Names::Weight:
 			if(role == Qt::DisplayRole) return weight.weight; break;
 		case AmountsModelFields::Names::Group_1_mol:
-			if(role == Qt::DisplayRole) return zero(amount.group_1_mol); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.group_1_mol);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{AmountsModelFields::group_1_color};
+			break;
 		case AmountsModelFields::Names::Group_1_gram:
-			if(role == Qt::DisplayRole) return zero(amount.group_1_gram); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.group_1_gram);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{AmountsModelFields::group_1_color};
+			break;
 		case AmountsModelFields::Names::Group_2_mol:
-			if(role == Qt::DisplayRole) return zero(amount.group_2_mol); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.group_2_mol);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{AmountsModelFields::group_2_color};
+			break;
 		case AmountsModelFields::Names::Group_2_gram:
-			if(role == Qt::DisplayRole) return zero(amount.group_2_gram); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.group_2_gram);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{AmountsModelFields::group_2_color};
+			break;
 		case AmountsModelFields::Names::Sum_mol:
 			if(role == Qt::DisplayRole) return zero(amount.sum_mol); break;
 		case AmountsModelFields::Names::Sum_gram:
@@ -429,9 +448,8 @@ QVariant AmountsModel::headerData(int section, Qt::Orientation orientation,
 		} else {
 			return section;
 		}
-	} else {
-		return QVariant{};
 	}
+	return QVariant{};
 }
 
 Qt::ItemFlags AmountsModel::flags(const QModelIndex& index) const

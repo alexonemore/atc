@@ -59,8 +59,11 @@ void DoubleNumberDelegate::setModelData(
 		const QModelIndex& index) const
 {
 	QLineEdit *le = static_cast<QLineEdit*>(editor);
-	double val = le->text().replace(',', '.').toDouble();
-	model->setData(index, val, Qt::EditRole);
+	bool ok{false};
+	double val = le->text().replace(',', '.').toDouble(&ok);
+	if(ok) {
+		model->setData(index, val, Qt::EditRole);
+	}
 }
 
 void DoubleNumberDelegate::updateEditorGeometry(
