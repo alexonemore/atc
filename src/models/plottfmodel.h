@@ -40,7 +40,6 @@ class PlotTFModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(PlotTFModel)
 private:
-	static const QStringList plot_TF_model_field_names;
 	struct Cell {
 		QColor color{Qt::white};
 		Qt::CheckState checked{Qt::Unchecked};
@@ -54,9 +53,10 @@ private:
 	std::unordered_map<int, Row> data_tf; // int = id from data_names
 	std::unordered_map<int, Row> data_tf_new;
 	int row_count{0};
-	const int col_count{static_cast<int>(plot_TF_model_field_names.size())};
+	const int col_count;
 	ParametersNS::Database database;
 private:
+	QStringList plot_TF_model_field_names;
 	const int field_names_size{static_cast<int>(PlotTFModelFields::names.size())};
 public:
 	explicit PlotTFModel(QObject *parent = nullptr);

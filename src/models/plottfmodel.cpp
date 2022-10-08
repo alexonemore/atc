@@ -28,14 +28,13 @@ const QStringList names{
 };
 };
 
-const QStringList PlotTFModel::plot_TF_model_field_names =
-		PlotTFModelFields::names + ParametersNS::thermodynamic_function;
-
-
 PlotTFModel::PlotTFModel(QObject *parent)
-	: QAbstractTableModel(parent)
+	: QAbstractTableModel(parent),
+	  col_count{static_cast<int>(PlotTFModelFields::names.size() +
+								 ParametersNS::thermodynamic_function.size())}
 {
-
+	plot_TF_model_field_names = PlotTFModelFields::names +
+			ParametersNS::thermodynamic_function;
 }
 
 PlotTFModel::~PlotTFModel()
