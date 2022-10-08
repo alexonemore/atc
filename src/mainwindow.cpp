@@ -127,6 +127,8 @@ MainWindow::MainWindow(QWidget *parent)
 	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Sum_mol), double_delegate);
 	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Sum_gram), double_delegate);
 	ui->amounts_view->verticalHeader()->setVisible(false);
+	connect(ui->amounts_view, &AmountsTableView::Delete,
+			this, &MainWindow::SignalAmountsTableDelete);
 }
 
 MainWindow::~MainWindow()

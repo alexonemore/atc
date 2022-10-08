@@ -139,6 +139,10 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
 			this, &CoreApplication::SlotGraphsRemovedPlotTFVtM);
 
+	// amounts
+	connect(gui, &MainWindow::SignalAmountsTableDelete,
+			model_amounts, &AmountsModel::Delete);
+
 }
 
 CoreApplication::~CoreApplication()

@@ -73,6 +73,9 @@ public:
 	void SetNewData(SubstanceWeights&& new_weights);
 	void Clear();
 
+public slots:
+	void Delete(const QModelIndexList& selected);
+
 	// QAbstractItemModel interface
 public:
 	int rowCount(const QModelIndex& parent) const override;

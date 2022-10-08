@@ -367,7 +367,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QTableView" name="amounts_view"/>
+             <widget class="AmountsTableView" name="amounts_view"/>
             </item>
            </layout>
           </widget>
@@ -427,6 +427,11 @@
    <extends>QWidget</extends>
    <header>plottfview.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AmountsTableView</class>
+   <extends>QTableView</extends>
+   <header>amountstableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

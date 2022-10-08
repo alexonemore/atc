@@ -58,6 +58,7 @@ public:
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 	void SetTFPlotModel(QAbstractItemModel* model);
 	void SetAmountsModel(QAbstractItemModel* model);
+
 	// demo
 	void SetModel_1(QAbstractItemModel* model);
 	void SetModel_2(QAbstractItemModel* model);
@@ -106,6 +107,7 @@ signals:
 	void SignalUpdate(const ParametersNS::Parameters parameters);
 	void SignalUpdateButtonClicked(const ParametersNS::Parameters parameters);
 	void SignalSubstancesTableSelection(int id);
+	void SignalAmountsTableDelete(const QModelIndexList& selected);
 	//demo
 	void SignalSendRequest(int);
 	void SignalPushButtonClicked(QString);

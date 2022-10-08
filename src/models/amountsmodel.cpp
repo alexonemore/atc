@@ -19,6 +19,8 @@
 
 #include "amountsmodel.h"
 #include <QBrush>
+#include <QKeyEvent>
+#include <QTableView>
 
 namespace AmountsModelFields {
 extern const QStringList names{
@@ -77,6 +79,17 @@ void AmountsModel::Clear()
 	row_count = 1;
 	Recalculate();
 	endResetModel();
+}
+
+void AmountsModel::Delete(const QModelIndexList& selected)
+{
+	for(auto&& index : selected) {
+		auto row = index.row();
+		if(row > 0) {
+			amounts.at(weights.at(row-1).id) = Amounts{};
+		}
+	}
+	RecalculateAndUpdate();
 }
 
 int AmountsModel::rowCount(const QModelIndex& parent) const
