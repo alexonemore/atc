@@ -179,32 +179,55 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	auto col = static_cast<AmountsModelFields::Names>(index.column());
 	auto row = index.row();
 
-	if(row == 0) {
+	if(row == 0) { // Sum row
 		if(role != Qt::EditRole) {
 			return false;
 		} else {
-
 			switch(col) {
 			case AmountsModelFields::Names::ID:
 			case AmountsModelFields::Names::Formula:
 			case AmountsModelFields::Names::Weight:
-				return false;
-			case AmountsModelFields::Names::Group_1_mol:
+				break;
+			case AmountsModelFields::Names::Group_1_mol: {
+				auto val = std::abs(value.toDouble());
 
-			case AmountsModelFields::Names::Group_1_gram:
 
-			case AmountsModelFields::Names::Group_2_mol:
+				return true;
+			}
+			case AmountsModelFields::Names::Group_1_gram: {
+				auto val = std::abs(value.toDouble());
 
-			case AmountsModelFields::Names::Group_2_gram:
 
-			case AmountsModelFields::Names::Sum_mol:
+				return true;
+			}
+			case AmountsModelFields::Names::Group_2_mol: {
+				auto val = std::abs(value.toDouble());
 
-			case AmountsModelFields::Names::Sum_gram:
 
+				return true;
+			}
+			case AmountsModelFields::Names::Group_2_gram: {
+				auto val = std::abs(value.toDouble());
+
+
+				return true;
+			}
+			case AmountsModelFields::Names::Sum_mol: {
+				auto val = std::abs(value.toDouble());
+
+
+				return true;
+			}
+			case AmountsModelFields::Names::Sum_gram: {
+				auto val = std::abs(value.toDouble());
+
+
+				return true;
+			}
 			case AmountsModelFields::Names::Sum_atpct:
 			case AmountsModelFields::Names::Sum_wtpct:
 			case AmountsModelFields::Names::Included:
-				return false;
+				break;
 			}
 		}
 	} else {
