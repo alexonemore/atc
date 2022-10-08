@@ -176,55 +176,132 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	if(!CheckIndexValidParent(index)) return false;
 	auto col = static_cast<AmountsModelFields::Names>(index.column());
 	auto row = index.row();
-	switch(col) {
-	case AmountsModelFields::Names::ID:
-	case AmountsModelFields::Names::Formula:
-	case AmountsModelFields::Names::Weight:
-		return false;
-	case AmountsModelFields::Names::Group_1_mol:
-		if(role == Qt::EditRole) {
 
-		}
-	case AmountsModelFields::Names::Group_1_gram:
-		if(role == Qt::EditRole) {
+	if(row == 0) {
+		if(role != Qt::EditRole) {
+			return false;
+		} else {
 
-		}
-	case AmountsModelFields::Names::Group_2_mol:
-		if(role == Qt::EditRole) {
+			switch(col) {
+			case AmountsModelFields::Names::ID:
+			case AmountsModelFields::Names::Formula:
+			case AmountsModelFields::Names::Weight:
+				return false;
+			case AmountsModelFields::Names::Group_1_mol:
 
-		}
-	case AmountsModelFields::Names::Group_2_gram:
-		if(role == Qt::EditRole) {
+			case AmountsModelFields::Names::Group_1_gram:
 
-		}
-	case AmountsModelFields::Names::Sum_mol:
-		if(role == Qt::EditRole) {
+			case AmountsModelFields::Names::Group_2_mol:
 
-		}
-	case AmountsModelFields::Names::Sum_gram:
-		if(role == Qt::EditRole) {
+			case AmountsModelFields::Names::Group_2_gram:
 
-		}
-	case AmountsModelFields::Names::Sum_atpct:
-		if(role == Qt::EditRole) {
+			case AmountsModelFields::Names::Sum_mol:
 
-		}
-	case AmountsModelFields::Names::Sum_wtpct:
-		if(role == Qt::EditRole) {
+			case AmountsModelFields::Names::Sum_gram:
 
-		}
-	case AmountsModelFields::Names::Included:
-		if(role == Qt::CheckStateRole) {
-			auto id = weights.at(row-1).id;
-			auto check = value.value<Qt::CheckState>();
-			if(check == Qt::Unchecked) {
-				excluded.insert(id);
-				amounts.at(id) = Amounts{};
-			} else {
-				excluded.erase(id);
+			case AmountsModelFields::Names::Sum_atpct:
+			case AmountsModelFields::Names::Sum_wtpct:
+			case AmountsModelFields::Names::Included:
+				return false;
 			}
-			RecalculateAndUpdate();
-			return true;
+		}
+	} else {
+		auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+		auto&& amount = amounts.at(substance_weight.id);
+		switch(col) {
+		case AmountsModelFields::Names::ID:
+		case AmountsModelFields::Names::Formula:
+		case AmountsModelFields::Names::Weight:
+			break;
+		case AmountsModelFields::Names::Group_1_mol:
+			if(role == Qt::EditRole) {
+				auto weight = substance_weight.weight;
+				amount.group_1_mol = std::abs(value.toDouble());
+				amount.group_1_gram = amount.group_1_mol * weight;
+				amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+				amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+				RecalculateAndUpdate();
+				return true;
+			} break;
+		case AmountsModelFields::Names::Group_1_gram:
+			if(role == Qt::EditRole) {
+				auto weight = substance_weight.weight;
+				amount.group_1_gram = std::abs(value.toDouble());
+				amount.group_1_mol = amount.group_1_gram / weight;
+				amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+				amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+				RecalculateAndUpdate();
+				return true;
+			} break;
+		case AmountsModelFields::Names::Group_2_mol:
+			if(role == Qt::EditRole) {
+				auto weight = substance_weight.weight;
+				amount.group_2_mol = std::abs(value.toDouble());
+				amount.group_2_gram = amount.group_2_mol * weight;
+				amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+				amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+				RecalculateAndUpdate();
+				return true;
+			} break;
+		case AmountsModelFields::Names::Group_2_gram:
+			if(role == Qt::EditRole) {
+				auto weight = substance_weight.weight;
+				amount.group_2_gram = std::abs(value.toDouble());
+				amount.group_2_mol = amount.group_2_gram / weight;
+				amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+				amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+				RecalculateAndUpdate();
+				return true;
+			} break;
+		case AmountsModelFields::Names::Sum_mol:
+			if(role == Qt::EditRole) {
+				if(amount.sum_mol > 0.0) {
+					auto weight = substance_weight.weight;
+					auto val = std::abs(value.toDouble());
+					auto coef = val / amount.sum_mol;
+					amount.sum_mol = val;
+					amount.group_1_mol *= coef;
+					amount.group_2_mol *= coef;
+					amount.group_1_gram = amount.group_1_mol * weight;
+					amount.group_2_gram = amount.group_2_mol * weight;
+					amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
+		case AmountsModelFields::Names::Sum_gram:
+			if(role == Qt::EditRole) {
+				if(amount.sum_gram > 0.0) {
+					auto weight = substance_weight.weight;
+					auto val = std::abs(value.toDouble());
+					auto coef = val / amount.sum_gram;
+					amount.sum_gram = val;
+					amount.group_1_gram *= coef;
+					amount.group_2_gram *= coef;
+					amount.group_1_mol = amount.group_1_gram / weight;
+					amount.group_2_mol = amount.group_2_gram / weight;
+					amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
+		case AmountsModelFields::Names::Sum_atpct:
+		case AmountsModelFields::Names::Sum_wtpct:
+			break;
+		case AmountsModelFields::Names::Included:
+			if(role == Qt::CheckStateRole) {
+				auto id = substance_weight.id;
+				auto check = value.value<Qt::CheckState>();
+				if(check == Qt::Unchecked) {
+					excluded.insert(id);
+					amount = Amounts{};
+				} else {
+					excluded.erase(id);
+				}
+				RecalculateAndUpdate();
+				return true;
+			}
+			break;
 		}
 	}
 	return false;
@@ -285,7 +362,30 @@ bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
 
 void AmountsModel::Recalculate()
 {
+	sum.group_1_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.group_1_mol;});
+	sum.group_1_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.group_1_gram;});
+	sum.group_2_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.group_2_mol;});
+	sum.group_2_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.group_2_gram;});
+	sum.sum_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.sum_mol;});
+	sum.sum_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.sum_gram;});
 
+	for(auto&& [_, amount] : amounts) {
+		amount.sum_atpct = sum.sum_mol > 0.0 ?
+					(100 * amount.sum_mol / sum.sum_mol) : 0.0;
+		amount.sum_wtpct = sum.sum_gram > 0.0 ?
+					(100 * amount.sum_gram / sum.sum_gram) : 0.0;
+	}
+
+	sum.sum_atpct = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.sum_atpct;});
+	sum.sum_wtpct = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
+						[](const auto& i){return i->second.sum_wtpct;});
 }
 
 void AmountsModel::RecalculateAndUpdate()

@@ -44,7 +44,6 @@ extern const QStringList names;
 }
 
 struct Amounts {
-	double weight{0};
 	double group_1_mol{0};
 	double group_1_gram{0};
 	double group_2_mol{0};
@@ -65,7 +64,7 @@ private:
 	Composition amounts;
 	Composition amounts_new;
 	std::set<int> excluded;
-	Amounts sum;
+	Amounts sum{};
 	int row_count{1};
 	const int col_count{static_cast<int>(AmountsModelFields::names.size())};
 public:
