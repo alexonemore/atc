@@ -178,7 +178,6 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	if(!CheckIndexValidParent(index)) return false;
 	auto col = static_cast<AmountsModelFields::Names>(index.column());
 	auto row = index.row();
-
 	if(row == 0) { // Sum row
 		if(role != Qt::EditRole) {
 			return false;
