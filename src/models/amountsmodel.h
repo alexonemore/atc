@@ -44,14 +44,14 @@ extern const QStringList names;
 }
 
 struct Amounts {
-	double group_1_mol{0};
-	double group_1_gram{0};
-	double group_2_mol{0};
-	double group_2_gram{0};
-	double sum_mol{0};
-	double sum_gram{0};
-	double sum_atpct{0};
-	double sum_wtpct{0};
+	double group_1_mol{0.0};
+	double group_1_gram{0.0};
+	double group_2_mol{0.0};
+	double group_2_gram{0.0};
+	double sum_mol{0.0};
+	double sum_gram{0.0};
+	double sum_atpct{0.0};
+	double sum_wtpct{0.0};
 };
 using Composition = std::unordered_map<int, Amounts>;
 

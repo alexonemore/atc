@@ -65,6 +65,7 @@ void AmountsModel::SetNewData(SubstanceWeights&& new_weights)
 	assert(weights.size() == amounts.size());
 	amounts_new.clear();
 	row_count = weights.size()+1;
+	Recalculate();
 	endResetModel();
 }
 
@@ -74,6 +75,7 @@ void AmountsModel::Clear()
 	weights.clear();
 	amounts.clear();
 	row_count = 1;
+	Recalculate();
 	endResetModel();
 }
 
@@ -362,18 +364,15 @@ bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
 
 void AmountsModel::Recalculate()
 {
-	sum.group_1_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.group_1_mol;});
-	sum.group_1_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.group_1_gram;});
-	sum.group_2_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.group_2_mol;});
-	sum.group_2_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.group_2_gram;});
-	sum.sum_mol = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.sum_mol;});
-	sum.sum_gram = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.sum_gram;});
+	sum = Amounts{};
+	for(const auto& [_, amount] : amounts) {
+		sum.group_1_mol		+= amount.group_1_mol;
+		sum.group_1_gram	+= amount.group_1_gram;
+		sum.group_2_mol		+= amount.group_2_mol;
+		sum.group_2_gram	+= amount.group_2_gram;
+		sum.sum_mol			+= amount.sum_mol;
+		sum.sum_gram		+= amount.sum_gram;
+	}
 
 	for(auto&& [_, amount] : amounts) {
 		amount.sum_atpct = sum.sum_mol > 0.0 ?
@@ -382,10 +381,10 @@ void AmountsModel::Recalculate()
 					(100 * amount.sum_gram / sum.sum_gram) : 0.0;
 	}
 
-	sum.sum_atpct = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.sum_atpct;});
-	sum.sum_wtpct = std::accumulate(amounts.cbegin(), amounts.cend(), 0.0,
-						[](const auto& i){return i->second.sum_wtpct;});
+	for(const auto& [_, amount] : amounts) {
+		sum.sum_atpct += amount.sum_atpct;
+		sum.sum_wtpct += amount.sum_wtpct;
+	}
 }
 
 void AmountsModel::RecalculateAndUpdate()
