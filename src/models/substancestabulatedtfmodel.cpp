@@ -38,7 +38,6 @@ SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 {
 	substance_tabulated_tf_field_names = SubstancesTabulatedTFFields::names +
 			ParametersNS::thermodynamic_function_full;
-
 }
 
 SubstancesTabulatedTFModel::~SubstancesTabulatedTFModel()
