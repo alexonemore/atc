@@ -189,41 +189,117 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			case AmountsModelFields::Names::Weight:
 				break;
 			case AmountsModelFields::Names::Group_1_mol: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.group_1_mol > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.group_1_mol;
+					sum.group_1_mol = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.group_1_mol *= coef;
+						amount.group_1_gram = amount.group_1_mol * w;
+						amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+						amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Group_1_gram: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.group_1_gram > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.group_1_gram;
+					sum.group_1_gram = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.group_1_gram *= coef;
+						amount.group_1_mol = amount.group_1_gram / w;
+						amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+						amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Group_2_mol: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.group_2_mol > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.group_2_mol;
+					sum.group_2_mol = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.group_2_mol *= coef;
+						amount.group_2_gram = amount.group_2_mol * w;
+						amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+						amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Group_2_gram: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.group_2_gram > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.group_2_gram;
+					sum.group_2_gram = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.group_2_gram *= coef;
+						amount.group_2_mol = amount.group_2_gram / w;
+						amount.sum_mol = amount.group_1_mol + amount.group_2_mol;
+						amount.sum_gram = amount.group_1_gram + amount.group_2_gram;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Sum_mol: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.sum_mol > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.sum_mol;
+					sum.sum_mol = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.sum_mol *= coef;
+						amount.group_1_mol *= coef;
+						amount.group_2_mol *= coef;
+						amount.group_1_gram = amount.group_1_mol * w;
+						amount.group_2_gram = amount.group_2_mol * w;
+						amount.sum_gram = amount.group_2_gram + amount.group_2_gram;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Sum_gram: {
-				auto val = std::abs(value.toDouble());
-
-
-				return true;
-			}
+				if(sum.sum_gram > 0.0) {
+					auto val = std::abs(value.toDouble());
+					auto coef = val / sum.sum_gram;
+					sum.sum_gram = val;
+					for(const auto& weight : weights) {
+						auto id = weight.id;
+						auto w = weight.weight;
+						auto&& amount = amounts.at(id);
+						amount.sum_gram *= coef;
+						amount.group_1_gram *= coef;
+						amount.group_2_gram *= coef;
+						amount.group_1_mol = amount.group_1_gram / w;
+						amount.group_2_mol = amount.group_2_gram / w;
+						amount.sum_mol= amount.group_2_mol+ amount.group_2_mol;
+					}
+					RecalculateAndUpdate();
+					return true;
+				}
+			} break;
 			case AmountsModelFields::Names::Sum_atpct:
 			case AmountsModelFields::Names::Sum_wtpct:
 			case AmountsModelFields::Names::Included:
