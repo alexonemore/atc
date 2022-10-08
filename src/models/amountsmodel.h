@@ -72,6 +72,9 @@ public:
 	~AmountsModel() override;
 	void SetNewData(SubstanceWeights&& new_weights);
 	void Clear();
+	auto GetComposition() const {
+		return std::make_pair(weights, amounts);
+	}
 
 public slots:
 	void Delete(const QModelIndexList& selected);
