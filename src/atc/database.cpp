@@ -202,6 +202,25 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 	return data;
 }
 
+std::unordered_map<int, SubstanceTempRangeData>
+Database::GetSubstancesTempRangeData(const QVector<int>& ids)
+{
+	std::unordered_map<int, SubstanceTempRangeData> temp_ranges;
+
+	// TODO
+
+	return temp_ranges;
+}
+
+std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
+{
+	std::vector<int> elements;
+
+	// TODO
+
+	return elements;
+}
+
 QString Database::GetSubstanceName(const int id)
 {
 	LOG(id)

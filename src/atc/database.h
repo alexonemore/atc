@@ -87,9 +87,15 @@ public:
 	virtual SubstancesData GetSubstancesData(
 			const ParametersNS::Parameters& parameters);
 	virtual SubstanceTempRangeData GetSubstancesTempRangeData(const int id);
+
+	virtual std::unordered_map<int, SubstanceTempRangeData>
+	GetSubstancesTempRangeData(const QVector<int>& ids);
+
 	const QStringList& GetAvailableElements() const {
 		return available_elements;
 	}
+	std::vector<int> GetAvailableElements(const QVector<int>& ids);
+
 	virtual QString GetSubstanceName(const int id);
 protected:
 	virtual const QString& GetSubstancesDataString() const = 0;

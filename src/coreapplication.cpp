@@ -405,9 +405,8 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
-QVector<int> MakeNewSpeciesList(const SubstanceWeights& subs,
-								const std::set<int>& excluded);
-
+QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
+								  const std::set<int>& excluded);
 
 void CoreApplication::SlotStartCalculations()
 {
@@ -421,10 +420,11 @@ void CoreApplication::SlotStartCalculations()
 	 * 4. Prepare vector of calculation instances
 	 * 5. emit vector
 	 * */
-	auto new_species = MakeNewSpeciesList(composition_data.weights,
-										  composition_data.excluded);
 
-
+	auto ids = MakeNewSpeciesIdList(composition_data.weights,
+									composition_data.excluded);
+	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
+	auto elements = db->GetAvailableElements(ids);
 
 	auto vec = PrepareHeavyCalculations();
 	emit SignalStartHeavyComputations(vec);
@@ -433,7 +433,7 @@ void CoreApplication::SlotStartCalculations()
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-QVector<int> MakeNewSpeciesList(const SubstanceWeights& subs,
+QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
 								const std::set<int>& excluded)
 {
 	QVector<int> species;
