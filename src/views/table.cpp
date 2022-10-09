@@ -183,8 +183,7 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			const QModelIndex index = indices.first().sibling(row, column);
 			QString style;
 			if(indices.contains(index)) {
-				QFont font;
-				font.fromString(index.data(Qt::FontRole).toString());
+				QFont font{index.data(Qt::FontRole).value<QFont>()};
 				const QString fontStyle(font.italic() ? "italic" : "normal");
 				const QString fontWeigth(font.bold() ? "bold" : "normal");
 				const QString fontDecoration(font.underline() ? " text-decoration: underline;" : "");
