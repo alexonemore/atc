@@ -28,10 +28,11 @@ class Table : public QTableView
 	Q_DISABLE_COPY_MOVE(Table)
 private:
 	QMenu* context_menu;
-
 public:
 	explicit Table(QWidget* parent = nullptr);
 	~Table() override;
+signals:
+	void Delete(const QModelIndexList& selected);
 private:
 	void Copy(const bool with_headers);
 	void CopyMimeData(const QModelIndexList& from_indices, QMimeData* mime_data,

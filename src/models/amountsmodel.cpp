@@ -34,8 +34,8 @@ extern const QStringList names{
 	QT_TR_NOOP("Group 2\ngram"),
 	QT_TR_NOOP("Sum\nmol"),
 	QT_TR_NOOP("Sum\ngram"),
-	QT_TR_NOOP("Sum\natpct"),
-	QT_TR_NOOP("Sum\nwtpct"),
+	QT_TR_NOOP("Sum\nat.%"),
+	QT_TR_NOOP("Sum\nwt.%"),
 	QT_TR_NOOP("Included")
 };
 const QColor group_1_color{171, 211, 255};
@@ -148,7 +148,8 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 			case AmountsModelFields::Names::Included: {
 				auto all = amounts.size();
 				auto ex = excluded.size();
-				return QString::number(all-ex) + "/" + QString::number(all);
+				return QString::number(all-ex) + " " + tr("of") + " " +
+						QString::number(all);
 			}
 			}
 		}
@@ -158,11 +159,23 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 		auto zero = [](double d)->QVariant {return d > 0 ? d : QVariant{};};
 		switch(col) {
 		case AmountsModelFields::Names::ID:
-			if(role == Qt::DisplayRole) return weight.id; break;
+			if(role == Qt::DisplayRole)
+				return weight.id;
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Formula:
-			if(role == Qt::DisplayRole) return weight.formula; break;
+			if(role == Qt::DisplayRole)
+				return weight.formula;
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Weight:
-			if(role == Qt::DisplayRole) return weight.weight; break;
+			if(role == Qt::DisplayRole)
+				return weight.weight;
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Group_1_mol:
 			if(role == Qt::DisplayRole)
 				return zero(amount.group_1_mol);
@@ -188,16 +201,36 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 				return QBrush{AmountsModelFields::group_2_color};
 			break;
 		case AmountsModelFields::Names::Sum_mol:
-			if(role == Qt::DisplayRole) return zero(amount.sum_mol); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.sum_mol);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Sum_gram:
-			if(role == Qt::DisplayRole) return zero(amount.sum_gram); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.sum_gram);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Sum_atpct:
-			if(role == Qt::DisplayRole) return zero(amount.sum_atpct); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.sum_atpct);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Sum_wtpct:
-			if(role == Qt::DisplayRole) return zero(amount.sum_wtpct); break;
+			if(role == Qt::DisplayRole)
+				return zero(amount.sum_wtpct);
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
+			break;
 		case AmountsModelFields::Names::Included:
 			if(role == Qt::CheckStateRole)
 				return excluded.count(weight.id) ? Qt::Unchecked : Qt::Checked;
+			else if(role == Qt::DisplayRole)
+				return excluded.count(weight.id) ? "-" : "+";
+			else if(role == Qt::BackgroundRole)
+				return QBrush{Qt::white};
 			break;
 		}
 	}
@@ -340,6 +373,11 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	} else {
 		auto&& substance_weight = weights.at(row-1); // -1 for Sum row
 		auto&& amount = amounts.at(substance_weight.id);
+		if(excluded.count(substance_weight.id) && role == Qt::EditRole) {
+			amount = Amounts{};
+			RecalculateAndUpdate();
+			return false;
+		}
 		switch(col) {
 		case AmountsModelFields::Names::ID:
 		case AmountsModelFields::Names::Formula:

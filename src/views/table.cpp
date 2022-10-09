@@ -184,24 +184,22 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			QString style;
 			if(indices.contains(index)) {
 				QFont font;
-				auto font_string = index.data(Qt::FontRole).toString();
-				if(!font_string.isEmpty()) {
-					font.fromString(font_string);
-				}
+				font.fromString(index.data(Qt::FontRole).toString());
 				const QString fontStyle(font.italic() ? "italic" : "normal");
 				const QString fontWeigth(font.bold() ? "bold" : "normal");
 				const QString fontDecoration(font.underline() ? " text-decoration: underline;" : "");
-				const QColor bgColor(Qt::white);
-				const QColor fgColor(Qt::black);
+				const QColor bgColor(index.data(Qt::BackgroundRole).value<QBrush>().color());
+				const QColor fgColor(index.data(Qt::ForegroundRole).value<QBrush>().color());
+				const Qt::Alignment align(index.data(Qt::TextAlignmentRole).toInt());
 				style = QString("style=\"font-family: '%1'; font-size: %2pt; font-style: %3; font-weight: %4;%5 "
 								"background-color: %6; color: %7\"").arg(
-							font.family().toHtmlEscaped(),
-							QString::number(font.pointSize()),
-							fontStyle,
-							fontWeigth,
-							fontDecoration,
-							bgColor.name(),
-							fgColor.name());
+									font.family().toHtmlEscaped(),
+									QString::number(font.pointSize()),
+									fontStyle,
+									fontWeigth,
+									fontDecoration,
+									bgColor.name(),
+									fgColor.name());
 			}
 
 			// Separators. For first cell, only opening table row tags
@@ -255,6 +253,7 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 void Table::keyPressEvent(QKeyEvent* event)
 {
+#if 0
 	if(event->matches(QKeySequence::Copy))
 	{
 		Copy(false);
@@ -265,5 +264,28 @@ void Table::keyPressEvent(QKeyEvent* event)
 		// Call copy with headers when Ctrl-Shift-C is pressed
 		Copy(true);
 	}
-	return QTableView::keyPressEvent(event);
+#endif
+	switch(event->key()) {
+	case Qt::Key_Delete:
+	case Qt::Key_Backspace:
+		if(hasFocus()) {
+			auto selected = selectionModel()->selectedIndexes();
+			emit Delete(selected);
+		}
+		break;
+	case Qt::Key_C:
+		if(event->modifiers().testFlag(Qt::ControlModifier)) {
+			if(event->modifiers().testFlag(Qt::ShiftModifier)) {
+				// Call copy with headers when Ctrl-Shift-C is pressed
+				Copy(true);
+			} else {
+				// Call copy without headers when Ctrl-C is pressed
+				Copy(false);
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	QTableView::keyPressEvent(event);
 }

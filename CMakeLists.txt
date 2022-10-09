@@ -106,8 +106,6 @@ set(PROJECT_SOURCES
     src/views/table.cpp
     src/views/plottfview.h
     src/views/plottfview.cpp
-    src/views/amountstableview.h
-    src/views/amountstableview.cpp
 
     # misc
     src/misc/utilities.h

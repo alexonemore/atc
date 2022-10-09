@@ -367,7 +367,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="AmountsTableView" name="amounts_view"/>
+             <widget class="Table" name="amounts_view"/>
             </item>
            </layout>
           </widget>
@@ -429,9 +429,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>AmountsTableView</class>
+   <class>Table</class>
    <extends>QTableView</extends>
-   <header>amountstableview.h</header>
+   <header>table.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
