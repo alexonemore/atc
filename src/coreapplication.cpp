@@ -405,30 +405,59 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
+QVector<int> MakeNewSpeciesList(const SubstanceWeights& subs,
+								const std::set<int>& excluded);
+
+
 void CoreApplication::SlotStartCalculations()
 {
-	LOG(">> CORE HEAVY START <<")
+	LOG(">> START CALCULATION <<")
 	auto composition_data = model_amounts->GetCompositionData();
 	auto db = CurrentDatabase();
-
 
 	/* 1. Make new species list taking into account the excluded species
 	 * 2. Update elements list for the number of elements
 	 * 3. Get species temp range data from current database
-	 * 4.
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 4. Prepare vector of calculation instances
+	 * 5. emit vector
 	 * */
+	auto new_species = MakeNewSpeciesList(composition_data.weights,
+										  composition_data.excluded);
 
 
 
 	auto vec = PrepareHeavyCalculations();
 	emit SignalStartHeavyComputations(vec);
-	LOG(">> CORE HEAVY END <<")
+	LOG(">> END CALCULATION <<")
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+QVector<int> MakeNewSpeciesList(const SubstanceWeights& subs,
+								const std::set<int>& excluded)
+{
+	QVector<int> species;
+	for(const auto& sub : subs) {
+		if(!excluded.count(sub.id)) {
+			species.push_back(sub.id);
+		}
+	}
+	return species;
+}
+
+void Prepare()
+{
+	ParametersNS::Parameters parameters;
+	switch(parameters.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+		break;
+	case ParametersNS::Workmode::CompositionRange:
+		break;
+	case ParametersNS::Workmode::DoubleCompositionRange:
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		break;
+	}
 }
