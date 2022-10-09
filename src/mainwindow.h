@@ -106,6 +106,7 @@ private slots:
 signals:
 	void SignalUpdate(const ParametersNS::Parameters parameters);
 	void SignalUpdateButtonClicked(const ParametersNS::Parameters parameters);
+	void SignalStartCalculate(const ParametersNS::Parameters parameters);
 	void SignalSubstancesTableSelection(int id);
 	void SignalAmountsTableDelete(const QModelIndexList& selected);
 	//demo

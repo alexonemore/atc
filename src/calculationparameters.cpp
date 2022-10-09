@@ -46,7 +46,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 			this, &CalculationParameters::UpdateButtonHandler);
 
 	connect(ui->calculate, &QPushButton::clicked,
-			this, &CalculationParameters::StartCalculate);
+			this, &CalculationParameters::CalculateButtonHandler);
 
 	connect(ui->clear, &QPushButton::clicked,
 			this, &CalculationParameters::Clear);
@@ -185,4 +185,9 @@ void CalculationParameters::Clear()
 	SetupInitialParameters();
 	ui->periodic_table->Clear();
 	emit UpdateParameters(ParametersNS::Parameters{});
+}
+
+void CalculationParameters::CalculateButtonHandler()
+{
+	emit StartCalculate(GetCurrentParameters());
 }

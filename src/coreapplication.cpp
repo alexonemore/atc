@@ -81,6 +81,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotSubstancesTableSelectionHandler);
 	connect(this, &CoreApplication::SignalSetSelectedSubstanceLabel,
 			gui, &MainWindow::SlotSetSelectedSubstanceLabel);
+	connect(gui, &MainWindow::SignalStartCalculate,
+			this, &CoreApplication::SlotStartCalculations);
 
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
@@ -402,3 +404,10 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
+void CoreApplication::SlotStartCalculations(const ParametersNS::Parameters parameters)
+{
+	LOG(">> CORE HEAVY START <<")
+	auto vec = PrepareHeavyCalculations();
+	emit SignalStartHeavyComputations(vec);
+	LOG(">> CORE HEAVY END <<")
+}

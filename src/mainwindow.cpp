@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
 			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
 			this, &MainWindow::SignalUpdateButtonClicked);
+	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
+			this, &MainWindow::SignalStartCalculate);
 
 	//demo
 	std::vector<QAbstractButton*> check_butons{
@@ -400,5 +402,6 @@ void MainWindow::UpdateButtonHandler(const ParametersNS::Parameters parameters)
 	// I don't know what to update in the mainwindow yet.
 	emit SignalUpdate(parameters);
 }
+
 
 

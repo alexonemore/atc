@@ -44,10 +44,11 @@ private slots:
 	void Update();
 	void UpdateButtonHandler();
 	void Clear();
+	void CalculateButtonHandler();
 signals:
 	void UpdateParameters(const ParametersNS::Parameters parameters);
 	void UpdateButtonClicked(const ParametersNS::Parameters parameters);
-	void StartCalculate();
+	void StartCalculate(const ParametersNS::Parameters parameters);
 };
 
 #endif // CALCULATIONPARAMETERS_H
