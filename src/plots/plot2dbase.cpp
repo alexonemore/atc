@@ -20,6 +20,7 @@
 #include "plot2dbase.h"
 #include "dialogchangetext.h"
 #include <QHBoxLayout>
+#include "utilities.h"
 
 Plot2DBase::Plot2DBase(QWidget *parent)
 	: QWidget{parent}
@@ -64,6 +65,8 @@ Plot2DBase::Plot2DBase(QWidget *parent)
 	connect(plot, &QCustomPlot::mouseWheel, this, &Plot2DBase::PlotMouseWheel);
 	connect(plot, &QCustomPlot::customContextMenuRequested,
 			this, &Plot2DBase::PlotContextMenuRequest);
+
+	menu = new QMenu(this);
 
 	SetupActionsBase();
 }
@@ -227,8 +230,7 @@ void Plot2DBase::SetupActionsBase()
 
 void Plot2DBase::PlotContextMenuRequest(QPoint pos)
 {
-	auto menu = new QMenu(this);
-	menu->setAttribute(Qt::WA_DeleteOnClose);
+	menu->clear();
 
 	menu->addAction(a_replot);
 	if(show_tracer) {

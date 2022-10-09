@@ -38,6 +38,7 @@ private:
 	QCPItemText* tracer_text;
 
 private:
+	QMenu* menu;
 	QAction* a_replot;
 	QAction* a_tracer_show;
 	QAction* a_tracer_hide;
