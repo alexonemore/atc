@@ -43,7 +43,7 @@ public:
 
 	void HeavyCalculations() {
 		LOG(i)
-		QThread::sleep(1);
+		QThread::msleep(RandomInt{100, 500}());
 		i *= 10;
 	}
 };

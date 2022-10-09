@@ -216,7 +216,7 @@ void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)
 {
 	LOG(">> HEAVY START <<")
 	Timer t; t.start();
-	QThreadPool::globalInstance()->setMaxThreadCount(4);
+	QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
 	fw->setFuture(QtConcurrent::map(ho, &HeavyContainer::HeavyCalculations));
 	//fw->setFuture(QtConcurrent::map(ho.begin(), ho.end(), &HeavyContainer::HeavyCalculations));
 	dialog->exec();

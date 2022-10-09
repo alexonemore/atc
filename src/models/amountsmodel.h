@@ -55,6 +55,12 @@ struct Amounts {
 };
 using Composition = std::unordered_map<int, Amounts>;
 
+struct CompositionData {
+	SubstanceWeights weights;
+	Composition amounts;
+	std::set<int> excluded;
+};
+
 class AmountsModel : public QAbstractTableModel
 {
 	Q_OBJECT
@@ -72,8 +78,8 @@ public:
 	~AmountsModel() override;
 	void SetNewData(SubstanceWeights&& new_weights);
 	void Clear();
-	auto GetComposition() const {
-		return std::make_pair(weights, amounts);
+	CompositionData GetCompositionData() const {
+		return CompositionData{weights, amounts, excluded};
 	}
 
 public slots:

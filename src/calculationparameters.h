@@ -48,7 +48,7 @@ private slots:
 signals:
 	void UpdateParameters(const ParametersNS::Parameters parameters);
 	void UpdateButtonClicked(const ParametersNS::Parameters parameters);
-	void StartCalculate(const ParametersNS::Parameters parameters);
+	void StartCalculate();
 };
 
 #endif // CALCULATIONPARAMETERS_H

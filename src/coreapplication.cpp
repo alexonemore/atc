@@ -185,6 +185,7 @@ void CoreApplication::SlotPushButtonHandler(const QString& text)
 
 void CoreApplication::SlotHeavyCalculations()
 {
+	// Demo
 	LOG(">> CORE HEAVY START <<")
 	auto vec = PrepareHeavyCalculations();
 	emit SignalStartHeavyComputations(vec);
@@ -253,7 +254,7 @@ void CoreApplication::SlotMake3DGraphData()
 QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 {
 	LOG()
-	QVector<HeavyContainer> vec(10);
+	QVector<HeavyContainer> vec(300);
 	return vec;
 }
 
@@ -404,9 +405,29 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
-void CoreApplication::SlotStartCalculations(const ParametersNS::Parameters parameters)
+void CoreApplication::SlotStartCalculations()
 {
 	LOG(">> CORE HEAVY START <<")
+	auto composition_data = model_amounts->GetCompositionData();
+	auto db = CurrentDatabase();
+
+
+	/* 1. Make species list taking into account the excluded species
+	 * 2. Get species temp range data from current database
+	 * 3.
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 * */
+
+
+
 	auto vec = PrepareHeavyCalculations();
 	emit SignalStartHeavyComputations(vec);
 	LOG(">> CORE HEAVY END <<")

@@ -87,7 +87,7 @@ private slots:
 	void SlotUpdateButtonHandler(const ParametersNS::Parameters parameters);
 	void SlotSubstancesTableSelectionHandler(int id);
 	// calculate
-	void SlotStartCalculations(const ParametersNS::Parameters parameters);
+	void SlotStartCalculations();
 
 	// tf plots: model to view
 private slots:
