@@ -73,8 +73,10 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters() const
 	p.database = static_cast<ParametersNS::Database>(ui->database->currentIndex());
 	p.minimization_function = static_cast<ParametersNS::MinimizationFunction>(ui->minimization_function->currentIndex());
 	p.extrapolation = static_cast<ParametersNS::Extrapolation>(ui->extrapolation->currentIndex());
+#if 0
 	p.group1_unit = static_cast<ParametersNS::CompositionUnit>(ui->group1_units->currentIndex());
 	p.group2_unit = static_cast<ParametersNS::CompositionUnit>(ui->group2_units->currentIndex());
+#endif
 	p.composition1_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition1_units->currentIndex());
 	p.composition2_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition2_units->currentIndex());
 	p.temperature_initial_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_initial_units->currentIndex());
@@ -129,8 +131,10 @@ void CalculationParameters::SetupInitialParameters()
 	ui->database->setCurrentIndex(static_cast<int>(p.database));
 	ui->minimization_function->setCurrentIndex(static_cast<int>(p.minimization_function));
 	ui->extrapolation->setCurrentIndex(static_cast<int>(p.extrapolation));
+#if 0
 	ui->group1_units->setCurrentIndex(static_cast<int>(p.group1_unit));
 	ui->group2_units->setCurrentIndex(static_cast<int>(p.group2_unit));
+#endif
 	ui->temperature_initial_units->setCurrentIndex(static_cast<int>(p.temperature_initial_unit));
 	ui->pressure_initial_units->setCurrentIndex(static_cast<int>(p.pressure_initial_unit));
 	ui->composition1_units->setCurrentIndex(static_cast<int>(p.composition1_unit));

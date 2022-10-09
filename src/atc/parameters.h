@@ -129,8 +129,10 @@ struct Parameters
 	Database		database			{Database::Thermo};
 	MinimizationFunction minimization_function {MinimizationFunction::GibbsEnergy};
 	Extrapolation	extrapolation		{Extrapolation::Enable};
+#if 0
 	CompositionUnit group1_unit			{CompositionUnit::AtomicPercent};
 	CompositionUnit group2_unit			{CompositionUnit::AtomicPercent};
+#endif
 	CompositionUnit composition1_unit	{CompositionUnit::AtomicPercent};
 	CompositionUnit composition2_unit	{CompositionUnit::AtomicPercent};
 	TemperatureUnit	temperature_initial_unit {TemperatureUnit::Kelvin};
