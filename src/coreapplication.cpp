@@ -412,10 +412,10 @@ void CoreApplication::SlotStartCalculations()
 	auto db = CurrentDatabase();
 
 
-	/* 1. Make species list taking into account the excluded species
-	 * 2. Get species temp range data from current database
-	 * 3.
-	 *
+	/* 1. Make new species list taking into account the excluded species
+	 * 2. Update elements list for the number of elements
+	 * 3. Get species temp range data from current database
+	 * 4.
 	 *
 	 *
 	 *
