@@ -187,8 +187,8 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 				const QString fontStyle(font.italic() ? "italic" : "normal");
 				const QString fontWeigth(font.bold() ? "bold" : "normal");
 				const QString fontDecoration(font.underline() ? " text-decoration: underline;" : "");
-				const QColor bgColor(index.data(Qt::BackgroundRole).value<QBrush>().color());
-				const QColor fgColor(index.data(Qt::ForegroundRole).value<QBrush>().color());
+				const QColor bgColor{index.data(Qt::BackgroundRole).value<QBrush>().color()};
+				const QColor fgColor{index.data(Qt::ForegroundRole).value<QBrush>().color()};
 				const Qt::Alignment align(index.data(Qt::TextAlignmentRole).toInt());
 				style = QString("style=\"font-family: '%1'; font-size: %2pt; font-style: %3; font-weight: %4;%5 "
 								"background-color: %6; color: %7\"").arg(
