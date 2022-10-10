@@ -30,19 +30,23 @@ class HeavyContainer
 {
 	int i{0};
 public:
-	HeavyContainer() : i{HeavyContainerNamespace::counter++} {LOG("ctor", i) }
+	HeavyContainer() : i{HeavyContainerNamespace::counter++} {
+		// LOG("ctor", i)
+	}
 	HeavyContainer(const HeavyContainer&) {LOG("copy ctor")}
 	HeavyContainer(HeavyContainer&&) noexcept {LOG("move ctor")}
 	void operator=(const HeavyContainer&) {LOG("copy =")}
 	void operator=(HeavyContainer&&) noexcept {LOG("move =")}
-	~HeavyContainer() {LOG(i)}
+	~HeavyContainer() {
+		// LOG(i)
+	}
 
 	int GetValue() const noexcept {LOG() return i;}
 	int GetCounter() const {LOG() return HeavyContainerNamespace::counter;}
 	void SetCounter(const int value) {LOG() HeavyContainerNamespace::counter = value;}
 
 	void HeavyCalculations() {
-		LOG(i)
+		// LOG(i)
 		QThread::msleep(RandomInt{100, 500}());
 		i *= 10;
 	}

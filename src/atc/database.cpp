@@ -30,6 +30,12 @@ const QString available_elements = QStringLiteral(
 "SELECT DISTINCT CompositionsOfSpecies.element_id "
 "FROM CompositionsOfSpecies);");
 
+const QString available_elements_for_spesies = QStringLiteral(
+"SELECT CompositionsOfSpecies.element_id "
+"FROM CompositionsOfSpecies "
+"WHERE CompositionsOfSpecies.species_id IN (%1) "
+"GROUP BY CompositionsOfSpecies.element_id;");
+
 const QString hsc_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
 "Species.Weight AS Weight, "
@@ -236,21 +242,11 @@ SubstanceTempRangeData Database::GetSubstanceTempRangeData(const int id)
 	return data;
 }
 
-QString MakeSeparatedString(const QVector<int>& ids)
-{
-	QStringList ids_strlist;
-	std::transform(ids.cbegin(), ids.cend(), std::back_inserter(ids_strlist),
-				   [](int id){ return QString::number(id); });
-	auto ids_str = QStringLiteral("'") + ids_strlist.join("','") +
-			QStringLiteral("'");
-	return ids_str;
-}
-
 std::unordered_map<int, SubstanceTempRangeData>
 Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 {
 	LOG(ids)
-	auto ids_str = MakeSeparatedString(ids);
+	auto ids_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
 	LOG(ids_str)
 	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(ids_str),
 						database_name);
@@ -276,8 +272,8 @@ Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
 {
 	std::vector<int> elements;
+//	auto q = SQL::Query(SQL::available_elements_for_spesies, database_name);
 
-	// TODO
 
 	return elements;
 }

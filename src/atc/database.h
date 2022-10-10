@@ -25,6 +25,7 @@
 
 namespace SQL {
 extern const QString available_elements;
+extern const QString available_elements_for_spesies;
 extern const QString hsc_substances_template;
 extern const QString thermo_substances_template;
 extern const QString hsc_substance_temprange_template;
@@ -160,5 +161,23 @@ protected:
 		return SQL::hsc_substance_name_template;
 	}
 };
+
+/****************************************************************************
+ *						Auxiliary
+ ****************************************************************************/
+
+template<typename ForwardIt,
+		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag,
+		 typename std::iterator_traits<ForwardIt>::iterator_category>>>
+QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last)
+{
+	using val = typename std::iterator_traits<ForwardIt>::value_type;
+	static_assert(std::is_arithmetic_v<val>, "");
+	QStringList strlist;
+	std::transform(first, last, std::back_inserter(strlist),
+				   [](val i){ return QString::number(i); });
+	auto str = QStringLiteral("'") + strlist.join("','") + QStringLiteral("'");
+	return str;
+}
 
 #endif // DATABASE_H
