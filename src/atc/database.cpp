@@ -137,18 +137,18 @@ QSqlQuery Query(const QString& query, const QString& name)
 
 Database::Database(const QString& filename)
 {
-	name = filename;
-	auto sql = QSqlDatabase::addDatabase("QSQLITE", name);
-	sql.setDatabaseName(name);
+	database_name = filename;
+	auto sql = QSqlDatabase::addDatabase("QSQLITE", database_name);
+	sql.setDatabaseName(database_name);
 	if(!sql.open()) {
 		QString str("Cannot open Database file: ");
-		str += name + "\n" + sql.lastError().text();
+		str += database_name + "\n" + sql.lastError().text();
 		LOG(str)
 		throw std::runtime_error(str.toStdString().c_str());
 	} else {
-		LOG(name)
+		LOG(database_name)
 	}
-	auto q = SQL::Query(SQL::available_elements, name);
+	auto q = SQL::Query(SQL::available_elements, database_name);
 	while(q.next()) {
 		available_elements.push_back(q.value(0).toString());
 	}
@@ -167,7 +167,7 @@ SubstancesData Database::GetSubstancesData(
 	auto phases = GetPhasesString(parameters.show_phases);
 	LOG(phases)
 	auto q = SQL::Query(GetSubstancesDataString().arg(elements_str, phases),
-						name);
+						database_name);
 	SubstancesData data;
 	while(q.next()) {
 		data.push_back(SubstanceData{{{q.value(0).toInt(),		// ID
@@ -183,7 +183,8 @@ SubstancesData Database::GetSubstancesData(
 SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 {
 	LOG(id)
-	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(id), name);
+	auto q = SQL::Query(GetSubstanceTempRangeDataString().arg(id),
+						database_name);
 	SubstanceTempRangeData data;
 	while(q.next()) {
 		data.push_back(TempRangeData{q.value(0).toDouble(), // T_min
@@ -205,6 +206,10 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 std::unordered_map<int, SubstanceTempRangeData>
 Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 {
+	LOG(ids)
+
+	auto q = SQL::Query(GetSubstancesTempRangeDataString(), database_name);
+
 	std::unordered_map<int, SubstanceTempRangeData> temp_ranges;
 
 	// TODO
@@ -224,7 +229,7 @@ std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
 QString Database::GetSubstanceName(const int id)
 {
 	LOG(id)
-	auto q = SQL::Query(GetSubstancesNameString().arg(id), name);
+	auto q = SQL::Query(GetSubstancesNameString().arg(id), database_name);
 	q.first();
 	return q.value(0).toString();
 }

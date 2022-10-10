@@ -417,14 +417,18 @@ void CoreApplication::SlotStartCalculations()
 	/* 1. Make new species list taking into account the excluded species
 	 * 2. Update elements list for the number of elements
 	 * 3. Get species temp range data from current database
-	 * 4. Prepare vector of calculation instances
-	 * 5. emit vector
+	 * 4. Get elements composition for species
+	 * 5. Prepare vector of calculation instances
+	 * 6. emit vector
 	 * */
 
 	auto ids = MakeNewSpeciesIdList(composition_data.weights,
 									composition_data.excluded);
 	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
+	//auto elements_composition = db->GetElementsComposition(ids);
 	auto elements = db->GetAvailableElements(ids);
+
+
 
 	auto vec = PrepareHeavyCalculations();
 	emit SignalStartHeavyComputations(vec);

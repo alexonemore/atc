@@ -79,16 +79,16 @@ struct SubstancesTabulatedTFData
 class Database
 {
 protected:
-	QString name;
+	QString database_name;
 	QStringList available_elements;
 public:
 	Database(const QString& filename);
 	virtual ~Database();
-	virtual SubstancesData GetSubstancesData(
-			const ParametersNS::Parameters& parameters);
-	virtual SubstanceTempRangeData GetSubstancesTempRangeData(const int id);
 
-	virtual std::unordered_map<int, SubstanceTempRangeData>
+	SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters);
+	SubstanceTempRangeData GetSubstancesTempRangeData(const int id);
+
+	std::unordered_map<int, SubstanceTempRangeData>
 	GetSubstancesTempRangeData(const QVector<int>& ids);
 
 	const QStringList& GetAvailableElements() const {
@@ -96,9 +96,10 @@ public:
 	}
 	std::vector<int> GetAvailableElements(const QVector<int>& ids);
 
-	virtual QString GetSubstanceName(const int id);
+	QString GetSubstanceName(const int id);
 protected:
 	virtual const QString& GetSubstancesDataString() const = 0;
+	virtual const QString& GetSubstanceTempRangeDataString() const = 0;
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
 	virtual const QString& GetSubstancesNameString() const = 0;
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
@@ -120,7 +121,7 @@ protected:
 	const QString& GetSubstancesDataString() const override {
 		return SQL::thermo_substances_template;
 	}
-	const QString& GetSubstancesTempRangeDataString() const override {
+	const QString& GetSubstanceTempRangeDataString() const override {
 		return SQL::thermo_substances_temprange_template;
 	}
 	const QString& GetSubstancesNameString() const override {
@@ -144,7 +145,7 @@ protected:
 	const QString& GetSubstancesDataString() const override {
 		return SQL::hsc_substances_template;
 	}
-	const QString& GetSubstancesTempRangeDataString() const override {
+	const QString& GetSubstanceTempRangeDataString() const override {
 		return SQL::hsc_substances_temprange_template;
 	}
 	const QString& GetSubstancesNameString() const override {
