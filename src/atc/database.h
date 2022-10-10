@@ -172,7 +172,7 @@ template<typename ForwardIt,
 QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last)
 {
 	using val = typename std::iterator_traits<ForwardIt>::value_type;
-	static_assert(std::is_arithmetic_v<val>, "");
+	static_assert(std::is_arithmetic_v<val>);
 	QStringList strlist;
 	std::transform(first, last, std::back_inserter(strlist),
 				   [](val i){ return QString::number(i); });

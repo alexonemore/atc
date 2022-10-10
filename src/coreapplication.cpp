@@ -405,40 +405,9 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
-QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
-								  const std::set<int>& excluded);
-
-void CoreApplication::SlotStartCalculations()
-{
-	LOG(">> START CALCULATION <<")
-	auto composition_data = model_amounts->GetCompositionData();
-	auto db = CurrentDatabase();
-
-	/* 1. Make new species list taking into account the excluded species
-	 * 2. Update elements list for the number of elements
-	 * 3. Get species temp range data from current database
-	 * 4. Get elements composition for species
-	 * 5. Prepare vector of calculation instances
-	 * 6. emit vector
-	 * */
-
-	auto ids = MakeNewSpeciesIdList(composition_data.weights,
-									composition_data.excluded);
-	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
-	//auto elements_composition = db->GetElementsComposition(ids);
-	auto elements = db->GetAvailableElements(ids);
-
-
-
-	auto vec = PrepareHeavyCalculations();
-	emit SignalStartHeavyComputations(vec);
-	LOG(">> END CALCULATION <<")
-}
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
-								const std::set<int>& excluded)
+namespace {
+static QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
+										 const std::set<int>& excluded)
 {
 	QVector<int> species;
 	for(const auto& sub : subs) {
@@ -448,7 +417,6 @@ QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
 	}
 	return species;
 }
-
 void Prepare()
 {
 	ParametersNS::Parameters parameters;
@@ -465,3 +433,38 @@ void Prepare()
 		break;
 	}
 }
+} // namespace
+
+void CoreApplication::SlotStartCalculations()
+{
+	LOG(">> START CALCULATION <<")
+	auto composition_data = model_amounts->GetCompositionData();
+	auto db = CurrentDatabase();
+
+	// 1. Make new species list taking into account the excluded species
+	auto ids = MakeNewSpeciesIdList(composition_data.weights,
+									composition_data.excluded);
+
+	// 2. Make elements list for the number of elements
+	auto elements = db->GetAvailableElements(ids);
+
+	// 3. Get species temp range data from current database
+	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
+
+	// 4. Get elements composition for species
+
+	// 5. Prepare vector of calculation instances
+
+	// 6. emit vector
+
+
+	//auto elements_composition = db->GetElementsComposition(ids);
+
+
+
+	auto vec = PrepareHeavyCalculations();
+	emit SignalStartHeavyComputations(vec);
+	LOG(">> END CALCULATION <<")
+}
+
+

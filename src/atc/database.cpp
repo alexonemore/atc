@@ -272,9 +272,13 @@ Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
 {
 	std::vector<int> elements;
-//	auto q = SQL::Query(SQL::available_elements_for_spesies, database_name);
-
-
+	auto el_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
+	LOG(el_str)
+	auto q = SQL::Query(SQL::available_elements_for_spesies.arg(el_str),
+						database_name);
+	while(q.next()) {
+		elements.push_back(q.value(0).toInt());
+	}
 	return elements;
 }
 
