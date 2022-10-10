@@ -424,7 +424,7 @@ void CoreApplication::SlotStartCalculations()
 
 	auto ids = MakeNewSpeciesIdList(composition_data.weights,
 									composition_data.excluded);
-	auto temp_ranges = db->GetSubstanceTempRangeData(ids);
+	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
 	//auto elements_composition = db->GetElementsComposition(ids);
 	auto elements = db->GetAvailableElements(ids);
 
