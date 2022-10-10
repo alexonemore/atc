@@ -71,7 +71,7 @@ const QString thermo_substances_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE State.Symbol IN (%2);");
 
-const QString hsc_substances_temprange_template = QStringLiteral(
+const QString hsc_substance_temprange_template = QStringLiteral(
 "SELECT TempRange.T1 AS 'T min', TempRange.T2 AS 'T max', "
 "TempRange.H AS 'H', "
 "TempRange.S AS 'S', "
@@ -86,7 +86,23 @@ const QString hsc_substances_temprange_template = QStringLiteral(
 "FROM TempRange "
 "WHERE TempRange.species_id = %1;");
 
-const QString thermo_substances_temprange_template = QStringLiteral(
+const QString hsc_substances_temprange_template = QStringLiteral(
+"SELECT TempRange.species_id AS 'ID', "
+"TempRange.T1 AS 'T min', TempRange.T2 AS 'T max', "
+"TempRange.H AS 'H', "
+"TempRange.S AS 'S', "
+"TempRange.A AS 'f1', "
+"TempRange.B AS 'f2', "
+"TempRange.C AS 'f3', "
+"TempRange.D AS 'f4', "
+"TempRange.E AS 'f5', "
+"TempRange.F AS 'f6', "
+"0 AS 'f7', "
+"TempRange.Phase AS 'Phase' "
+"FROM TempRange "
+"WHERE TempRange.species_id IN (%1);");
+
+const QString thermo_substance_temprange_template = QStringLiteral(
 "SELECT TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
 "Species.H0 AS 'H', 0 AS 'S', "
 "TempRange.f1 AS 'f1', "
@@ -102,7 +118,24 @@ const QString thermo_substances_temprange_template = QStringLiteral(
 "JOIN State ON State.state_id = Species.state_id "
 "WHERE TempRange.species_id = %1;");
 
-const QString hsc_substances_name_template = QStringLiteral(
+const QString thermo_substances_temprange_template = QStringLiteral(
+"SELECT TempRange.species_id AS 'ID', "
+"TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
+"Species.H0 AS 'H', 0 AS 'S', "
+"TempRange.f1 AS 'f1', "
+"TempRange.f2 AS 'f2', "
+"TempRange.f3 AS 'f3', "
+"TempRange.f4 AS 'f4', "
+"TempRange.f5 AS 'f5', "
+"TempRange.f6 AS 'f6', "
+"TempRange.f7 AS 'f7', "
+"State.Symbol AS 'Phase' "
+"FROM TempRange "
+"JOIN Species ON Species.species_id = TempRange.species_id "
+"JOIN State ON State.state_id = Species.state_id "
+"WHERE TempRange.species_id IN (%1);");
+
+const QString hsc_substance_name_template = QStringLiteral(
 "SELECT "
 "Species.Formula || ' ' || "
 "IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
@@ -113,7 +146,7 @@ const QString hsc_substances_name_template = QStringLiteral(
 "FROM Species "
 "WHERE Species.species_id = %1;");
 
-const QString thermo_substances_name_template = QStringLiteral(
+const QString thermo_substance_name_template = QStringLiteral(
 "SELECT "
 "Species.Formula || '(' || State.Symbol || ') ' || Species.Name AS 'Name' "
 "FROM Species "
@@ -180,7 +213,7 @@ SubstancesData Database::GetSubstancesData(
 	return data;
 }
 
-SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
+SubstanceTempRangeData Database::GetSubstanceTempRangeData(const int id)
 {
 	LOG(id)
 	auto q = SQL::Query(GetSubstanceTempRangeDataString().arg(id),
@@ -203,18 +236,41 @@ SubstanceTempRangeData Database::GetSubstancesTempRangeData(const int id)
 	return data;
 }
 
+QString MakeSeparatedString(const QVector<int>& ids)
+{
+	QStringList ids_strlist;
+	std::transform(ids.cbegin(), ids.cend(), std::back_inserter(ids_strlist),
+				   [](int id){ return QString::number(id); });
+	auto ids_str = QStringLiteral("'") + ids_strlist.join("','") +
+			QStringLiteral("'");
+	return ids_str;
+}
+
 std::unordered_map<int, SubstanceTempRangeData>
 Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 {
 	LOG(ids)
-
-	auto q = SQL::Query(GetSubstancesTempRangeDataString(), database_name);
-
-	std::unordered_map<int, SubstanceTempRangeData> temp_ranges;
-
-	// TODO
-
-	return temp_ranges;
+	auto ids_str = MakeSeparatedString(ids);
+	LOG(ids_str)
+	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(ids_str),
+						database_name);
+	std::unordered_map<int, SubstanceTempRangeData> tr;
+	while(q.next()) {
+		int id = q.value(0).toInt();
+		tr[id].push_back(TempRangeData{q.value(1).toDouble(), // T_min
+									   q.value(2).toDouble(), // T_max
+									   q.value(3).toDouble(), // H
+									   q.value(4).toDouble(), // S
+									   q.value(5).toDouble(), // f1
+									   q.value(6).toDouble(), // f2
+									   q.value(7).toDouble(), // f3
+									   q.value(8).toDouble(), // f4
+									   q.value(9).toDouble(), // f5
+									   q.value(10).toDouble(), // f6
+									   q.value(11).toDouble(), // f7
+								   q.value(12).toString().toUpper()}); // phase
+	}
+	return tr;
 }
 
 std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
@@ -229,7 +285,7 @@ std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
 QString Database::GetSubstanceName(const int id)
 {
 	LOG(id)
-	auto q = SQL::Query(GetSubstancesNameString().arg(id), database_name);
+	auto q = SQL::Query(GetSubstanceNameString().arg(id), database_name);
 	q.first();
 	return q.value(0).toString();
 }

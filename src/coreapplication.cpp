@@ -325,7 +325,7 @@ void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 	graphs_tf_view[id].name = name;
 	QVector<double> x, y;
 	auto db = Database(id.database);
-	auto data_temp_range = db->GetSubstancesTempRangeData(id.substance_id);
+	auto data_temp_range = db->GetSubstanceTempRangeData(id.substance_id);
 	Thermodynamics::TabulateOneTF(parameters_.temperature_range,
 								  parameters_.temperature_range_unit,
 								  parameters_.extrapolation,
@@ -386,7 +386,7 @@ void CoreApplication::UpdateRangeTabulatedModels()
 {
 	if(is_selected) {
 		auto db = CurrentDatabase();
-		auto data_temp_range = db->GetSubstancesTempRangeData(
+		auto data_temp_range = db->GetSubstanceTempRangeData(
 					selected_substance_id);
 		auto tabdata = Thermodynamics::Tabulate(
 					parameters_.temperature_range,
@@ -424,7 +424,7 @@ void CoreApplication::SlotStartCalculations()
 
 	auto ids = MakeNewSpeciesIdList(composition_data.weights,
 									composition_data.excluded);
-	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
+	auto temp_ranges = db->GetSubstanceTempRangeData(ids);
 	//auto elements_composition = db->GetElementsComposition(ids);
 	auto elements = db->GetAvailableElements(ids);
 

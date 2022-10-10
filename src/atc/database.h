@@ -27,10 +27,12 @@ namespace SQL {
 extern const QString available_elements;
 extern const QString hsc_substances_template;
 extern const QString thermo_substances_template;
+extern const QString hsc_substance_temprange_template;
+extern const QString thermo_substance_temprange_template;
 extern const QString hsc_substances_temprange_template;
 extern const QString thermo_substances_temprange_template;
-extern const QString hsc_substances_name_template;
-extern const QString thermo_substances_name_template;
+extern const QString hsc_substance_name_template;
+extern const QString thermo_substance_name_template;
 } // namespace SQL
 
 /****************************************************************************
@@ -86,7 +88,7 @@ public:
 	virtual ~Database();
 
 	SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters);
-	SubstanceTempRangeData GetSubstancesTempRangeData(const int id);
+	SubstanceTempRangeData GetSubstanceTempRangeData(const int id);
 
 	std::unordered_map<int, SubstanceTempRangeData>
 	GetSubstancesTempRangeData(const QVector<int>& ids);
@@ -101,7 +103,7 @@ protected:
 	virtual const QString& GetSubstancesDataString() const = 0;
 	virtual const QString& GetSubstanceTempRangeDataString() const = 0;
 	virtual const QString& GetSubstancesTempRangeDataString() const = 0;
-	virtual const QString& GetSubstancesNameString() const = 0;
+	virtual const QString& GetSubstanceNameString() const = 0;
 	QString GetPhasesString(const ParametersNS::ShowPhases& phases);
 };
 
@@ -122,10 +124,13 @@ protected:
 		return SQL::thermo_substances_template;
 	}
 	const QString& GetSubstanceTempRangeDataString() const override {
+		return SQL::thermo_substance_temprange_template;
+	}
+	const QString& GetSubstancesTempRangeDataString() const override {
 		return SQL::thermo_substances_temprange_template;
 	}
-	const QString& GetSubstancesNameString() const override {
-		return SQL::thermo_substances_name_template;
+	const QString& GetSubstanceNameString() const override {
+		return SQL::thermo_substance_name_template;
 	}
 };
 
@@ -146,10 +151,13 @@ protected:
 		return SQL::hsc_substances_template;
 	}
 	const QString& GetSubstanceTempRangeDataString() const override {
+		return SQL::hsc_substance_temprange_template;
+	}
+	const QString& GetSubstancesTempRangeDataString() const override {
 		return SQL::hsc_substances_temprange_template;
 	}
-	const QString& GetSubstancesNameString() const override {
-		return SQL::hsc_substances_name_template;
+	const QString& GetSubstanceNameString() const override {
+		return SQL::hsc_substance_name_template;
 	}
 };
 
