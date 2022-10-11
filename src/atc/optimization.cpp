@@ -114,10 +114,7 @@ OptimizationVector Prepare(const ParametersNS::Parameters parameters,
 						   const SubstanceWeights& weight,
 						   const Composition& amounts)
 {
-	// 1. Numbers
-	Numbers numbers;
-	numbers.elements = elements.size();
-	numbers.substances = weight.size();
+	// 1.
 
 
 

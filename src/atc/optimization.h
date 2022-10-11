@@ -49,6 +49,10 @@ struct Constraint
 
 struct OptimizationItem
 {
+	Numbers numbers;
+
+
+
 	void Calculate() {}
 };
 
