@@ -107,8 +107,28 @@ static const char* NLoptResultToString(nlopt::result result)
 	return "RESULT_IS_OUT_OF_ENUM_VALUES";
 }
 
-OptimizationVector Prepare(const ParametersNS::Parameters parameters, const std::vector<int>& ids, const std::vector<int>& elements, const SubstancesTempRangeData& temp_ranges, const SubstancesElementComposition& subs_element_composition)
+OptimizationVector Prepare(const ParametersNS::Parameters parameters,
+						   const std::vector<int>& elements,
+						   const SubstancesTempRangeData& temp_ranges,
+						   const SubstancesElementComposition& subs_element_composition,
+						   const SubstanceWeights& weight,
+						   const Composition& amounts)
 {
+	// 1. Numbers
+	Numbers numbers;
+	numbers.elements = elements.size();
+	numbers.substances = weight.size();
+
+
+
+
+
+
+
+
+
+
+
 	OptimizationVector ov;
 	switch(parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint:

@@ -215,12 +215,13 @@ void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& colo
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 									   int threads)
 {
-	LOG(">> CALCULATION START <<")
 	if(vec.size() <= 1) {
+		LOG(">> CALCULATION START FOR <= 1 ITEM <<")
 		for(auto&& i : vec) i.Calculate();
 		return;
 	}
 
+	LOG(">> CALCULATION START <<")
 	Timer t; t.start();
 	QThreadPool::globalInstance()->setMaxThreadCount(threads);
 	fw->setFuture(QtConcurrent::map(vec, &Optimization::OptimizationItem::Calculate));
@@ -245,7 +246,7 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 	LOG(">> CALCULATION END <<")
 }
 
-void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)
+void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho) // demo
 {
 	LOG(">> HEAVY START <<")
 	Timer t; t.start();

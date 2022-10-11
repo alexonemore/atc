@@ -84,6 +84,20 @@ void AmountsModel::Clear()
 	endResetModel();
 }
 
+CompositionData AmountsModel::GetCompositionData() const
+{
+	SubstanceWeights new_weights;
+	Composition new_amounts;
+	for(const auto& sub : weights) {
+		auto id = sub.id;
+		if(!excluded.count(id)) {
+			new_weights.push_back(sub);
+			new_amounts[id] = amounts.at(id);
+		}
+	}
+	return CompositionData{new_weights, new_amounts};
+}
+
 void AmountsModel::Delete(const QModelIndexList& selected)
 {
 	for(auto&& index : selected) {

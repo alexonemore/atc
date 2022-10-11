@@ -21,6 +21,7 @@
 #define OPTIMIZATION_H
 
 #include "database.h"
+#include "amountsmodel.h"
 
 /* Order of substunces in vector n, size = N
 |------gas------|---------liq-------|------ind------|
@@ -33,11 +34,11 @@ namespace Optimization {
 
 struct Numbers
 {
-	size_t elements = 0;	// M
-	size_t substances = 0;	// N
-	size_t gases = 0;		// part of N
-	size_t individuals = 0;	// part of N
-	size_t liquids = 0;		// part of N
+	size_t elements{0};		// M
+	size_t substances{0};	// N
+	size_t gases{0};		// part of N
+	size_t individuals{0};	// part of N
+	size_t liquids{0};		// part of N
 };
 
 struct Constraint
@@ -54,10 +55,11 @@ struct OptimizationItem
 using OptimizationVector = QVector<OptimizationItem>;
 
 OptimizationVector Prepare(const ParametersNS::Parameters parameters,
-			 const std::vector<int>& ids,
-			 const std::vector<int>& elements,
-			 const SubstancesTempRangeData& temp_ranges,
-			 const SubstancesElementComposition& subs_element_composition);
+						   const std::vector<int>& elements,
+						   const SubstancesTempRangeData& temp_ranges,
+						   const SubstancesElementComposition& subs_element_composition,
+						   const SubstanceWeights& weight,
+						   const Composition& amounts);
 
 } // namespace Optimization
 

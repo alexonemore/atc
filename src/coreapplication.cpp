@@ -415,28 +415,17 @@ void CoreApplication::UpdateRangeTabulatedModels()
  ****************************************************************************/
 
 namespace {
-static std::vector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
-											 const std::set<int>& excluded)
-{
-	std::vector<int> species;
-	for(const auto& sub : subs) {
-		if(!excluded.count(sub.id)) {
-			species.push_back(sub.id);
-		}
-	}
-	return species;
-}
-
-template<typename ForwardIt,
+template<typename ForwardIt, typename UnaryOperation,
 		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag,
 		 typename std::iterator_traits<ForwardIt>::iterator_category>>>
-QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last)
+QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
+								 UnaryOperation unary_op )
 {
-	using val = typename std::iterator_traits<ForwardIt>::value_type;
-	static_assert(std::is_arithmetic_v<val>);
+//	using val = typename std::iterator_traits<ForwardIt>::value_type;
+//	static_assert(std::is_arithmetic_v<val>);
 	QStringList strlist;
 	std::transform(first, last, std::back_inserter(strlist),
-				   [](val i){ return QString::number(i); });
+				   [unary_op](const auto& i){return QString::number(unary_op(i));});
 	auto str = QStringLiteral("'") + strlist.join("','") + QStringLiteral("'");
 	return str;
 }
@@ -448,10 +437,10 @@ void CoreApplication::SlotStartCalculations()
 	auto composition_data = model_amounts->GetCompositionData();
 	auto db = CurrentDatabase();
 
-	// 1. Make new species list taking into account the excluded species
-	auto ids = MakeNewSpeciesIdList(composition_data.weights,
-									composition_data.excluded);
-	auto ids_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
+	// 1. Make species list
+	auto ids_str = MakeCommaSeparatedString(composition_data.weights.cbegin(),
+											composition_data.weights.cend(),
+								[](const SubstanceWeight& w){return w.id;});
 
 	// 2. Make elements list for the number of elements
 	auto elements = db->GetAvailableElements(ids_str);
@@ -463,8 +452,10 @@ void CoreApplication::SlotStartCalculations()
 	auto subs_element_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
-	auto vec = Optimization::Prepare(parameters_, ids, elements, temp_ranges,
-									 subs_element_composition);
+	auto vec = Optimization::Prepare(parameters_, elements, temp_ranges,
+									 subs_element_composition,
+									 composition_data.weights,
+									 composition_data.amounts);
 
 	// 6. emit vector
 	emit SignalStartCalculations(vec, parameters_.threads);
