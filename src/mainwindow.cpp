@@ -209,7 +209,40 @@ void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
 void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
 {
 	LOG(color)
-	ui->plot_tf_view->ChangeColorGraph(id, color);
+			ui->plot_tf_view->ChangeColorGraph(id, color);
+}
+
+void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
+									   int threads)
+{
+	LOG(">> CALCULATION START <<")
+	if(vec.size() <= 1) {
+		for(auto&& i : vec) i.Calculate();
+		return;
+	}
+
+	Timer t; t.start();
+	QThreadPool::globalInstance()->setMaxThreadCount(threads);
+	fw->setFuture(QtConcurrent::map(vec, &Optimization::OptimizationItem::Calculate));
+//	fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
+	dialog->exec();
+	fw->waitForFinished();
+#ifndef NDEBUG
+	qDebug() << "isFinished " << fw->future().isFinished();
+	qDebug() << "isCanceled " << fw->future().isCanceled();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	qDebug() << "isPaused   " << fw->future().isPaused();
+#else
+	qDebug() << "isSuspended" << fw->future().isSuspended();
+#endif
+	qDebug() << "isRunning  " << fw->future().isRunning();
+	qDebug() << "isStarted  " << fw->future().isStarted();
+#endif
+	assert(fw->future().isFinished());
+	t.stop();
+	QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
+	SlotShowStatusBarText(text);
+	LOG(">> CALCULATION END <<")
 }
 
 void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho)

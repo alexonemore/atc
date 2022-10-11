@@ -46,6 +46,18 @@ struct Constraint
 	double b_j{0};
 };
 
+struct OptimizationItem
+{
+	void Calculate() {}
+};
+
+using OptimizationVector = QVector<OptimizationItem>;
+
+OptimizationVector Prepare(const ParametersNS::Parameters parameters,
+			 const std::vector<int>& ids,
+			 const std::vector<int>& elements,
+			 const SubstancesTempRangeData& temp_ranges,
+			 const SubstancesElementComposition& subs_element_composition);
 
 } // namespace Optimization
 

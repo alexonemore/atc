@@ -28,6 +28,7 @@
 #include "plots.h"
 #include "heavycontainer.h"
 #include "parameters.h"
+#include "optimization.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 using namespace QtDataVisualization;
@@ -77,8 +78,9 @@ signals:
 	void SignalGraphsRemovedPlotTF(const QVector<GraphId>&);
 
 
-	// demo
 public slots:
+	void SlotStartCalculations(Optimization::OptimizationVector& vec, int threads);
+	// demo
 	void SlotHeavyComputations(QVector<HeavyContainer>& ho);
 
 public slots:

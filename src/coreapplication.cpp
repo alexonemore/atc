@@ -26,7 +26,6 @@
 #include <QProgressDialog>
 #include "utilities.h"
 #include "thermodynamics.h"
-#include "optimization.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}
@@ -41,6 +40,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
 	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
+	qRegisterMetaType<Optimization::OptimizationVector>("Optimization::OptimizationVector&");
 
 	// GUI methods should be called only in this constructor,
 	// but not in any other CoreApplication methods,
@@ -114,8 +114,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalShow3DGraphData,
 			gui, &MainWindow::SlotAdd3DGraph);
 
-	connect(this, &CoreApplication::SignalStartHeavyComputations,
-			gui, &MainWindow::SlotHeavyComputations);
 	connect(this, &CoreApplication::SignalSetPlotXAxisUnit,
 			gui, &MainWindow::SlotSetPlotXAxisUnit);
 
@@ -146,6 +144,12 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(gui, &MainWindow::SignalAmountsTableDelete,
 			model_amounts, &AmountsModel::Delete);
 
+	// calculations
+	connect(this, &CoreApplication::SignalStartCalculations,
+			gui, &MainWindow::SlotStartCalculations);
+	// demo
+	connect(this, &CoreApplication::SignalStartHeavyComputations,
+			gui, &MainWindow::SlotHeavyComputations);
 }
 
 CoreApplication::~CoreApplication()
@@ -436,23 +440,6 @@ QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last)
 	auto str = QStringLiteral("'") + strlist.join("','") + QStringLiteral("'");
 	return str;
 }
-
-void Prepare()
-{
-	ParametersNS::Parameters parameters;
-	switch(parameters.workmode) {
-	case ParametersNS::Workmode::SinglePoint:
-		break;
-	case ParametersNS::Workmode::TemperatureRange:
-		break;
-	case ParametersNS::Workmode::CompositionRange:
-		break;
-	case ParametersNS::Workmode::DoubleCompositionRange:
-		break;
-	case ParametersNS::Workmode::TemperatureCompositionRange:
-		break;
-	}
-}
 } // namespace
 
 void CoreApplication::SlotStartCalculations()
@@ -476,17 +463,12 @@ void CoreApplication::SlotStartCalculations()
 	auto subs_element_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
-
+	auto vec = Optimization::Prepare(parameters_, ids, elements, temp_ranges,
+									 subs_element_composition);
 
 	// 6. emit vector
+	emit SignalStartCalculations(vec, parameters_.threads);
 
-
-
-
-
-
-	auto vec = PrepareHeavyCalculations();
-	emit SignalStartHeavyComputations(vec);
 	LOG(">> END CALCULATION <<")
 }
 

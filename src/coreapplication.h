@@ -35,6 +35,7 @@
 #include "parameters.h"
 #include "plottfmodel.h"
 #include "amountsmodel.h"
+#include "optimization.h"
 
 class CoreApplication : public QObject
 {
@@ -81,6 +82,9 @@ signals:
 							   QVector<double>& y, QVector<QVector<double>>& z);
 	void SignalShow3DGraphData(QSurfaceDataArray* data);
 	void SignalStartHeavyComputations(QVector<HeavyContainer>& ho);
+
+	void SignalStartCalculations(Optimization::OptimizationVector& vec,
+								 int threads);
 
 private slots:
 	void SlotUpdate(const ParametersNS::Parameters parameters);
