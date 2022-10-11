@@ -405,11 +405,15 @@ void CoreApplication::UpdateRangeTabulatedModels()
 	}
 }
 
+/****************************************************************************
+ *							Calculations
+ ****************************************************************************/
+
 namespace {
-static QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
-										 const std::set<int>& excluded)
+static std::vector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
+											 const std::set<int>& excluded)
 {
-	QVector<int> species;
+	std::vector<int> species;
 	for(const auto& sub : subs) {
 		if(!excluded.count(sub.id)) {
 			species.push_back(sub.id);
@@ -417,6 +421,21 @@ static QVector<int> MakeNewSpeciesIdList(const SubstanceWeights& subs,
 	}
 	return species;
 }
+
+template<typename ForwardIt,
+		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag,
+		 typename std::iterator_traits<ForwardIt>::iterator_category>>>
+QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last)
+{
+	using val = typename std::iterator_traits<ForwardIt>::value_type;
+	static_assert(std::is_arithmetic_v<val>);
+	QStringList strlist;
+	std::transform(first, last, std::back_inserter(strlist),
+				   [](val i){ return QString::number(i); });
+	auto str = QStringLiteral("'") + strlist.join("','") + QStringLiteral("'");
+	return str;
+}
+
 void Prepare()
 {
 	ParametersNS::Parameters parameters;
@@ -444,14 +463,16 @@ void CoreApplication::SlotStartCalculations()
 	// 1. Make new species list taking into account the excluded species
 	auto ids = MakeNewSpeciesIdList(composition_data.weights,
 									composition_data.excluded);
+	auto ids_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
 
 	// 2. Make elements list for the number of elements
-	auto elements = db->GetAvailableElements(ids);
+	auto elements = db->GetAvailableElements(ids_str);
 
 	// 3. Get species temp range data from current database
-	auto temp_ranges = db->GetSubstancesTempRangeData(ids);
+	auto temp_ranges = db->GetSubstancesTempRangeData(ids_str);
 
 	// 4. Get elements composition for species
+	auto subs_elemen_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
 

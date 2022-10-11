@@ -36,6 +36,10 @@ const QString available_elements_for_spesies = QStringLiteral(
 "WHERE CompositionsOfSpecies.species_id IN (%1) "
 "GROUP BY CompositionsOfSpecies.element_id;");
 
+const QString substances_element_composition = QStringLiteral(
+
+			);
+
 const QString hsc_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
 "Species.Weight AS Weight, "
@@ -242,15 +246,12 @@ SubstanceTempRangeData Database::GetSubstanceTempRangeData(const int id)
 	return data;
 }
 
-std::unordered_map<int, SubstanceTempRangeData>
-Database::GetSubstancesTempRangeData(const QVector<int>& ids)
+SubstancesTempRangeData Database::GetSubstancesTempRangeData(const QString& ids)
 {
 	LOG(ids)
-	auto ids_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
-	LOG(ids_str)
-	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(ids_str),
+	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(ids),
 						database_name);
-	std::unordered_map<int, SubstanceTempRangeData> tr;
+	SubstancesTempRangeData tr;
 	while(q.next()) {
 		int id = q.value(0).toInt();
 		tr[id].push_back(TempRangeData{q.value(1).toDouble(), // T_min
@@ -269,17 +270,27 @@ Database::GetSubstancesTempRangeData(const QVector<int>& ids)
 	return tr;
 }
 
-std::vector<int> Database::GetAvailableElements(const QVector<int>& ids)
+std::vector<int> Database::GetAvailableElements(const QString& ids)
 {
 	std::vector<int> elements;
-	auto el_str = MakeCommaSeparatedString(ids.cbegin(), ids.cend());
-	LOG(el_str)
-	auto q = SQL::Query(SQL::available_elements_for_spesies.arg(el_str),
+	auto q = SQL::Query(SQL::available_elements_for_spesies.arg(ids),
 						database_name);
 	while(q.next()) {
 		elements.push_back(q.value(0).toInt());
 	}
 	return elements;
+}
+
+SubstancesElementComposition Database::GetSubstancesElementComposition(
+		const QString& ids)
+{
+	SubstancesElementComposition cmp;
+	auto q = SQL::Query(SQL::substances_element_composition.arg(ids),
+						database_name);
+	while(q.next()) {
+
+	}
+	return cmp;
 }
 
 QString Database::GetSubstanceName(const int id)
