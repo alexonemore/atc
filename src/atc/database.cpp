@@ -37,8 +37,11 @@ const QString available_elements_for_spesies = QStringLiteral(
 "GROUP BY CompositionsOfSpecies.element_id;");
 
 const QString substances_element_composition = QStringLiteral(
-
-			);
+"SELECT CompositionsOfSpecies.species_id, "
+"CompositionsOfSpecies.element_id, "
+"CompositionsOfSpecies.Amount "
+"FROM CompositionsOfSpecies "
+"WHERE CompositionsOfSpecies.species_id IN (%1);");
 
 const QString hsc_substances_template = QStringLiteral(
 "SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
@@ -288,7 +291,9 @@ SubstancesElementComposition Database::GetSubstancesElementComposition(
 	auto q = SQL::Query(SQL::substances_element_composition.arg(ids),
 						database_name);
 	while(q.next()) {
-
+		auto sub_id = q.value(0).toInt();
+		auto el_id = q.value(1).toInt();
+		cmp[sub_id][el_id] = q.value(2).toDouble();
 	}
 	return cmp;
 }

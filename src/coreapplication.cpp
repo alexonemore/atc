@@ -472,7 +472,7 @@ void CoreApplication::SlotStartCalculations()
 	auto temp_ranges = db->GetSubstancesTempRangeData(ids_str);
 
 	// 4. Get elements composition for species
-	auto subs_elemen_composition = db->GetSubstancesElementComposition(ids_str);
+	auto subs_element_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
 
