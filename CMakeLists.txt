@@ -63,6 +63,8 @@ set(PROJECT_SOURCES
     src/atc/parameters.cpp
     src/atc/database.h
     src/atc/database.cpp
+    src/atc/optimization.h
+    src/atc/optimization.cpp
 
     # plots
     src/plots/plots.h
