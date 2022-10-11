@@ -419,10 +419,10 @@ template<typename ForwardIt, typename UnaryOperation,
 		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag,
 		 typename std::iterator_traits<ForwardIt>::iterator_category>>>
 QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
-								 UnaryOperation unary_op )
+								 UnaryOperation unary_op)
 {
-//	using val = typename std::iterator_traits<ForwardIt>::value_type;
-//	static_assert(std::is_arithmetic_v<val>);
+	using val = typename std::iterator_traits<ForwardIt>::value_type;
+	static_assert(std::is_arithmetic_v<decltype(unary_op(std::declval<val&>()))>);
 	QStringList strlist;
 	std::transform(first, last, std::back_inserter(strlist),
 				   [unary_op](const auto& i){return QString::number(unary_op(i));});
@@ -441,6 +441,7 @@ void CoreApplication::SlotStartCalculations()
 	auto ids_str = MakeCommaSeparatedString(composition_data.weights.cbegin(),
 											composition_data.weights.cend(),
 								[](const SubstanceWeight& w){return w.id;});
+	LOG(ids_str)
 
 	// 2. Make elements list for the number of elements
 	auto elements = db->GetAvailableElements(ids_str);

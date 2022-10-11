@@ -251,7 +251,6 @@ SubstanceTempRangeData Database::GetSubstanceTempRangeData(const int id)
 
 SubstancesTempRangeData Database::GetSubstancesTempRangeData(const QString& ids)
 {
-	LOG(ids)
 	auto q = SQL::Query(GetSubstancesTempRangeDataString().arg(ids),
 						database_name);
 	SubstancesTempRangeData tr;
