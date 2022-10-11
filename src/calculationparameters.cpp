@@ -54,7 +54,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	connect(ui->periodic_table, &PeriodicTable::SignalClickedElementButton,
 			this, &CalculationParameters::Update);
 
-	SetupInitialParameters();
+	SetupParameters();
 }
 
 CalculationParameters::~CalculationParameters()
@@ -62,7 +62,7 @@ CalculationParameters::~CalculationParameters()
 	delete ui;
 }
 
-ParametersNS::Parameters CalculationParameters::GetCurrentParameters() const
+ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 {
 	ParametersNS::Parameters p;
 
@@ -113,6 +113,8 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters() const
 
 	p.checked_elements = ui->periodic_table->GetCheckedElements();
 
+	p.FixInputParameters();
+	SetupParameters(p);
 	return p;
 }
 
@@ -121,9 +123,8 @@ void CalculationParameters::SetEnabledElements(const QStringList& elements)
 	ui->periodic_table->SetEnabledElements(elements);
 }
 
-void CalculationParameters::SetupInitialParameters()
+void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 {
-	ParametersNS::Parameters p;
 	ui->workmode->setCurrentIndex(static_cast<int>(p.workmode));
 	ui->target->setCurrentIndex(static_cast<int>(p.target));
 	ui->liquid_solution->setCurrentIndex(static_cast<int>(p.liquid_solution));
@@ -182,7 +183,7 @@ void CalculationParameters::UpdateButtonHandler()
 
 void CalculationParameters::Clear()
 {
-	SetupInitialParameters();
+	SetupParameters();
 	ui->periodic_table->Clear();
 	emit UpdateParameters(ParametersNS::Parameters{});
 }

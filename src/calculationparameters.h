@@ -38,9 +38,9 @@ public:
 	~CalculationParameters() override;
 	void SetEnabledElements(const QStringList& elements);
 private:
-	ParametersNS::Parameters GetCurrentParameters() const;
+	ParametersNS::Parameters GetCurrentParameters();
+	void SetupParameters(const ParametersNS::Parameters p = ParametersNS::Parameters{});
 private slots:
-	void SetupInitialParameters();
 	void Update();
 	void UpdateButtonHandler();
 	void Clear();

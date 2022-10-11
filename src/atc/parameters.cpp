@@ -97,11 +97,69 @@ const QStringList minimization_function{
 	QT_TR_NOOP("Gibbs energy"),
 	QT_TR_NOOP("Entropy")
 };
+constexpr double min_Celsius = -273.15;
+constexpr double min_Fahrenheit = -459.67;
+constexpr double max_temperature = 1E6;
+constexpr double max_composition = 1E10;
+constexpr double min_range_step = 1E-5;
 
 Parameters::Parameters()
 	: threads{QThread::idealThreadCount()}
 {
 
+}
+
+static double FixTemperature(const double temperature, const TemperatureUnit tu)
+{
+	switch(tu) {
+	case TemperatureUnit::Kelvin:
+		return std::clamp(temperature, 0.0, max_temperature);
+	case TemperatureUnit::Celsius:
+		return std::clamp(temperature, min_Celsius, max_temperature);
+	case TemperatureUnit::Fahrenheit:
+		return std::clamp(temperature, min_Fahrenheit, max_temperature);
+	}
+	return temperature;
+}
+
+static double FixComposition(const double val, const CompositionUnit cu)
+{
+	switch(cu) {
+	case CompositionUnit::AtomicPercent:
+	case CompositionUnit::WeightPercent:
+		return std::clamp(val, 0.0, 100.0);
+	case CompositionUnit::Mol:
+	case CompositionUnit::Gram:
+		return std::clamp(val, 0.0, max_composition);
+	}
+	return val;
+}
+
+static void FixRange(Range& range)
+{
+	if(range.start > range.stop)
+		std::swap(range.start, range.stop);
+	range.step = std::clamp(range.step, min_range_step, range.stop);
+}
+
+void Parameters::FixInputParameters()
+{
+	temperature_initial = FixTemperature(temperature_initial, temperature_initial_unit);
+	pressure_initial = std::clamp(pressure_initial, 0.0, pressure_initial);
+
+	temperature_range.start = FixTemperature(temperature_range.start, temperature_range_unit);
+	temperature_range.stop = FixTemperature(temperature_range.stop, temperature_range_unit);
+	FixRange(temperature_range);
+
+	composition1_range.start = FixComposition(composition1_range.start, composition1_unit);
+	composition1_range.stop = FixComposition(composition1_range.stop, composition1_unit);
+	FixRange(composition1_range);
+
+	composition2_range.start = FixComposition(composition2_range.start, composition2_unit);
+	composition2_range.stop = FixComposition(composition2_range.stop, composition2_unit);
+	FixRange(composition2_range);
+
+	FixRange(pressure_range);
 }
 
 } // namespace ParametersNS

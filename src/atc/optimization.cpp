@@ -21,11 +21,17 @@
 #include "utilities.h"
 #include <nlopt.hpp>
 
+
 namespace Optimization {
+constexpr static double epsilon_log = 1E-9;
+constexpr static double epsilon_accuracy = 1E-6;
+constexpr static double maxtime_of_minimize = 1; // second
+
 static double Log_eps(const double x) // noexcept
 {
-	return ((std::log(x*x + Constants::epsilon_log)) / 2);
+	return ((std::log(x*x + epsilon_log)) / 2);
 }
+
 static double ConstraintFunction(const std::vector<double>& x,
 								 std::vector<double>& grad, void* data)
 {
@@ -38,8 +44,9 @@ static double ConstraintFunction(const std::vector<double>& x,
 	return std::transform_reduce(x.cbegin(), x.cend(), cnt->a_j->cbegin(),
 								 -cnt->b_j); /* minus of bj */
 }
+#if 0
 static double ThermodinamicFunction(const std::vector<double>& n,
-									 std::vector<double>& grad, void* data)
+									std::vector<double>& grad, void* data)
 {
 	using DT = std::vector<double>::difference_type;
 	const ThermodynamicCalculator::TCNode* tcn =
@@ -78,6 +85,7 @@ static double ThermodinamicFunction(const std::vector<double>& n,
 	}
 	return result;
 }
+#endif
 #ifndef NDEBUG
 static const char* NLoptResultToString(nlopt::result result)
 {

@@ -151,6 +151,7 @@ struct Parameters
 	QStringList		checked_elements;
 
 	Parameters();
+	void FixInputParameters();
 };
 
 enum GUISize {
