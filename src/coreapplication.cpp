@@ -26,6 +26,7 @@
 #include <QProgressDialog>
 #include "utilities.h"
 #include "thermodynamics.h"
+#include "optimization.h"
 
 CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	: QObject{parent}

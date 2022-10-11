@@ -20,11 +20,33 @@
 #ifndef OPTIMIZATION_H
 #define OPTIMIZATION_H
 
+#include "database.h"
 
-class Optimization
+/* Order of substunces in vector n, size = N
+|------gas------|---------liq-------|------ind------|
+|0	|1	|2	|3	|0	|1	|2	|3	|4	|0	|1	|2	|3	|
+|0	|1	|2	|3	|4	|5	|6	|7	|8	|9	|10	|11	|12	|
+*/
+
+namespace Optimization {
+
+
+struct Numbers
 {
-public:
-	Optimization();
+	size_t elements = 0;	// M
+	size_t substances = 0;	// N
+	size_t gases = 0;		// part of N
+	size_t individuals = 0;	// part of N
+	size_t liquids = 0;		// part of N
 };
+
+struct Constraint
+{
+	const std::vector<double> *a_j;
+	double b_j{0};
+};
+
+
+} // namespace Optimization
 
 #endif // OPTIMIZATION_H

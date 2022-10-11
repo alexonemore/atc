@@ -49,6 +49,11 @@
 #else
 	#define LOG(...) //{void(#__VA_ARGS__);}
 #endif
+#if !defined(NDEBUG) && defined(VERBOSE_DEBUG)
+	#define LOGV(...) {LOG(__VA_ARGS__)}
+#else
+	#define LOGV(...)
+#endif
 
 #ifndef NDEBUG
 template<typename ... Ts>
@@ -105,16 +110,16 @@ constexpr bool is_mapping_v = is_mapping<T>::value;
 
 
 template<typename T1, typename T2, typename ...TN,
-	typename = std::void_t<decltype(std::declval<T1&>() == std::declval<T1&>()),
-						   decltype(std::declval<T1&>() == std::declval<TN&>())...>>
+	typename = std::void_t<decltype(std::declval<T1&>() == std::declval<T2&>()),
+						   decltype(std::declval<T2&>() == std::declval<TN&>())...>>
 constexpr bool EqualsAnyOf(const T1& t1, const T2& t2, const TN& ...tN)
 {
 	return ((t1 == t2) || ... || (t1 == tN));
 }
 
 template<typename T1, typename T2, typename ...TN,
-	typename = std::void_t<decltype(std::declval<T1&>() == std::declval<T1&>()),
-						   decltype(std::declval<T1&>() == std::declval<TN&>())...>>
+	typename = std::void_t<decltype(std::declval<T1&>() == std::declval<T2&>()),
+						   decltype(std::declval<T2&>() == std::declval<TN&>())...>>
 constexpr bool EqualsAllOf(const T1& t1, const T2& t2, const TN& ...tN)
 {
 	return ((t1 == t2) && ... && (t1 == tN));
