@@ -67,6 +67,8 @@ struct TempRangeData
 	QString phase;
 };
 using SubstanceTempRangeData = QVector<TempRangeData>;
+// int = substance ID
+using SubstancesTempRangeData = std::unordered_map<int, SubstanceTempRangeData>;
 
 struct SubstancesTabulatedTFData
 {
@@ -82,9 +84,6 @@ using SubstanceElementComposition = std::unordered_map<int, double>;
 // int = substance ID
 using SubstancesElementComposition =
 	std::unordered_map<int, SubstanceElementComposition>;
-
-// int = substance ID
-using SubstancesTempRangeData = std::unordered_map<int, SubstanceTempRangeData>;
 
 /****************************************************************************
  *						Database virtual interface

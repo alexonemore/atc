@@ -476,10 +476,11 @@ void CoreApplication::SlotStartCalculations()
 
 	// 5. Prepare vector of calculation instances
 
+
 	// 6. emit vector
 
 
-	//auto elements_composition = db->GetElementsComposition(ids);
+
 
 
 
