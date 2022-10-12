@@ -521,9 +521,6 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QCheckBox" name="show_gas">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Gas</string>
           </property>
@@ -531,9 +528,6 @@
         </item>
         <item>
          <widget class="QCheckBox" name="show_liquid">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Liquid</string>
           </property>
@@ -541,9 +535,6 @@
         </item>
         <item>
          <widget class="QCheckBox" name="show_solid">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Sollid</string>
           </property>

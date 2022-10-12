@@ -22,6 +22,8 @@
 
 #include "database.h"
 #include "amountsmodel.h"
+#include "parameters.h"
+#include "utilities.h"
 
 /* Order of substunces in vector n, size = N
 |------gas------|---------liq-------|------ind------|
@@ -43,6 +45,7 @@ struct OptimizationItem
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
 	std::vector<Constraint> constraints;	// size = M, number_of_elements
+	double temperature_K_initial, temperature_K_current, temperature_K_adiabatic;
 	size_t number_of_gases{0};
 	size_t number_of_liquids{0};
 	size_t number_of_individuals{0};
@@ -62,7 +65,7 @@ class OptimizationItemsMaker
 	size_t number_of_substances{0};	// N
 
 
-	OptimizationVector vec;
+	OptimizationVector items;
 public:
 	OptimizationItemsMaker(const ParametersNS::Parameters& parameters_,
 						   const std::vector<int>& elements,
@@ -70,14 +73,46 @@ public:
 						   const SubstancesElementComposition& subs_element_composition,
 						   const SubstanceWeights& weights,
 						   const Composition& amounts);
-	OptimizationVector GetData() { return std::move(vec); }
+	OptimizationVector GetData() { return std::move(items); }
 
 private:
-
+	std::vector<double> MakeTemperatureVector();
+	std::vector<double> MakeCompositionVector(ParametersNS::Range range);
 
 };
 
-
+template<typename Container>
+void RangeTabulator(ParametersNS::Range range, Container& x)
+{
+	const double start = range.start;
+	const double stop = range.stop;
+	const double step = range.step;
+	constexpr double eps = std::numeric_limits<double>::epsilon();
+	x.clear();
+	if(std::abs(stop - start) < eps) {
+		x.push_back(start);
+	} else if(std::abs(step) < eps) {
+		x.reserve(2);
+		x.push_back(start);
+		x.push_back(stop);
+	} else {
+		int size = static_cast<int>(std::ceil(std::abs((stop-start)/step)))+1;
+		x.reserve(size);
+		double rounding_decimal = 1/step < 1000 ?
+					1000 : std::pow(10, std::ceil(std::log10(1/step))+1);
+		int i = 1;
+		double current = start;
+		while (current < stop) {
+			x.push_back(current);
+			current = std::round((start + step * (i++)) * rounding_decimal)
+					/ rounding_decimal;
+		}
+		x.push_back(stop);
+		LOG("size = ", size)
+		LOG("x.size = ", x.size())
+		assert(x.size() == size && "Reserve fail");
+	}
+}
 
 } // namespace Optimization
 

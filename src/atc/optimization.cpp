@@ -18,7 +18,7 @@
  */
 
 #include "optimization.h"
-#include "utilities.h"
+#include "thermodynamics.h"
 #include <nlopt.hpp>
 
 
@@ -124,20 +124,63 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	assert(number_of_substances == amounts.size());
 	assert(number_of_substances == temp_ranges.size());
 
+
+
 	switch(parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
-		vec.resize(1);
+		items.resize(1);
 		break;
-	case ParametersNS::Workmode::TemperatureRange:
+	case ParametersNS::Workmode::TemperatureRange: {
+		auto temperature = MakeTemperatureVector();
+		items.reserve(temperature.size());
+
+	}
 		break;
-	case ParametersNS::Workmode::CompositionRange:
+	case ParametersNS::Workmode::CompositionRange: {
+		auto composition = MakeCompositionVector(parameters.composition1_range);
+		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
+													parameters.temperature_initial_unit);
+		items.reserve(composition.size());
+
+
+	}
 		break;
-	case ParametersNS::Workmode::DoubleCompositionRange:
+	case ParametersNS::Workmode::DoubleCompositionRange: {
+		auto compositon1 = MakeCompositionVector(parameters.composition1_range);
+		auto compositon2 = MakeCompositionVector(parameters.composition2_range);
+
+
+
+	}
 		break;
-	case ParametersNS::Workmode::TemperatureCompositionRange:
+	case ParametersNS::Workmode::TemperatureCompositionRange: {
+		auto temperature = MakeTemperatureVector();
+		auto composition = MakeCompositionVector(parameters.composition1_range);
+
+
+	}
 		break;
 	}
 
+}
+
+std::vector<double> OptimizationItemsMaker::MakeTemperatureVector()
+{
+	std::vector<double> temperature;
+	RangeTabulator(parameters.temperature_range, temperature);
+	std::transform(temperature.cbegin(), temperature.cend(),
+				   temperature.begin(),
+				   [tu = parameters.temperature_range_unit](double t){
+		return Thermodynamics::ToKelvin(t, tu); });
+	return temperature;
+}
+
+std::vector<double> OptimizationItemsMaker::MakeCompositionVector(
+		ParametersNS::Range range)
+{
+	std::vector<double> composition;
+	RangeTabulator(range, composition);
+	return composition;
 }
 
 
