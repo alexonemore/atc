@@ -111,11 +111,15 @@ OptimizationVector Prepare(const ParametersNS::Parameters parameters,
 						   const std::vector<int>& elements,
 						   const SubstancesTempRangeData& temp_ranges,
 						   const SubstancesElementComposition& subs_element_composition,
-						   const SubstanceWeights& weight,
+						   const SubstanceWeights& weights,
 						   const Composition& amounts)
 {
 	// 1.
-
+	auto number_of_elements = elements.size();	// M
+	auto number_of_substances = weights.size();	// N
+	assert(number_of_substances == subs_element_composition.size());
+	assert(number_of_substances == amounts.size());
+	assert(number_of_substances == temp_ranges.size());
 
 
 

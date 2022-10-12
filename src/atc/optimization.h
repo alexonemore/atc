@@ -31,16 +31,6 @@
 
 namespace Optimization {
 
-
-struct Numbers
-{
-	size_t elements{0};		// M
-	size_t substances{0};	// N
-	size_t gases{0};		// part of N
-	size_t individuals{0};	// part of N
-	size_t liquids{0};		// part of N
-};
-
 struct Constraint
 {
 	const std::vector<double> *a_j;
@@ -49,10 +39,18 @@ struct Constraint
 
 struct OptimizationItem
 {
-	Numbers numbers;
+	const ParametersNS::Parameters& parameters;
+	std::vector<double> n, c;				// size = N, number_of_substances
+	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
+	std::vector<Constraint> constraints;	// size = M, number_of_elements
+	size_t number_of_gases{0};
+	size_t number_of_liquids{0};
+	size_t number_of_individuals{0};
 
 
-
+	OptimizationItem(const ParametersNS::Parameters& parameters_)
+		: parameters{parameters_}
+	{}
 	void Calculate() {}
 };
 
@@ -62,7 +60,7 @@ OptimizationVector Prepare(const ParametersNS::Parameters parameters,
 						   const std::vector<int>& elements,
 						   const SubstancesTempRangeData& temp_ranges,
 						   const SubstancesElementComposition& subs_element_composition,
-						   const SubstanceWeights& weight,
+						   const SubstanceWeights& weights,
 						   const Composition& amounts);
 
 } // namespace Optimization
