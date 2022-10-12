@@ -211,6 +211,7 @@ OptimizationItem::OptimizationItem(
 
 
 	// Order of substances changes every time when current temperature changes
+	// then changes order in A matrix, i.e. needs to remake constraints vector
 
 }
 
