@@ -35,7 +35,7 @@ namespace Optimization {
 
 struct Constraint
 {
-	const std::vector<double> *a_j;
+	std::vector<double> a_j;
 	double b_j{0};
 };
 
@@ -70,6 +70,7 @@ struct OptimizationItem
 	void Calculate() {}
 private:
 	void DefineOrderOfSubstances();
+	void MakeConstraints();
 };
 
 using OptimizationVector = QVector<OptimizationItem>;

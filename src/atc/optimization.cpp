@@ -37,11 +37,11 @@ static double ConstraintFunction(const std::vector<double>& x,
 {
 	const Constraint* cnt = reinterpret_cast<const Constraint*>(data);
 	if(!grad.empty()) {
-		assert(cnt->a_j->size() == grad.size() && "grad.size error");
-		std::copy(cnt->a_j->cbegin(), cnt->a_j->cend(), grad.begin());
+		assert(cnt->a_j.size() == grad.size() && "grad.size error");
+		std::copy(cnt->a_j.cbegin(), cnt->a_j.cend(), grad.begin());
 	}
-	assert(x.size() == cnt->a_j->size() && "x.size error");
-	return std::transform_reduce(x.cbegin(), x.cend(), cnt->a_j->cbegin(),
+	assert(x.size() == cnt->a_j.size() && "x.size error");
+	return std::transform_reduce(x.cbegin(), x.cend(), cnt->a_j.cbegin(),
 								 -cnt->b_j); /* minus of bj */
 }
 #if 0
@@ -201,17 +201,19 @@ OptimizationItem::OptimizationItem(
 {
 	temperature_K_current = temperature_K_initial;
 	number_of_substances = weights->size();
-	substances_id_order.reserve(number_of_substances);
-	n.reserve(number_of_substances);
-	c.reserve(number_of_substances);
-	ub_ini.reserve(number_of_substances);
-	ub_cur.reserve(number_of_substances);
-
-	constraints.reserve(elements->size());
+	substances_id_order.resize(number_of_substances);
+	n.resize(number_of_substances);
+	c.resize(number_of_substances);
+	ub_ini.resize(number_of_substances);
+	ub_cur.resize(number_of_substances);
+	constraints.resize(elements->size());
 
 
 	// Order of substances changes every time when current temperature changes
 	// then changes order in A matrix, i.e. needs to remake constraints vector
+
+
+
 
 }
 
@@ -219,15 +221,10 @@ void OptimizationItem::DefineOrderOfSubstances()
 {
 	std::set<int> gas, liq, ind;
 	for(const auto& [id, sub_temp_range] : *temp_ranges) {
-		auto trange = std::find_if(sub_temp_range.cbegin(), sub_temp_range.cend(),
-					 [t = temperature_K_current](const TempRangeData& tr){
-			return t < tr.T_max; });
-		if(trange == sub_temp_range.cend()) {
-			trange = &sub_temp_range.last();
-		}
-		if(trange->phase == QStringLiteral("G")) {
+		auto tr = Thermodynamics::FindCoef(temperature_K_current, sub_temp_range);
+		if(tr.phase == QStringLiteral("G")) {
 			gas.insert(id);
-		} else if(trange->phase == QStringLiteral("L")) {
+		} else if(tr.phase == QStringLiteral("L")) {
 			switch(parameters->liquid_solution) {
 			case ParametersNS::LiquidSolution::No:
 				ind.insert(id);
@@ -250,6 +247,25 @@ void OptimizationItem::DefineOrderOfSubstances()
 	std::copy(gas.cbegin(), gas.cend(), back_ins);
 	std::copy(liq.cbegin(), liq.cend(), back_ins);
 	std::copy(ind.cbegin(), ind.cend(), back_ins);
+}
+
+void OptimizationItem::MakeConstraints()
+{
+	// size = N * M
+	for(auto&& constraint : constraints) {
+		constraint.a_j.resize(number_of_substances);
+	}
+	size_t sub_id, el_id;
+	for(size_t j = 0, maxj = elements->size(); j != maxj; ++j) {
+		el_id = elements->at(j);
+		for(size_t i = 0; i != number_of_substances; ++i) {
+			sub_id = substances_id_order.at(i);
+			constraints.at(j).a_j.at(i++) =
+					subs_element_composition->at(sub_id).at(el_id);
+		}
+	}
+
+
 }
 
 
