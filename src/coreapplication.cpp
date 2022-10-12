@@ -453,10 +453,9 @@ void CoreApplication::SlotStartCalculations()
 	auto subs_element_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
-	auto vec = Optimization::Prepare(parameters_, elements, temp_ranges,
-									 subs_element_composition,
-									 composition_data.weights,
-									 composition_data.amounts);
+	Optimization::OptimizationItemsMaker oim(parameters_, elements, temp_ranges,
+		subs_element_composition, composition_data.weights, composition_data.amounts);
+	auto vec = oim.GetData();
 
 	// 6. emit vector
 	emit SignalStartCalculations(vec, parameters_.threads);

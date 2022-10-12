@@ -39,7 +39,7 @@ struct Constraint
 
 struct OptimizationItem
 {
-	const ParametersNS::Parameters& parameters;
+	const ParametersNS::Parameters* parameters;
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
 	std::vector<Constraint> constraints;	// size = M, number_of_elements
@@ -47,8 +47,7 @@ struct OptimizationItem
 	size_t number_of_liquids{0};
 	size_t number_of_individuals{0};
 
-
-	OptimizationItem(const ParametersNS::Parameters& parameters_)
+	OptimizationItem(const ParametersNS::Parameters* parameters_ = nullptr)
 		: parameters{parameters_}
 	{}
 	void Calculate() {}
@@ -56,12 +55,29 @@ struct OptimizationItem
 
 using OptimizationVector = QVector<OptimizationItem>;
 
-OptimizationVector Prepare(const ParametersNS::Parameters parameters,
+class OptimizationItemsMaker
+{
+	const ParametersNS::Parameters& parameters;
+	size_t number_of_elements{0};	// M
+	size_t number_of_substances{0};	// N
+
+
+	OptimizationVector vec;
+public:
+	OptimizationItemsMaker(const ParametersNS::Parameters& parameters_,
 						   const std::vector<int>& elements,
 						   const SubstancesTempRangeData& temp_ranges,
 						   const SubstancesElementComposition& subs_element_composition,
 						   const SubstanceWeights& weights,
 						   const Composition& amounts);
+	OptimizationVector GetData() { return std::move(vec); }
+
+private:
+
+
+};
+
+
 
 } // namespace Optimization
 
