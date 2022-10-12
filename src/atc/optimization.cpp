@@ -127,8 +127,14 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 
 
 	switch(parameters.workmode) {
-	case ParametersNS::Workmode::SinglePoint:
-		items.resize(1);
+	case ParametersNS::Workmode::SinglePoint: {
+		items.reserve(1);
+		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
+													parameters.temperature_initial_unit);
+		items.push_back(OptimizationItem{&parameters,
+						&elements, &temp_ranges, &subs_element_composition,
+						&weights, &amounts, temperature});
+	}
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
 		auto temperature = MakeTemperatureVector();

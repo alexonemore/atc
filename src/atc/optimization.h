@@ -41,12 +41,12 @@ struct Constraint
 
 struct OptimizationItem
 {
-	const ParametersNS::Parameters* parameters{nullptr};
-	const std::vector<int>* elements{nullptr};
-	const SubstancesTempRangeData* temp_ranges{nullptr};
-	const SubstancesElementComposition* subs_element_composition{nullptr};
-	const SubstanceWeights* weights{nullptr};
-	const Composition* amounts{nullptr};
+	const ParametersNS::Parameters* parameters;
+	const std::vector<int>* elements;
+	const SubstancesTempRangeData* temp_ranges;
+	const SubstancesElementComposition* subs_element_composition;
+	const SubstanceWeights* weights;
+	const Composition* amounts;
 
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
@@ -60,13 +60,13 @@ struct OptimizationItem
 	size_t number_of_individuals{0};
 	size_t number_of_substances{0};			// N
 
-	OptimizationItem(const ParametersNS::Parameters* parameters_ = nullptr,
-					 const std::vector<int>* elements_ = nullptr,
-					 const SubstancesTempRangeData* temp_ranges_ = nullptr,
-					 const SubstancesElementComposition* subs_element_composition_ = nullptr,
-					 const SubstanceWeights* weights_ = nullptr,
-					 const Composition* amounts_ = nullptr,
-					 const double initial_temperature_K = 0);
+	OptimizationItem(const ParametersNS::Parameters* parameters_,
+					 const std::vector<int>* elements_,
+					 const SubstancesTempRangeData* temp_ranges_,
+					 const SubstancesElementComposition* subs_element_composition_,
+					 const SubstanceWeights* weights_,
+					 const Composition* amounts_,
+					 const double initial_temperature_K);
 	void Calculate() {}
 private:
 	void DefineOrderOfSubstances();
