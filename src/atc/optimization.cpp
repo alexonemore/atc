@@ -183,6 +183,74 @@ std::vector<double> OptimizationItemsMaker::MakeCompositionVector(
 	return composition;
 }
 
+OptimizationItem::OptimizationItem(
+		const ParametersNS::Parameters* parameters_,
+		const std::vector<int>* elements_,
+		const SubstancesTempRangeData* temp_ranges_,
+		const SubstancesElementComposition* subs_element_composition_,
+		const SubstanceWeights* weights_,
+		const Composition* amounts_,
+		const double initial_temperature_K)
+	: parameters{parameters_}
+	, elements{elements_}
+	, temp_ranges{temp_ranges_}
+	, subs_element_composition{subs_element_composition_}
+	, weights{weights_}
+	, amounts{amounts_}
+	, temperature_K_initial{initial_temperature_K}
+{
+	temperature_K_current = temperature_K_initial;
+	number_of_substances = weights->size();
+	substances_id_order.reserve(number_of_substances);
+	n.reserve(number_of_substances);
+	c.reserve(number_of_substances);
+	ub_ini.reserve(number_of_substances);
+	ub_cur.reserve(number_of_substances);
+
+	constraints.reserve(elements->size());
+
+
+	// Order of substances changes every time when current temperature changes
+
+}
+
+void OptimizationItem::DefineOrderOfSubstances()
+{
+	std::set<int> gas, liq, ind;
+	for(const auto& [id, sub_temp_range] : *temp_ranges) {
+		auto trange = std::find_if(sub_temp_range.cbegin(), sub_temp_range.cend(),
+					 [t = temperature_K_current](const TempRangeData& tr){
+			return t < tr.T_max; });
+		if(trange == sub_temp_range.cend()) {
+			trange = &sub_temp_range.last();
+		}
+		if(trange->phase == QStringLiteral("G")) {
+			gas.insert(id);
+		} else if(trange->phase == QStringLiteral("L")) {
+			switch(parameters->liquid_solution) {
+			case ParametersNS::LiquidSolution::No:
+				ind.insert(id);
+				break;
+			case ParametersNS::LiquidSolution::One:
+				liq.insert(id);
+				break;
+			}
+		} else { // trange->phase == QStringLiteral("S")
+			ind.insert(id);
+		}
+	}
+	number_of_gases = gas.size();
+	number_of_liquids = liq.size();
+	number_of_individuals = ind.size();
+	assert(number_of_gases + number_of_liquids + number_of_individuals ==
+		   number_of_substances);
+	substances_id_order.clear();
+	auto back_ins = std::back_inserter(substances_id_order);
+	std::copy(gas.cbegin(), gas.cend(), back_ins);
+	std::copy(liq.cbegin(), liq.cend(), back_ins);
+	std::copy(ind.cbegin(), ind.cend(), back_ins);
+}
+
 
 
 } // namespace Optimization

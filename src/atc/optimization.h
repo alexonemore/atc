@@ -41,19 +41,35 @@ struct Constraint
 
 struct OptimizationItem
 {
-	const ParametersNS::Parameters* parameters;
+	const ParametersNS::Parameters* parameters{nullptr};
+	const std::vector<int>* elements{nullptr};
+	const SubstancesTempRangeData* temp_ranges{nullptr};
+	const SubstancesElementComposition* subs_element_composition{nullptr};
+	const SubstanceWeights* weights{nullptr};
+	const Composition* amounts{nullptr};
+
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
 	std::vector<Constraint> constraints;	// size = M, number_of_elements
-	double temperature_K_initial, temperature_K_current, temperature_K_adiabatic;
+	std::vector<int> substances_id_order;	// size = N, in order
+	double temperature_K_initial{0};
+	double temperature_K_current{0};
+	double temperature_K_adiabatic{0};
 	size_t number_of_gases{0};
 	size_t number_of_liquids{0};
 	size_t number_of_individuals{0};
+	size_t number_of_substances{0};			// N
 
-	OptimizationItem(const ParametersNS::Parameters* parameters_ = nullptr)
-		: parameters{parameters_}
-	{}
+	OptimizationItem(const ParametersNS::Parameters* parameters_ = nullptr,
+					 const std::vector<int>* elements_ = nullptr,
+					 const SubstancesTempRangeData* temp_ranges_ = nullptr,
+					 const SubstancesElementComposition* subs_element_composition_ = nullptr,
+					 const SubstanceWeights* weights_ = nullptr,
+					 const Composition* amounts_ = nullptr,
+					 const double initial_temperature_K = 0);
 	void Calculate() {}
+private:
+	void DefineOrderOfSubstances();
 };
 
 using OptimizationVector = QVector<OptimizationItem>;
