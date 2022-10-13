@@ -455,7 +455,7 @@ void CoreApplication::SlotStartCalculations()
 	// 5. Prepare vector of calculation instances
 	Optimization::OptimizationItemsMaker oim(parameters_, elements, temp_ranges,
 		subs_element_composition, composition_data.weights, composition_data.amounts);
-	auto vec = oim.GetData();
+	auto vec{std::move(oim).GetData()};
 
 	// 6. emit vector
 	emit SignalStartCalculations(vec, parameters_.threads);

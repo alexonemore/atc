@@ -41,12 +41,12 @@ struct Constraint
 
 struct OptimizationItem
 {
-	const ParametersNS::Parameters* parameters;
-	const std::vector<int>* elements;
-	const SubstancesTempRangeData* temp_ranges;
-	const SubstancesElementComposition* subs_element_composition;
-	const SubstanceWeights* weights;
-	const Composition* amounts;
+	ParametersNS::Parameters parameters;
+	std::vector<int> elements;
+	SubstancesTempRangeData temp_ranges;
+	SubstancesElementComposition subs_element_composition;
+	SubstanceWeights weights;
+	Composition amounts;
 
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
@@ -60,12 +60,12 @@ struct OptimizationItem
 	size_t number_of_individuals{0};
 	size_t number_of_substances{0};			// N
 
-	OptimizationItem(const ParametersNS::Parameters* parameters_,
-					 const std::vector<int>* elements_,
-					 const SubstancesTempRangeData* temp_ranges_,
-					 const SubstancesElementComposition* subs_element_composition_,
-					 const SubstanceWeights* weights_,
-					 const Composition* amounts_,
+	OptimizationItem(const ParametersNS::Parameters& parameters_,
+					 const std::vector<int>& elements_,
+					 const SubstancesTempRangeData& temp_ranges_,
+					 const SubstancesElementComposition& subs_element_composition_,
+					 const SubstanceWeights& weights_,
+					 const Composition& amounts_,
 					 const double initial_temperature_K);
 	void Calculate() {}
 private:
@@ -77,7 +77,7 @@ using OptimizationVector = QVector<OptimizationItem>;
 
 class OptimizationItemsMaker
 {
-	const ParametersNS::Parameters& parameters;
+	ParametersNS::Parameters parameters;
 	size_t number_of_elements{0};	// M
 	size_t number_of_substances{0};	// N
 
@@ -90,7 +90,7 @@ public:
 						   const SubstancesElementComposition& subs_element_composition,
 						   const SubstanceWeights& weights,
 						   const Composition& amounts);
-	OptimizationVector GetData() { return std::move(items); }
+	OptimizationVector&& GetData() && { return std::move(items); }
 
 private:
 	std::vector<double> MakeTemperatureVector();

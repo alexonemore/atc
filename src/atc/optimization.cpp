@@ -131,14 +131,19 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		items.reserve(1);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
-		items.push_back(OptimizationItem{&parameters,
-						&elements, &temp_ranges, &subs_element_composition,
-						&weights, &amounts, temperature});
+		items.push_back(OptimizationItem{parameters, elements, temp_ranges,
+						subs_element_composition, weights, amounts,
+						temperature});
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
-		auto temperature = MakeTemperatureVector();
-		items.reserve(temperature.size());
+		auto temperatures = MakeTemperatureVector();
+		items.reserve(temperatures.size());
+		for(const auto& temperature : temperatures) {
+			items.push_back(OptimizationItem{parameters, elements,
+							temp_ranges, subs_element_composition,
+							weights, amounts, temperature});
+		}
 
 	}
 		break;
@@ -146,23 +151,45 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		auto composition = MakeCompositionVector(parameters.composition1_range);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
-		items.reserve(composition.size());
 
+		std::vector<Composition> new_amounts; // = make_new_amounts
+		items.reserve(new_amounts.size());
+		for(const auto& new_amount : new_amounts) {
+			items.push_back(OptimizationItem{parameters, elements,
+							temp_ranges, subs_element_composition,
+							weights, std::move(new_amount), temperature});
+		}
 
 	}
 		break;
 	case ParametersNS::Workmode::DoubleCompositionRange: {
 		auto compositon1 = MakeCompositionVector(parameters.composition1_range);
 		auto compositon2 = MakeCompositionVector(parameters.composition2_range);
-
+		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
+													parameters.temperature_initial_unit);
+		std::vector<Composition> new_amounts; // = make_new_amounts_2
+		items.reserve(new_amounts.size());
+		for(const auto& new_amount : new_amounts) {
+			items.push_back(OptimizationItem{parameters, elements,
+							temp_ranges, subs_element_composition,
+							weights, std::move(new_amount), temperature});
+		}
 
 
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
-		auto temperature = MakeTemperatureVector();
+		auto temperatures = MakeTemperatureVector();
 		auto composition = MakeCompositionVector(parameters.composition1_range);
-
+		std::vector<Composition> new_amounts; // = make_new_amounts
+		items.reserve(new_amounts.size() * temperatures.size());
+		for(const auto& temperature : temperatures) {
+			for(const auto& new_amount : new_amounts) {
+				items.push_back(OptimizationItem{parameters, elements,
+								temp_ranges, subs_element_composition,
+								weights, std::move(new_amount), temperature});
+			}
+		}
 
 	}
 		break;
@@ -190,12 +217,12 @@ std::vector<double> OptimizationItemsMaker::MakeCompositionVector(
 }
 
 OptimizationItem::OptimizationItem(
-		const ParametersNS::Parameters* parameters_,
-		const std::vector<int>* elements_,
-		const SubstancesTempRangeData* temp_ranges_,
-		const SubstancesElementComposition* subs_element_composition_,
-		const SubstanceWeights* weights_,
-		const Composition* amounts_,
+		const ParametersNS::Parameters& parameters_,
+		const std::vector<int>& elements_,
+		const SubstancesTempRangeData& temp_ranges_,
+		const SubstancesElementComposition& subs_element_composition_,
+		const SubstanceWeights& weights_,
+		const Composition& amounts_,
 		const double initial_temperature_K)
 	: parameters{parameters_}
 	, elements{elements_}
@@ -206,13 +233,13 @@ OptimizationItem::OptimizationItem(
 	, temperature_K_initial{initial_temperature_K}
 {
 	temperature_K_current = temperature_K_initial;
-	number_of_substances = weights->size();
+	number_of_substances = weights.size();
 	substances_id_order.resize(number_of_substances);
 	n.resize(number_of_substances);
 	c.resize(number_of_substances);
 	ub_ini.resize(number_of_substances);
 	ub_cur.resize(number_of_substances);
-	constraints.resize(elements->size());
+	constraints.resize(elements.size());
 
 
 	// Order of substances changes every time when current temperature changes
@@ -226,12 +253,12 @@ OptimizationItem::OptimizationItem(
 void OptimizationItem::DefineOrderOfSubstances()
 {
 	std::set<int> gas, liq, ind;
-	for(const auto& [id, sub_temp_range] : *temp_ranges) {
+	for(const auto& [id, sub_temp_range] : temp_ranges) {
 		auto tr = Thermodynamics::FindCoef(temperature_K_current, sub_temp_range);
 		if(tr.phase == QStringLiteral("G")) {
 			gas.insert(id);
 		} else if(tr.phase == QStringLiteral("L")) {
-			switch(parameters->liquid_solution) {
+			switch(parameters.liquid_solution) {
 			case ParametersNS::LiquidSolution::No:
 				ind.insert(id);
 				break;
@@ -262,12 +289,12 @@ void OptimizationItem::MakeConstraints()
 		constraint.a_j.resize(number_of_substances);
 	}
 	size_t sub_id, el_id;
-	for(size_t j = 0, maxj = elements->size(); j != maxj; ++j) {
-		el_id = elements->at(j);
+	for(size_t j = 0, maxj = elements.size(); j != maxj; ++j) {
+		el_id = elements.at(j);
 		for(size_t i = 0; i != number_of_substances; ++i) {
 			sub_id = substances_id_order.at(i);
 			constraints.at(j).a_j.at(i++) =
-					subs_element_composition->at(sub_id).at(el_id);
+					subs_element_composition.at(sub_id).at(el_id);
 		}
 	}
 
@@ -277,3 +304,4 @@ void OptimizationItem::MakeConstraints()
 
 
 } // namespace Optimization
+
