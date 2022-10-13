@@ -298,6 +298,7 @@ void OptimizationItem::MakeConstraints()
 		}
 	}
 
+	// fill b
 
 }
 
