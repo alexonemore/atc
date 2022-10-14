@@ -124,8 +124,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	assert(number_of_substances == amounts.size());
 	assert(number_of_substances == temp_ranges.size());
 
-
-
 	switch(parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint: {
 		items.reserve(1);
@@ -144,14 +142,12 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 							temp_ranges, subs_element_composition,
 							weights, amounts, temperature});
 		}
-
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
 		auto composition = MakeCompositionVector(parameters.composition1_range);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
-
 		std::vector<Composition> new_amounts; // = make_new_amounts
 		items.reserve(new_amounts.size());
 		for(const auto& new_amount : new_amounts) {
@@ -159,7 +155,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 							temp_ranges, subs_element_composition,
 							weights, std::move(new_amount), temperature});
 		}
-
 	}
 		break;
 	case ParametersNS::Workmode::DoubleCompositionRange: {
@@ -174,8 +169,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 							temp_ranges, subs_element_composition,
 							weights, std::move(new_amount), temperature});
 		}
-
-
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
@@ -190,11 +183,9 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 								weights, std::move(new_amount), temperature});
 			}
 		}
-
 	}
 		break;
 	}
-
 }
 
 std::vector<double> OptimizationItemsMaker::MakeTemperatureVector()
