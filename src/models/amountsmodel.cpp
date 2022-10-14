@@ -543,9 +543,9 @@ bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
 
-void AmountsModel::Recalculate()
+Amounts SumComposition(const Composition& amounts)
 {
-	sum = Amounts{};
+	auto sum = Amounts{};
 	for(const auto& [_, amount] : amounts) {
 		sum.group_1_mol		+= amount.group_1_mol;
 		sum.group_1_gram	+= amount.group_1_gram;
@@ -554,14 +554,23 @@ void AmountsModel::Recalculate()
 		sum.sum_mol			+= amount.sum_mol;
 		sum.sum_gram		+= amount.sum_gram;
 	}
+	return sum;
+}
 
+void SumRecalculate(Composition& amounts)
+{
+	auto sum = SumComposition(amounts);
 	for(auto&& [_, amount] : amounts) {
 		amount.sum_atpct = sum.sum_mol > 0.0 ?
 					(100 * amount.sum_mol / sum.sum_mol) : 0.0;
 		amount.sum_wtpct = sum.sum_gram > 0.0 ?
 					(100 * amount.sum_gram / sum.sum_gram) : 0.0;
 	}
+}
 
+void AmountsModel::Recalculate()
+{
+	SumRecalculate(amounts);
 	for(const auto& [_, amount] : amounts) {
 		sum.sum_atpct += amount.sum_atpct;
 		sum.sum_wtpct += amount.sum_wtpct;
@@ -577,3 +586,4 @@ void AmountsModel::RecalculateAndUpdate()
 			(row_count, static_cast<int>(AmountsModelFields::Names::Included));
 	emit dataChanged(tl, br);
 }
+

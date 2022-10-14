@@ -60,6 +60,9 @@ struct CompositionData {
 	Composition amounts;
 };
 
+Amounts SumComposition(const Composition& amounts);
+void SumRecalculate(Composition& amounts);
+
 class AmountsModel : public QAbstractTableModel
 {
 	Q_OBJECT

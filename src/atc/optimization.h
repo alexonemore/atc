@@ -96,10 +96,9 @@ private:
 	std::vector<double> MakeTemperatureVector();
 	std::vector<double> MakeCompositionVector(ParametersNS::Range range);
 	std::vector<Composition> MakeNewAmounts(const Composition& amounts,
-											const std::vector<double>& composition);
+											const SubstanceWeights& weights);
 	std::vector<Composition> MakeNewAmounts2(const Composition& amounts,
-											 const std::vector<double>& composition1,
-											 const std::vector<double>& compositon2);
+											 const SubstanceWeights& weights);
 
 };
 
