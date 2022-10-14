@@ -95,6 +95,11 @@ public:
 private:
 	std::vector<double> MakeTemperatureVector();
 	std::vector<double> MakeCompositionVector(ParametersNS::Range range);
+	std::vector<Composition> MakeNewAmounts(const Composition& amounts,
+											const std::vector<double>& composition);
+	std::vector<Composition> MakeNewAmounts2(const Composition& amounts,
+											 const std::vector<double>& composition1,
+											 const std::vector<double>& compositon2);
 
 };
 
@@ -130,6 +135,7 @@ void RangeTabulator(ParametersNS::Range range, Container& x)
 		assert(x.size() == size && "Reserve fail");
 	}
 }
+
 
 } // namespace Optimization
 

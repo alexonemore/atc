@@ -124,6 +124,15 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	assert(number_of_substances == amounts.size());
 	assert(number_of_substances == temp_ranges.size());
 
+	/*	Workmode						Group 1		Group 2		Sum
+	 *	-----------------------------------------------------------------
+	 *	SinglePoint												Main
+	 *	TemperatureRange										Main
+	 *	CompositionRange				Main		Variable
+	 *	DoubleCompositionRange			Variable	Variable
+	 *	TemperatureCompositionRange		Main		Variable
+	 * */
+
 	switch(parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint: {
 		items.reserve(1);
@@ -145,7 +154,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
-		auto composition = MakeCompositionVector(parameters.composition1_range);
+		auto composition = MakeCompositionVector(parameters.composition2_range);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
 		std::vector<Composition> new_amounts; // = make_new_amounts
@@ -173,7 +182,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		auto temperatures = MakeTemperatureVector();
-		auto composition = MakeCompositionVector(parameters.composition1_range);
+		auto composition = MakeCompositionVector(parameters.composition2_range);
 		std::vector<Composition> new_amounts; // = make_new_amounts
 		items.reserve(new_amounts.size() * temperatures.size());
 		for(const auto& temperature : temperatures) {
@@ -291,6 +300,28 @@ void OptimizationItem::MakeConstraints()
 
 	// fill b
 
+}
+
+std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
+		const Composition& amounts, const std::vector<double>& composition)
+{
+	std::vector<Composition> new_amounts;
+
+
+
+
+	return new_amounts;
+}
+
+std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts2(
+		const Composition& amounts, const std::vector<double>& composition1,
+		const std::vector<double>& compositon2)
+{
+	std::vector<Composition> new_amounts;
+
+
+
+	return new_amounts;
 }
 
 
