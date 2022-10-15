@@ -46,7 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
 			this, &MainWindow::SignalUpdateButtonClicked);
 	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
-			this, &MainWindow::SignalStartCalculate);
+//			this, &MainWindow::SignalStartCalculate);
+			[this](){
+		QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+		emit SignalStartCalculate();
+	});
 
 	//demo
 	std::vector<QAbstractButton*> check_butons{
@@ -209,7 +213,7 @@ void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
 void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
 {
 	LOG(color)
-			ui->plot_tf_view->ChangeColorGraph(id, color);
+	ui->plot_tf_view->ChangeColorGraph(id, color);
 }
 
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
@@ -218,32 +222,32 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 	if(vec.size() <= 1) {
 		LOG(">> CALCULATION START FOR <= 1 ITEM <<")
 		for(auto&& i : vec) i.Calculate();
-		return;
-	}
-
-	LOG(">> CALCULATION START <<")
-	Timer t; t.start();
-	QThreadPool::globalInstance()->setMaxThreadCount(threads);
-	fw->setFuture(QtConcurrent::map(vec, &Optimization::OptimizationItem::Calculate));
-//	fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
-	dialog->exec();
-	fw->waitForFinished();
+	} else {
+		LOG(">> CALCULATION START <<")
+		Timer t; t.start();
+		QThreadPool::globalInstance()->setMaxThreadCount(threads);
+		fw->setFuture(QtConcurrent::map(vec, &Optimization::OptimizationItem::Calculate));
+		//	fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
+		dialog->exec();
+		fw->waitForFinished();
 #ifndef NDEBUG
-	qDebug() << "isFinished " << fw->future().isFinished();
-	qDebug() << "isCanceled " << fw->future().isCanceled();
+		qDebug() << "isFinished " << fw->future().isFinished();
+		qDebug() << "isCanceled " << fw->future().isCanceled();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-	qDebug() << "isPaused   " << fw->future().isPaused();
+		qDebug() << "isPaused   " << fw->future().isPaused();
 #else
-	qDebug() << "isSuspended" << fw->future().isSuspended();
+		qDebug() << "isSuspended" << fw->future().isSuspended();
 #endif
-	qDebug() << "isRunning  " << fw->future().isRunning();
-	qDebug() << "isStarted  " << fw->future().isStarted();
+		qDebug() << "isRunning  " << fw->future().isRunning();
+		qDebug() << "isStarted  " << fw->future().isStarted();
 #endif
-	assert(fw->future().isFinished());
-	t.stop();
-	QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
-	SlotShowStatusBarText(text);
+		assert(fw->future().isFinished());
+		t.stop();
+		QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
+		SlotShowStatusBarText(text);
+	}
 	LOG(">> CALCULATION END <<")
+	QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
 }
 
 void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho) // demo
