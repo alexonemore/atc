@@ -310,10 +310,12 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 	for(auto&& val : composition) {
 		switch(parameters.composition2_unit) {
 		case ParametersNS::CompositionUnit::AtomicPercent: {
-			if(sum.group_2_mol > 0.0) {
+			if(sum.group_1_mol > 0.0 && sum.group_2_mol > 0.0) {
 				new_amount = amounts;
-				auto coef2 = val / 100;
-				auto coef1 = 1 - coef2;
+				auto new_sum_group2 = sum.sum_mol * val / 100;
+				auto new_sum_group1 = sum.sum_mol - new_sum_group2;
+				auto coef1 = new_sum_group1 / sum.group_1_mol;
+				auto coef2 = new_sum_group2 / sum.group_2_mol;
 				for(const auto& weight : weights) {
 					auto id = weight.id;
 					auto w = weight.weight;
@@ -322,16 +324,38 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 					new_amount_at.group_1_gram = new_amount_at.group_1_mol * w;
 					new_amount_at.group_2_mol *= coef2;
 					new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
-
-
-
+					new_amount_at.sum_mol = new_amount_at.group_1_mol +
+							new_amount_at.group_2_mol;
+					new_amount_at.sum_gram = new_amount_at.group_1_gram +
+							new_amount_at.group_2_gram;
 				}
-
+				SumRecalculate(new_amount);
+				new_amounts.push_back(std::move(new_amount));
 			}
 		}
 			break;
 		case ParametersNS::CompositionUnit::WeightPercent: {
-
+			if(sum.group_1_gram > 0.0 && sum.group_2_gram > 0.0) {
+				new_amount = amounts;
+				auto new_sum_group2 = sum.sum_gram * val / 100;
+				auto new_sum_group1 = sum.sum_gram - new_sum_group2;
+				auto coef1 = new_sum_group1 / sum.group_1_gram;
+				auto coef2 = new_sum_group2 / sum.group_2_gram;
+				for(const auto& weight : weights) {
+					auto id = weight.id;
+					auto w = weight.weight;
+					auto&& new_amount_at = new_amount.at(id);
+					new_amount_at.group_1_gram *= coef1;
+					new_amount_at.group_1_mol = new_amount_at.group_1_gram / w;
+					new_amount_at.group_2_gram *= coef2;
+					new_amount_at.group_2_mol = new_amount_at.group_2_gram * w;
+					new_amount_at.sum_mol = new_amount_at.group_1_mol +
+							new_amount_at.group_2_mol;
+					new_amount_at.sum_gram = new_amount_at.group_1_gram +
+							new_amount_at.group_2_gram;
+				}
+				SumRecalculate(new_amount);
+				new_amounts.push_back(std::move(new_amount));
 		}
 			break;
 		case ParametersNS::CompositionUnit::Mol: {
