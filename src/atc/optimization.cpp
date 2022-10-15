@@ -280,6 +280,8 @@ void OptimizationItem::MakeConstraints()
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 			const SubstanceWeights& weights, const double value)
 {
+	// Group 1 - main composition
+	// Group 2 - variable composition
 	Composition new_amount;
 	switch(parameters.composition_range_unit) {
 	case ParametersNS::CompositionUnit::AtomicPercent: {
@@ -320,7 +322,7 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 				new_amount_at.group_1_gram *= coef1;
 				new_amount_at.group_1_mol = new_amount_at.group_1_gram / w;
 				new_amount_at.group_2_gram *= coef2;
-				new_amount_at.group_2_mol = new_amount_at.group_2_gram * w;
+				new_amount_at.group_2_mol = new_amount_at.group_2_gram / w;
 				new_amount_at.sum_mol = new_amount_at.group_1_mol +
 						new_amount_at.group_2_mol;
 				new_amount_at.sum_gram = new_amount_at.group_1_gram +
@@ -375,8 +377,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
-	// Group 1 - main composition
-	// Group 2 - variable composition
 	auto composition = MakeCompositionVector(parameters.composition_range);
 	sum = SumComposition(amounts);
 	std::vector<Composition> new_amounts;
