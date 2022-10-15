@@ -356,6 +356,7 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 				}
 				SumRecalculate(new_amount);
 				new_amounts.push_back(std::move(new_amount));
+			}
 		}
 			break;
 		case ParametersNS::CompositionUnit::Mol: {
