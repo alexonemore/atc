@@ -310,7 +310,24 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 	for(auto&& val : composition) {
 		switch(parameters.composition2_unit) {
 		case ParametersNS::CompositionUnit::AtomicPercent: {
+			if(sum.group_2_mol > 0.0) {
+				new_amount = amounts;
+				auto coef2 = val / 100;
+				auto coef1 = 1 - coef2;
+				for(const auto& weight : weights) {
+					auto id = weight.id;
+					auto w = weight.weight;
+					auto&& new_amount_at = new_amount.at(id);
+					new_amount_at.group_1_mol *= coef1;
+					new_amount_at.group_1_gram = new_amount_at.group_1_mol * w;
+					new_amount_at.group_2_mol *= coef2;
+					new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
 
+
+
+				}
+
+			}
 		}
 			break;
 		case ParametersNS::CompositionUnit::WeightPercent: {
@@ -318,7 +335,7 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		}
 			break;
 		case ParametersNS::CompositionUnit::Mol: {
-			if(sum.sum_mol > 0.0) {
+			if(sum.group_2_mol > 0.0) {
 				new_amount = amounts;
 				auto coef = val / sum.group_2_mol;
 				for(const auto& weight : weights) {
@@ -338,7 +355,7 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		}
 			break;
 		case ParametersNS::CompositionUnit::Gram: {
-			if(sum.sum_gram > 0.0) {
+			if(sum.group_2_gram > 0.0) {
 				new_amount = amounts;
 				auto coef = val / sum.group_2_gram;
 				for(const auto& weight : weights) {
