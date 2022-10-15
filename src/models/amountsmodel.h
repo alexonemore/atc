@@ -30,9 +30,9 @@ enum class Names {
 	ID,
 	Formula,
 	Weight,
-	Group_1_mol,
+	Group_1_mol,	// main group
 	Group_1_gram,
-	Group_2_mol,
+	Group_2_mol,	// variable group
 	Group_2_gram,
 	Sum_mol,
 	Sum_gram,
@@ -44,9 +44,9 @@ extern const QStringList names;
 }
 
 struct Amounts {
-	double group_1_mol{0.0};
+	double group_1_mol{0.0};	// main group
 	double group_1_gram{0.0};
-	double group_2_mol{0.0};
+	double group_2_mol{0.0};	// variable group
 	double group_2_gram{0.0};
 	double sum_mol{0.0};
 	double sum_gram{0.0};
