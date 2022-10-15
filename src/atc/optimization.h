@@ -81,6 +81,7 @@ class OptimizationItemsMaker
 	size_t number_of_elements{0};	// M
 	size_t number_of_substances{0};	// N
 
+	Amounts sum;
 
 	OptimizationVector items;
 public:
@@ -95,11 +96,11 @@ public:
 private:
 	std::vector<double> MakeTemperatureVector();
 	std::vector<double> MakeCompositionVector(ParametersNS::Range range);
+	Composition MakeNewAmount(const Composition& amounts,
+							  const SubstanceWeights& weights,
+							  const double value);
 	std::vector<Composition> MakeNewAmounts(const Composition& amounts,
 											const SubstanceWeights& weights);
-	std::vector<Composition> MakeNewAmounts2(const Composition& amounts,
-											 const SubstanceWeights& weights);
-
 };
 
 template<typename Container>

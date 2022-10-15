@@ -50,7 +50,6 @@ const QStringList workmode{
 	QT_TR_NOOP("Temperature range"),
 //	QT_TR_NOOP("PressureRange"), TODO
 	QT_TR_NOOP("Composition range"),
-	QT_TR_NOOP("Double composition range"),
 	QT_TR_NOOP("Temperature-composition range")
 };
 const QStringList target{
@@ -151,13 +150,9 @@ void Parameters::FixInputParameters()
 	temperature_range.stop = FixTemperature(temperature_range.stop, temperature_range_unit);
 	FixRange(temperature_range);
 
-	composition1_range.start = FixComposition(composition1_range.start, composition1_unit);
-	composition1_range.stop = FixComposition(composition1_range.stop, composition1_unit);
-	FixRange(composition1_range);
-
-	composition2_range.start = FixComposition(composition2_range.start, composition2_unit);
-	composition2_range.stop = FixComposition(composition2_range.stop, composition2_unit);
-	FixRange(composition2_range);
+	composition_range.start = FixComposition(composition_range.start, composition_range_unit);
+	composition_range.stop = FixComposition(composition_range.stop, composition_range_unit);
+	FixRange(composition_range);
 
 	FixRange(pressure_range);
 }

@@ -41,7 +41,6 @@ enum class Workmode {
 	TemperatureRange,
 //	PressureRange, TODO
 	CompositionRange,
-	DoubleCompositionRange,
 	TemperatureCompositionRange
 };
 extern const QStringList workmode;
@@ -129,20 +128,14 @@ struct Parameters
 	Database		database			{Database::Thermo};
 	MinimizationFunction minimization_function {MinimizationFunction::GibbsEnergy};
 	Extrapolation	extrapolation		{Extrapolation::Enable};
-#if 0
-	CompositionUnit group1_unit			{CompositionUnit::AtomicPercent};
-	CompositionUnit group2_unit			{CompositionUnit::AtomicPercent};
-#endif
-	CompositionUnit composition1_unit	{CompositionUnit::AtomicPercent};
-	CompositionUnit composition2_unit	{CompositionUnit::AtomicPercent};
 	TemperatureUnit	temperature_initial_unit {TemperatureUnit::Kelvin};
-	TemperatureUnit temperature_range_unit {TemperatureUnit::Kelvin};
 	PressureUnit	pressure_initial_unit {PressureUnit::MPa};
+	CompositionUnit composition_range_unit	{CompositionUnit::AtomicPercent};
+	TemperatureUnit temperature_range_unit {TemperatureUnit::Kelvin};
 	PressureUnit	pressure_range_unit {PressureUnit::MPa};
 	double			temperature_initial	{300.0};
 	double			pressure_initial	{0.1};
-	Range			composition1_range	{  0.0,  100.0, 10.0};
-	Range			composition2_range	{  0.0,  100.0, 10.0};
+	Range			composition_range	{  0.0,  100.0, 10.0};
 	Range			temperature_range	{300.0, 1000.0, 10.0};
 	Range			pressure_range		{  0.1,    1.0,  0.1};
 	int				threads				{1};

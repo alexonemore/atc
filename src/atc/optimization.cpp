@@ -124,15 +124,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	assert(number_of_substances == amounts.size());
 	assert(number_of_substances == temp_ranges.size());
 
-	/*	Workmode						Group 1		Group 2		Sum
-	 *	-----------------------------------------------------------------
-	 *	SinglePoint												Main
-	 *	TemperatureRange										Main
-	 *	CompositionRange				Main		Variable
-	 *	DoubleCompositionRange			Variable	Variable
-	 *	TemperatureCompositionRange		Main		Variable
-	 * */
-
 	switch(parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint: {
 		items.reserve(1);
@@ -157,18 +148,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
 		std::vector<Composition> new_amounts = MakeNewAmounts(amounts, weights);
-		items.reserve(new_amounts.size());
-		for(const auto& new_amount : new_amounts) {
-			items.push_back(OptimizationItem{parameters, elements,
-							temp_ranges, subs_element_composition,
-							weights, std::move(new_amount), temperature});
-		}
-	}
-		break;
-	case ParametersNS::Workmode::DoubleCompositionRange: {
-		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
-													parameters.temperature_initial_unit);
-		std::vector<Composition> new_amounts = MakeNewAmounts2(amounts, weights);
 		items.reserve(new_amounts.size());
 		for(const auto& new_amount : new_amounts) {
 			items.push_back(OptimizationItem{parameters, elements,
@@ -298,127 +277,114 @@ void OptimizationItem::MakeConstraints()
 
 }
 
+Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
+			const SubstanceWeights& weights, const double value)
+{
+	Composition new_amount;
+	switch(parameters.composition_range_unit) {
+	case ParametersNS::CompositionUnit::AtomicPercent: {
+		if(sum.group_1_mol > 0.0 && sum.group_2_mol > 0.0) {
+			new_amount = amounts;
+			auto new_sum_group2 = sum.sum_mol * value / 100;
+			auto new_sum_group1 = sum.sum_mol - new_sum_group2;
+			auto coef1 = new_sum_group1 / sum.group_1_mol;
+			auto coef2 = new_sum_group2 / sum.group_2_mol;
+			for(const auto& weight : weights) {
+				auto id = weight.id;
+				auto w = weight.weight;
+				auto&& new_amount_at = new_amount.at(id);
+				new_amount_at.group_1_mol *= coef1;
+				new_amount_at.group_1_gram = new_amount_at.group_1_mol * w;
+				new_amount_at.group_2_mol *= coef2;
+				new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
+				new_amount_at.sum_mol = new_amount_at.group_1_mol +
+						new_amount_at.group_2_mol;
+				new_amount_at.sum_gram = new_amount_at.group_1_gram +
+						new_amount_at.group_2_gram;
+			}
+			SumRecalculate(new_amount);
+		}
+	}
+		break;
+	case ParametersNS::CompositionUnit::WeightPercent: {
+		if(sum.group_1_gram > 0.0 && sum.group_2_gram > 0.0) {
+			new_amount = amounts;
+			auto new_sum_group2 = sum.sum_gram * value / 100;
+			auto new_sum_group1 = sum.sum_gram - new_sum_group2;
+			auto coef1 = new_sum_group1 / sum.group_1_gram;
+			auto coef2 = new_sum_group2 / sum.group_2_gram;
+			for(const auto& weight : weights) {
+				auto id = weight.id;
+				auto w = weight.weight;
+				auto&& new_amount_at = new_amount.at(id);
+				new_amount_at.group_1_gram *= coef1;
+				new_amount_at.group_1_mol = new_amount_at.group_1_gram / w;
+				new_amount_at.group_2_gram *= coef2;
+				new_amount_at.group_2_mol = new_amount_at.group_2_gram * w;
+				new_amount_at.sum_mol = new_amount_at.group_1_mol +
+						new_amount_at.group_2_mol;
+				new_amount_at.sum_gram = new_amount_at.group_1_gram +
+						new_amount_at.group_2_gram;
+			}
+			SumRecalculate(new_amount);
+		}
+	}
+		break;
+	case ParametersNS::CompositionUnit::Mol: {
+		if(sum.group_2_mol > 0.0) {
+			new_amount = amounts;
+			auto coef = value / sum.group_2_mol;
+			for(const auto& weight : weights) {
+				auto id = weight.id;
+				auto w = weight.weight;
+				auto&& new_amount_at = new_amount.at(id);
+				new_amount_at.group_2_mol *= coef;
+				new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
+				new_amount_at.sum_mol = new_amount_at.group_1_mol +
+						new_amount_at.group_2_mol;
+				new_amount_at.sum_gram = new_amount_at.group_1_gram +
+						new_amount_at.group_2_gram;
+			}
+			SumRecalculate(new_amount);
+		}
+	}
+		break;
+	case ParametersNS::CompositionUnit::Gram: {
+		if(sum.group_2_gram > 0.0) {
+			new_amount = amounts;
+			auto coef = value / sum.group_2_gram;
+			for(const auto& weight : weights) {
+				auto id = weight.id;
+				auto w = weight.weight;
+				auto&& new_amount_at = new_amount.at(id);
+				new_amount_at.group_2_gram *= coef;
+				new_amount_at.group_2_mol = new_amount_at.group_2_gram / w;
+				new_amount_at.sum_mol = new_amount_at.group_1_mol +
+						new_amount_at.group_2_mol;
+				new_amount_at.sum_gram = new_amount_at.group_1_gram +
+						new_amount_at.group_2_gram;
+			}
+			SumRecalculate(new_amount);
+		}
+	}
+		break;
+	}
+	return new_amount;
+}
+
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
 	// Group 1 - main composition
 	// Group 2 - variable composition
-	auto composition = MakeCompositionVector(parameters.composition2_range);
-	auto sum = SumComposition(amounts);
+	auto composition = MakeCompositionVector(parameters.composition_range);
+	sum = SumComposition(amounts);
 	std::vector<Composition> new_amounts;
-	Composition new_amount;
 	for(auto&& val : composition) {
-		switch(parameters.composition2_unit) {
-		case ParametersNS::CompositionUnit::AtomicPercent: {
-			if(sum.group_1_mol > 0.0 && sum.group_2_mol > 0.0) {
-				new_amount = amounts;
-				auto new_sum_group2 = sum.sum_mol * val / 100;
-				auto new_sum_group1 = sum.sum_mol - new_sum_group2;
-				auto coef1 = new_sum_group1 / sum.group_1_mol;
-				auto coef2 = new_sum_group2 / sum.group_2_mol;
-				for(const auto& weight : weights) {
-					auto id = weight.id;
-					auto w = weight.weight;
-					auto&& new_amount_at = new_amount.at(id);
-					new_amount_at.group_1_mol *= coef1;
-					new_amount_at.group_1_gram = new_amount_at.group_1_mol * w;
-					new_amount_at.group_2_mol *= coef2;
-					new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
-					new_amount_at.sum_mol = new_amount_at.group_1_mol +
-							new_amount_at.group_2_mol;
-					new_amount_at.sum_gram = new_amount_at.group_1_gram +
-							new_amount_at.group_2_gram;
-				}
-				SumRecalculate(new_amount);
-				new_amounts.push_back(std::move(new_amount));
-			}
-		}
-			break;
-		case ParametersNS::CompositionUnit::WeightPercent: {
-			if(sum.group_1_gram > 0.0 && sum.group_2_gram > 0.0) {
-				new_amount = amounts;
-				auto new_sum_group2 = sum.sum_gram * val / 100;
-				auto new_sum_group1 = sum.sum_gram - new_sum_group2;
-				auto coef1 = new_sum_group1 / sum.group_1_gram;
-				auto coef2 = new_sum_group2 / sum.group_2_gram;
-				for(const auto& weight : weights) {
-					auto id = weight.id;
-					auto w = weight.weight;
-					auto&& new_amount_at = new_amount.at(id);
-					new_amount_at.group_1_gram *= coef1;
-					new_amount_at.group_1_mol = new_amount_at.group_1_gram / w;
-					new_amount_at.group_2_gram *= coef2;
-					new_amount_at.group_2_mol = new_amount_at.group_2_gram * w;
-					new_amount_at.sum_mol = new_amount_at.group_1_mol +
-							new_amount_at.group_2_mol;
-					new_amount_at.sum_gram = new_amount_at.group_1_gram +
-							new_amount_at.group_2_gram;
-				}
-				SumRecalculate(new_amount);
-				new_amounts.push_back(std::move(new_amount));
-			}
-		}
-			break;
-		case ParametersNS::CompositionUnit::Mol: {
-			if(sum.group_2_mol > 0.0) {
-				new_amount = amounts;
-				auto coef = val / sum.group_2_mol;
-				for(const auto& weight : weights) {
-					auto id = weight.id;
-					auto w = weight.weight;
-					auto&& new_amount_at = new_amount.at(id);
-					new_amount_at.group_2_mol *= coef;
-					new_amount_at.group_2_gram = new_amount_at.group_2_mol * w;
-					new_amount_at.sum_mol = new_amount_at.group_1_mol +
-							new_amount_at.group_2_mol;
-					new_amount_at.sum_gram = new_amount_at.group_1_gram +
-							new_amount_at.group_2_gram;
-				}
-				SumRecalculate(new_amount);
-				new_amounts.push_back(std::move(new_amount));
-			}
-		}
-			break;
-		case ParametersNS::CompositionUnit::Gram: {
-			if(sum.group_2_gram > 0.0) {
-				new_amount = amounts;
-				auto coef = val / sum.group_2_gram;
-				for(const auto& weight : weights) {
-					auto id = weight.id;
-					auto w = weight.weight;
-					auto&& new_amount_at = new_amount.at(id);
-					new_amount_at.group_2_gram *= coef;
-					new_amount_at.group_2_mol = new_amount_at.group_2_gram / w;
-					new_amount_at.sum_mol = new_amount_at.group_1_mol +
-							new_amount_at.group_2_mol;
-					new_amount_at.sum_gram = new_amount_at.group_1_gram +
-							new_amount_at.group_2_gram;
-				}
-				SumRecalculate(new_amount);
-				new_amounts.push_back(std::move(new_amount));
-			}
-		}
-			break;
-		}
+		new_amounts.emplace_back(MakeNewAmount(amounts, weights, val));
 	}
 	return new_amounts;
 }
-
-std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts2(
-		const Composition& amounts, const SubstanceWeights& weights)
-{
-	// Group 1 - variable composition
-	// Group 2 - variable composition
-	auto compositon1 = MakeCompositionVector(parameters.composition1_range);
-	auto compositon2 = MakeCompositionVector(parameters.composition2_range);
-	std::vector<Composition> new_amounts;
-
-
-
-	return new_amounts;
-}
-
-
 
 } // namespace Optimization
 

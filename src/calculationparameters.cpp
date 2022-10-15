@@ -33,10 +33,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->choose_substances->addItems(ParametersNS::choose_substances);
 	ui->extrapolation->addItems(ParametersNS::extrapolation);
 	ui->minimization_function->addItems(ParametersNS::minimization_function);
-	ui->composition1_units->addItems(ParametersNS::composition_units);
-	ui->composition2_units->addItems(ParametersNS::composition_units);
-	ui->group1_units->addItems(ParametersNS::composition_units);
-	ui->group2_units->addItems(ParametersNS::composition_units);
+	ui->composition_units->addItems(ParametersNS::composition_units);
 	ui->temperature_initial_units->addItems(ParametersNS::temperature_units);
 	ui->temperature_units->addItems(ParametersNS::temperature_units);
 	ui->pressure_initial_units->addItems(ParametersNS::pressure_units);
@@ -73,12 +70,7 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 	p.database = static_cast<ParametersNS::Database>(ui->database->currentIndex());
 	p.minimization_function = static_cast<ParametersNS::MinimizationFunction>(ui->minimization_function->currentIndex());
 	p.extrapolation = static_cast<ParametersNS::Extrapolation>(ui->extrapolation->currentIndex());
-#if 0
-	p.group1_unit = static_cast<ParametersNS::CompositionUnit>(ui->group1_units->currentIndex());
-	p.group2_unit = static_cast<ParametersNS::CompositionUnit>(ui->group2_units->currentIndex());
-#endif
-	p.composition1_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition1_units->currentIndex());
-	p.composition2_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition2_units->currentIndex());
+	p.composition_range_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition_units->currentIndex());
 	p.temperature_initial_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_initial_units->currentIndex());
 	p.pressure_initial_unit = static_cast<ParametersNS::PressureUnit>(ui->pressure_initial_units->currentIndex());
 	p.temperature_range_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_units->currentIndex());
@@ -87,12 +79,9 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 	p.temperature_initial = ui->temperature_initial->text().toDouble();
 	p.pressure_initial = ui->pressure_initial->text().toDouble();
 
-	p.composition1_range.start = ui->composition1_start->text().toDouble();
-	p.composition1_range.stop = ui->composition1_stop->text().toDouble();
-	p.composition1_range.step = ui->composition1_step->text().toDouble();
-	p.composition2_range.start = ui->composition2_start->text().toDouble();
-	p.composition2_range.stop = ui->composition2_stop->text().toDouble();
-	p.composition2_range.step = ui->composition2_step->text().toDouble();
+	p.composition_range.start = ui->composition_start->text().toDouble();
+	p.composition_range.stop = ui->composition_stop->text().toDouble();
+	p.composition_range.step = ui->composition_step->text().toDouble();
 
 	p.temperature_range.start = ui->temperature_start->text().toDouble();
 	p.temperature_range.stop = ui->temperature_stop->text().toDouble();
@@ -132,14 +121,9 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 	ui->database->setCurrentIndex(static_cast<int>(p.database));
 	ui->minimization_function->setCurrentIndex(static_cast<int>(p.minimization_function));
 	ui->extrapolation->setCurrentIndex(static_cast<int>(p.extrapolation));
-#if 0
-	ui->group1_units->setCurrentIndex(static_cast<int>(p.group1_unit));
-	ui->group2_units->setCurrentIndex(static_cast<int>(p.group2_unit));
-#endif
 	ui->temperature_initial_units->setCurrentIndex(static_cast<int>(p.temperature_initial_unit));
 	ui->pressure_initial_units->setCurrentIndex(static_cast<int>(p.pressure_initial_unit));
-	ui->composition1_units->setCurrentIndex(static_cast<int>(p.composition1_unit));
-	ui->composition2_units->setCurrentIndex(static_cast<int>(p.composition2_unit));
+	ui->composition_units->setCurrentIndex(static_cast<int>(p.composition_range_unit));
 	ui->temperature_units->setCurrentIndex(static_cast<int>(p.temperature_range_unit));
 	ui->pressure_units->setCurrentIndex(static_cast<int>(p.pressure_range_unit));
 
@@ -151,12 +135,9 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 
 	ui->temperature_initial->setText(QString::number(p.temperature_initial));
 	ui->pressure_initial->setText(QString::number(p.pressure_initial));
-	ui->composition1_start->setText(QString::number(p.composition1_range.start));
-	ui->composition1_stop->setText(QString::number(p.composition1_range.stop));
-	ui->composition1_step->setText(QString::number(p.composition1_range.step));
-	ui->composition2_start->setText(QString::number(p.composition2_range.start));
-	ui->composition2_stop->setText(QString::number(p.composition2_range.stop));
-	ui->composition2_step->setText(QString::number(p.composition2_range.step));
+	ui->composition_start->setText(QString::number(p.composition_range.start));
+	ui->composition_stop->setText(QString::number(p.composition_range.stop));
+	ui->composition_step->setText(QString::number(p.composition_range.step));
 	ui->temperature_start->setText(QString::number(p.temperature_range.start));
 	ui->temperature_stop->setText(QString::number(p.temperature_range.stop));
 	ui->temperature_step->setText(QString::number(p.temperature_range.step));
