@@ -332,6 +332,7 @@ void OptimizationItem::MakeC()
 
 void OptimizationItem::MakeUBini()
 {
+	// depends on constraints
 	ub_ini.resize(number_of_substances, std::numeric_limits<double>::max());
 	for(const auto& cnti : constraints) {
 		std::transform(cnti.a_j.cbegin(), cnti.a_j.cend(), ub_ini.cbegin(),
