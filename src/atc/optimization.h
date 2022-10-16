@@ -72,6 +72,8 @@ private:
 	void DefineOrderOfSubstances();
 	void MakeConstraints();
 	void FillB();
+	void MakeC();
+	void MakeUBini();
 };
 
 using OptimizationVector = QVector<OptimizationItem>;

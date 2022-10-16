@@ -222,7 +222,8 @@ OptimizationItem::OptimizationItem(
 	// Order of substances changes every time when current temperature changes
 	// then changes order in A matrix, i.e. needs to remake constraints vector
 
-	FillB();
+	FillB(); // vector B depends on amounts
+
 
 
 }
@@ -288,6 +289,50 @@ void OptimizationItem::FillB()
 		el_id = elements.at(j);
 		constraints.at(j).b_j = el_id_amount.at(el_id);
 	}
+}
+
+void OptimizationItem::MakeC()
+{
+	// depends on substances_id_order
+	switch(parameters.minimization_function) {
+	case ParametersNS::MinimizationFunction::GibbsEnergy:
+		switch(parameters.database) {
+		case ParametersNS::Database::Thermo:
+			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+						   c.begin(), [this](int id){
+				return Thermodynamics::Thermo::TF_c(temperature_K_current,
+													temp_ranges.at(id));});
+			break;
+		case ParametersNS::Database::HSC:
+			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+						   c.begin(), [this](int id){
+				return Thermodynamics::HSC::TF_c(temperature_K_current,
+												 temp_ranges.at(id));});
+			break;
+		}
+		break;
+	case ParametersNS::MinimizationFunction::Entropy:
+		switch(parameters.database) {
+		case ParametersNS::Database::Thermo:
+			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+						   c.begin(), [this](int id){
+				return Thermodynamics::Thermo::TF_S_J(temperature_K_current,
+													  temp_ranges.at(id));});
+			break;
+		case ParametersNS::Database::HSC:
+			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+						   c.begin(), [this](int id){
+				return Thermodynamics::HSC::TF_S_J(temperature_K_current,
+												   temp_ranges.at(id));});
+			break;
+		}
+		break;
+	}
+}
+
+void OptimizationItem::MakeUBini()
+{
+
 }
 
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
