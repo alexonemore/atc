@@ -332,7 +332,18 @@ void OptimizationItem::MakeC()
 
 void OptimizationItem::MakeUBini()
 {
-
+	ub_ini.resize(number_of_substances, std::numeric_limits<double>::max());
+	for(const auto& cnti : constraints) {
+		std::transform(cnti.a_j.cbegin(), cnti.a_j.cend(), ub_ini.cbegin(),
+					   ub_ini.begin(), [bj = cnti.b_j](auto aji, auto ubi){
+			if(aji > 0) {
+				auto tmp = bj / aji;
+				return tmp < ubi ? tmp : ubi;
+			} else {
+				return ubi;
+			}
+		});
+	}
 }
 
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
