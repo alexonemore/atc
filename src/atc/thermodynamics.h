@@ -22,6 +22,7 @@
 
 #include "database.h"
 #include "parameters.h"
+#include "utilities.h"
 
 namespace Thermodynamics {
 
@@ -83,7 +84,38 @@ void TabulateOneTF(const ParametersNS::Range& temperature_range,
 				   QVector<double>& x, QVector<double>& y);
 
 
-void RangeTabulator(const ParametersNS::Range range, QVector<double>& x);
+template<typename Container>
+void RangeTabulator(ParametersNS::Range range, Container& x)
+{
+	const double start = range.start;
+	const double stop = range.stop;
+	const double step = range.step;
+	constexpr double eps = std::numeric_limits<double>::epsilon();
+	x.clear();
+	if(std::abs(stop - start) < eps) {
+		x.push_back(start);
+	} else if(std::abs(step) < eps) {
+		x.reserve(2);
+		x.push_back(start);
+		x.push_back(stop);
+	} else {
+		int size = static_cast<int>(std::ceil(std::abs((stop-start)/step)))+1;
+		x.reserve(size);
+		double rounding_decimal = 1/step < 1000 ?
+					1000 : std::pow(10, std::ceil(std::log10(1/step))+1);
+		int i = 1;
+		double current = start;
+		while (current < stop) {
+			x.push_back(current);
+			current = std::round((start + step * (i++)) * rounding_decimal)
+					/ rounding_decimal;
+		}
+		x.push_back(stop);
+		LOG("size = ", size)
+		LOG("x.size = ", x.size())
+		assert(x.size() == size && "Reserve fail");
+	}
+}
 
 } // namespace Thermodynamics
 

@@ -23,7 +23,6 @@
 #include "database.h"
 #include "amountsmodel.h"
 #include "parameters.h"
-#include "utilities.h"
 
 /* Order of substunces in vector n, size = N
 |------gas------|---------liq-------|------ind------|
@@ -67,13 +66,21 @@ struct OptimizationItem
 					 const SubstanceWeights& weights_,
 					 const Composition& amounts_,
 					 const double initial_temperature_K);
-	void Calculate() {}
+	void Calculate();
 private:
 	void DefineOrderOfSubstances();
 	void MakeConstraints();
 	void FillB();
 	void MakeC();
 	void MakeUBini();
+	void MakeUBcur();
+	void MakeN();
+	void Equilibrium();
+	void Equilibrium(const double temperature_K);
+	void AdiabaticTemperature();
+	double H_kJ_Initial();
+	double H_kJ_Current();
+	bool IsExistAtCurrentTemperature(const int sub_id);
 };
 
 using OptimizationVector = QVector<OptimizationItem>;
@@ -105,40 +112,6 @@ private:
 	std::vector<Composition> MakeNewAmounts(const Composition& amounts,
 											const SubstanceWeights& weights);
 };
-
-template<typename Container>
-void RangeTabulator(ParametersNS::Range range, Container& x)
-{
-	const double start = range.start;
-	const double stop = range.stop;
-	const double step = range.step;
-	constexpr double eps = std::numeric_limits<double>::epsilon();
-	x.clear();
-	if(std::abs(stop - start) < eps) {
-		x.push_back(start);
-	} else if(std::abs(step) < eps) {
-		x.reserve(2);
-		x.push_back(start);
-		x.push_back(stop);
-	} else {
-		int size = static_cast<int>(std::ceil(std::abs((stop-start)/step)))+1;
-		x.reserve(size);
-		double rounding_decimal = 1/step < 1000 ?
-					1000 : std::pow(10, std::ceil(std::log10(1/step))+1);
-		int i = 1;
-		double current = start;
-		while (current < stop) {
-			x.push_back(current);
-			current = std::round((start + step * (i++)) * rounding_decimal)
-					/ rounding_decimal;
-		}
-		x.push_back(stop);
-		LOG("size = ", size)
-		LOG("x.size = ", x.size())
-		assert(x.size() == size && "Reserve fail");
-	}
-}
-
 
 } // namespace Optimization
 

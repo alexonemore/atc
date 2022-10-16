@@ -175,7 +175,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 std::vector<double> OptimizationItemsMaker::MakeTemperatureVector()
 {
 	std::vector<double> temperature;
-	RangeTabulator(parameters.temperature_range, temperature);
+	Thermodynamics::RangeTabulator(parameters.temperature_range, temperature);
 	std::transform(temperature.cbegin(), temperature.cend(),
 				   temperature.begin(),
 				   [tu = parameters.temperature_range_unit](double t){
@@ -187,7 +187,7 @@ std::vector<double> OptimizationItemsMaker::MakeCompositionVector(
 		ParametersNS::Range range)
 {
 	std::vector<double> composition;
-	RangeTabulator(range, composition);
+	Thermodynamics::RangeTabulator(range, composition);
 	return composition;
 }
 
@@ -226,6 +226,18 @@ OptimizationItem::OptimizationItem(
 
 
 
+}
+
+void OptimizationItem::Calculate()
+{
+	switch(parameters.target) {
+	case ParametersNS::Target::Equilibrium:
+		AdiabaticTemperature();
+		break;
+	case ParametersNS::Target::AdiabaticTemperature:
+		Equilibrium(temperature_K_initial);
+		break;
+	}
 }
 
 void OptimizationItem::DefineOrderOfSubstances()
@@ -344,6 +356,67 @@ void OptimizationItem::MakeUBini()
 				return ubi;
 			}
 		});
+	}
+}
+
+void OptimizationItem::MakeUBcur()
+{
+	// depends on ub_ini
+	switch(parameters.extrapolation) {
+	case ParametersNS::Extrapolation::Disable:
+		std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+					   ub_ini.cbegin(), ub_cur.begin(),
+					   [this](const int sub_id, const double ubi){
+			return IsExistAtCurrentTemperature(sub_id) ? ubi : 0.0;
+		});
+		break;
+	case ParametersNS::Extrapolation::Enable:
+		std::copy(ub_ini.cbegin(), ub_ini.cend(), ub_cur.begin());
+		break;
+	}
+}
+
+void OptimizationItem::MakeN()
+{
+	std::transform(ub_cur.cbegin(), ub_cur.cend(), n.begin(), [](double n){
+		return n / 2;
+	});
+}
+
+void OptimizationItem::Equilibrium()
+{
+
+}
+
+void OptimizationItem::Equilibrium(const double temperature_K)
+{
+
+}
+
+void OptimizationItem::AdiabaticTemperature()
+{
+
+}
+
+double OptimizationItem::H_kJ_Initial()
+{
+
+}
+
+double OptimizationItem::H_kJ_Current()
+{
+
+}
+
+bool OptimizationItem::IsExistAtCurrentTemperature(const int sub_id)
+{
+	auto&& temp_range = temp_ranges.at(sub_id);
+	auto min = temp_range.cbegin()->T_min;
+	auto max = temp_range.crbegin()->T_max;
+	if(min <= temperature_K_current && temperature_K_current <= max) {
+		return true;
+	} else {
+		return false;
 	}
 }
 
