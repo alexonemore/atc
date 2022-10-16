@@ -71,6 +71,7 @@ struct OptimizationItem
 private:
 	void DefineOrderOfSubstances();
 	void MakeConstraints();
+	void FillB();
 };
 
 using OptimizationVector = QVector<OptimizationItem>;

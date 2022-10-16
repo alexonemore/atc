@@ -53,6 +53,7 @@ struct Amounts {
 	double sum_atpct{0.0};
 	double sum_wtpct{0.0};
 };
+// int = substance ID
 using Composition = std::unordered_map<int, Amounts>;
 
 struct CompositionData {

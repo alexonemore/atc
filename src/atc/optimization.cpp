@@ -215,12 +215,14 @@ OptimizationItem::OptimizationItem(
 	ub_ini.resize(number_of_substances);
 	ub_cur.resize(number_of_substances);
 	constraints.resize(elements.size());
-
+	for(auto&& constraint : constraints) {
+		constraint.a_j.resize(number_of_substances);
+	}
 
 	// Order of substances changes every time when current temperature changes
 	// then changes order in A matrix, i.e. needs to remake constraints vector
 
-
+	FillB();
 
 
 }
@@ -259,22 +261,33 @@ void OptimizationItem::DefineOrderOfSubstances()
 
 void OptimizationItem::MakeConstraints()
 {
+	// It depends on order of substances
 	// size = N * M
-	for(auto&& constraint : constraints) {
-		constraint.a_j.resize(number_of_substances);
-	}
 	size_t sub_id, el_id;
 	for(size_t j = 0, maxj = elements.size(); j != maxj; ++j) {
 		el_id = elements.at(j);
+		auto&& a_j = constraints.at(j).a_j;
 		for(size_t i = 0; i != number_of_substances; ++i) {
 			sub_id = substances_id_order.at(i);
-			constraints.at(j).a_j.at(i++) =
-					subs_element_composition.at(sub_id).at(el_id);
+			a_j.at(i) = subs_element_composition.at(sub_id).at(el_id);
 		}
 	}
+}
 
-	// fill b
-
+void OptimizationItem::FillB()
+{
+	std::unordered_map<int, double> el_id_amount;
+	for(const auto& [sub_id, el_cmp] : subs_element_composition) {
+		auto sub_mol = amounts.at(sub_id).sum_mol;
+		for(const auto& [el_id, el_value] : el_cmp) {
+			el_id_amount[el_id] += sub_mol * el_value;
+		}
+	}
+	size_t el_id;
+	for(size_t j = 0, maxj = elements.size(); j != maxj; ++j) {
+		el_id = elements.at(j);
+		constraints.at(j).b_j = el_id_amount.at(el_id);
+	}
 }
 
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
