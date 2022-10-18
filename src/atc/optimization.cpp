@@ -19,8 +19,6 @@
 
 #include "optimization.h"
 #include "thermodynamics.h"
-#include <nlopt.hpp>
-
 
 namespace Optimization {
 constexpr static double epsilon_log = 1E-9;
@@ -44,13 +42,12 @@ static double ConstraintFunction(const std::vector<double>& x,
 	return std::transform_reduce(x.cbegin(), x.cend(), cnt->a_j.cbegin(),
 								 -cnt->b_j); /* minus of bj */
 }
-#if 0
+
 static double ThermodinamicFunction(const std::vector<double>& n,
 									std::vector<double>& grad, void* data)
 {
 	using DT = std::vector<double>::difference_type;
-	const ThermodynamicCalculator::TCNode* tcn =
-			reinterpret_cast<const ThermodynamicCalculator::TCNode*>(data);
+	const OptimizationItem* tcn = reinterpret_cast<const OptimizationItem*>(data);
 	auto&& c = tcn->GetC();
 	auto&& numbers = tcn->GetNumbers();
 	auto n_gas = n.cbegin();
@@ -85,7 +82,7 @@ static double ThermodinamicFunction(const std::vector<double>& n,
 	}
 	return result;
 }
-#endif
+
 #ifndef NDEBUG
 static const char* NLoptResultToString(nlopt::result result)
 {
@@ -116,7 +113,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		const SubstanceWeights& weights,
 		const Composition& amounts)
 	: parameters{parameters_}
-	, number_of_elements{elements.size()}
 	, number_of_substances{static_cast<size_t>(weights.size())}
 {
 	LOG()
@@ -208,15 +204,16 @@ OptimizationItem::OptimizationItem(
 	, temperature_K_initial{initial_temperature_K}
 {
 	temperature_K_current = temperature_K_initial;
-	number_of_substances = weights.size();
-	substances_id_order.resize(number_of_substances);
-	n.resize(number_of_substances);
-	c.resize(number_of_substances);
-	ub_ini.resize(number_of_substances);
-	ub_cur.resize(number_of_substances);
-	constraints.resize(elements.size());
+	number.elements = elements.size();
+	number.substances = weights.size();
+	substances_id_order.resize(number.substances);
+	n.resize(number.substances);
+	c.resize(number.substances);
+	ub_ini.resize(number.substances);
+	ub_cur.resize(number.substances);
+	constraints.resize(number.elements);
 	for(auto&& constraint : constraints) {
-		constraint.a_j.resize(number_of_substances);
+		constraint.a_j.resize(number.substances);
 	}
 
 	// Order of substances changes every time when current temperature changes
@@ -260,11 +257,11 @@ void OptimizationItem::DefineOrderOfSubstances()
 			ind.insert(id);
 		}
 	}
-	number_of_gases = gas.size();
-	number_of_liquids = liq.size();
-	number_of_individuals = ind.size();
-	assert(number_of_gases + number_of_liquids + number_of_individuals ==
-		   number_of_substances);
+	number.gases = gas.size();
+	number.liquids = liq.size();
+	number.individuals = ind.size();
+	assert(number.gases + number.liquids + number.individuals ==
+		   number.substances);
 	substances_id_order.clear();
 	auto back_ins = std::back_inserter(substances_id_order);
 	std::copy(gas.cbegin(), gas.cend(), back_ins);
@@ -277,10 +274,10 @@ void OptimizationItem::MakeConstraints()
 	// It depends on order of substances
 	// size = N * M
 	size_t sub_id, el_id;
-	for(size_t j = 0, maxj = elements.size(); j != maxj; ++j) {
+	for(size_t j = 0; j != number.elements; ++j) {
 		el_id = elements.at(j);
 		auto&& a_j = constraints.at(j).a_j;
-		for(size_t i = 0; i != number_of_substances; ++i) {
+		for(size_t i = 0; i != number.substances; ++i) {
 			sub_id = substances_id_order.at(i);
 			a_j.at(i) = subs_element_composition.at(sub_id).at(el_id);
 		}
@@ -297,7 +294,7 @@ void OptimizationItem::FillB()
 		}
 	}
 	size_t el_id;
-	for(size_t j = 0, maxj = elements.size(); j != maxj; ++j) {
+	for(size_t j = 0; j != number.elements; ++j) {
 		el_id = elements.at(j);
 		constraints.at(j).b_j = el_id_amount.at(el_id);
 	}
@@ -345,7 +342,7 @@ void OptimizationItem::MakeC()
 void OptimizationItem::MakeUBini()
 {
 	// depends on constraints
-	ub_ini.resize(number_of_substances, std::numeric_limits<double>::max());
+	ub_ini.resize(number.substances, std::numeric_limits<double>::max());
 	for(const auto& cnti : constraints) {
 		std::transform(cnti.a_j.cbegin(), cnti.a_j.cend(), ub_ini.cbegin(),
 					   ub_ini.begin(), [bj = cnti.b_j](auto aji, auto ubi){
@@ -385,17 +382,69 @@ void OptimizationItem::MakeN()
 
 void OptimizationItem::Equilibrium()
 {
+	// TODO
+	MakeUBcur();
+	MakeC(); // depends on current temperature
+	MakeN(); // refresh to half of ub_cur
 
+	nlopt::result result;
+	result_of_optimization = Minimize(nlopt::LD_SLSQP, result);
+	if(result == nlopt::XTOL_REACHED) return;
+	result_of_optimization = Minimize(nlopt::LD_AUGLAG_EQ, result);
+	if(result == nlopt::XTOL_REACHED) return;
+	result_of_optimization = Minimize(nlopt::LD_SLSQP, result);
 }
 
 void OptimizationItem::Equilibrium(const double temperature_K)
 {
-
+	temperature_K_current = temperature_K;
+	Equilibrium();
 }
 
 void OptimizationItem::AdiabaticTemperature()
 {
+	double T_min = 298.15;
+	double T_max = 10000;
+	double T_cur, H_min, H_max, H_cur;
+	const double H_initial = H_kJ_Initial();
+	Equilibrium(T_min);
+	H_min = H_kJ_Current();
+	if(H_initial < H_min) {
+		temperature_K_adiabatic = T_min;
+		return;
+	}
+	Equilibrium(T_max);
+	H_max = H_kJ_Current();
+	if(H_initial > H_max) {
+		temperature_K_adiabatic = T_max;
+		return;
+	}
+	T_cur = (T_min + T_max) / 2;
+	Equilibrium(T_cur);
+	H_cur = H_kJ_Current();
+	double at_epsilon = std::pow(10, -parameters.at_accuracy)/2;
+#if !defined(NDEBUG) && defined(VERBOSE_DEBUG)
+	int n = 0;
+#endif
+	while((std::abs(T_max - T_min) > at_epsilon))
+	{
+		if(H_initial < H_cur) {
+			T_max = T_cur;
+		} else {
+			T_min = T_cur;
+		}
+		T_cur = (T_min + T_max) / 2;
+		Equilibrium(T_cur);
+		H_cur = H_kJ_Current();
 
+#if !defined(NDEBUG) && defined(VERBOSE_DEBUG)
+		qDebug() << Qt::fixed << qSetRealNumberPrecision(10) << ++n
+				 << "H_cur:" << H_cur << "\tT_cur" << T_cur
+				 << "\tdelta_H:" << std::abs(H_cur - H_initial)
+				 << "\tdelta_T:" << std::abs(T_max - T_min);
+#endif
+	}
+	temperature_K_adiabatic = T_cur;
 }
 
 double OptimizationItem::H_kJ_Initial()
@@ -418,6 +467,66 @@ bool OptimizationItem::IsExistAtCurrentTemperature(const int sub_id)
 	} else {
 		return false;
 	}
+}
+
+double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
+								  nlopt::result& result)
+{
+	double minf;
+	nlopt::opt opt(algorithm, static_cast<unsigned>(number.substances));
+	opt.set_lower_bounds(0);
+	opt.set_upper_bounds(ub_cur);
+	opt.set_min_objective(Optimization::ThermodinamicFunction, this);
+	for(size_t j = 0; j < number.elements; ++j) {
+		opt.add_equality_constraint(Optimization::ConstraintFunction,
+						&constraints[j], Optimization::epsilon_accuracy);
+	}
+	// Using ftol's results in a noisy graph.
+	/* bug in nlopt:
+	 * Class nlopt::opt has private struct nlopt_opt which has field
+	 * double *xtol_abs.
+	 * Nlopt library does not allocate memory for xtol_abs array by default.
+	 * When the NLOPT_LD_AUGLAG_EQ algorithm is used, the nlopt library creates
+	 * a local_opt instance of nlopt_opt struct for local optimization and uses
+	 * the memcpy function to copy some data from the primary opt to local_opt.
+	 * And memcpy try to copy from null pointer xtol_abs to another.
+	 * Since xtol_abs is not allocated in primary opt, the program crashes.
+	 * File optimize.c line 755 in function nlopt_optimize_ then
+	 * file option.c line 698 in function nlopt_set_xtol_abs.
+	 * Solution: use the set_xtol_abs function for the primary opt instance,
+	 * which will allocate the necessary memory.
+	 */
+	opt.set_xtol_abs(Optimization::epsilon_accuracy);
+	opt.set_xtol_rel(Optimization::epsilon_accuracy);
+	opt.set_maxtime(Optimization::maxtime_of_minimize);
+
+	try {
+		result = opt.optimize(n, minf);
+	}
+#if !defined(NDEBUG)
+	catch(std::exception &e) {
+		qDebug() << "********************************************************";
+		qDebug() << "NLopt failed:" << e.what();
+		qDebug() << "Result:" << Optimization::NLoptResultToString(result) << result;
+		qDebug() << "Algorithm:" << opt.get_algorithm() << opt.get_algorithm_name();
+		qDebug() << "minf:" << minf;
+		qDebug() << "Error message:" << opt.get_errmsg();
+		qDebug() << "Numevals:" << opt.get_numevals();
+		qDebug() << "Maxeval:" << opt.get_maxeval();
+		qDebug() << "last_optimize_result:" << opt.last_optimize_result() <<
+					Optimization::NLoptResultToString(opt.last_optimize_result());
+		qDebug() << "last_optimum_value:" << opt.last_optimum_value();
+		qDebug() << "num_params:" << opt.num_params();
+		qDebug() << "********************************************************";
+#else
+	catch(...) {
+#endif
+		/* bug in nlopt:
+		 * Sometimes the result is out of enum values.
+		 */
+		result = nlopt::FAILURE;
+	}
+	return minf;
 }
 
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,

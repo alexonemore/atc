@@ -23,6 +23,7 @@
 #include "database.h"
 #include "amountsmodel.h"
 #include "parameters.h"
+#include <nlopt.hpp>
 
 /* Order of substunces in vector n, size = N
 |------gas------|---------liq-------|------ind------|
@@ -36,6 +37,15 @@ struct Constraint
 {
 	std::vector<double> a_j;
 	double b_j{0};
+};
+
+struct Numbers
+{
+	size_t elements = 0;	// M
+	size_t substances = 0;	// N
+	size_t gases = 0;		// part of N
+	size_t individuals = 0;	// part of N
+	size_t liquids = 0;		// part of N
 };
 
 struct OptimizationItem
@@ -54,10 +64,8 @@ struct OptimizationItem
 	double temperature_K_initial{0};
 	double temperature_K_current{0};
 	double temperature_K_adiabatic{0};
-	size_t number_of_gases{0};
-	size_t number_of_liquids{0};
-	size_t number_of_individuals{0};
-	size_t number_of_substances{0};			// N
+	Numbers number;
+	double result_of_optimization;
 
 	OptimizationItem(const ParametersNS::Parameters& parameters_,
 					 const std::vector<int>& elements_,
@@ -67,6 +75,8 @@ struct OptimizationItem
 					 const Composition& amounts_,
 					 const double initial_temperature_K);
 	void Calculate();
+	const std::vector<double>& GetC() const { return c; }
+	auto GetNumbers() const { return number; }
 private:
 	void DefineOrderOfSubstances();
 	void MakeConstraints();
@@ -81,6 +91,7 @@ private:
 	double H_kJ_Initial();
 	double H_kJ_Current();
 	bool IsExistAtCurrentTemperature(const int sub_id);
+	double Minimize(const nlopt::algorithm algorithm, nlopt::result& result);
 };
 
 using OptimizationVector = QVector<OptimizationItem>;
@@ -88,11 +99,8 @@ using OptimizationVector = QVector<OptimizationItem>;
 class OptimizationItemsMaker
 {
 	ParametersNS::Parameters parameters;
-	size_t number_of_elements{0};	// M
 	size_t number_of_substances{0};	// N
-
 	Amounts sum;
-
 	OptimizationVector items;
 public:
 	OptimizationItemsMaker(const ParametersNS::Parameters& parameters_,
