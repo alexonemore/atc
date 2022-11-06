@@ -1,6 +1,6 @@
 # This file is part of ATC (Adiabatic Temperature Calculator).
 # Copyright (c) 2022 Alexandr Shchukin
-# Corresponding email: shchukin@ism.ac.ru
+# Corresponding email: alexonemoreemail@gmail.com
 #
 # ATC (Adiabatic Temperature Calculator) is free software:
 # you can redistribute it and/or modify it under the terms of

@@ -1,6 +1,6 @@
 /* This file is part of ATC (Adiabatic Temperature Calculator).
  * Copyright (c) 2022 Alexandr Shchukin
- * Corresponding email: shchukin@ism.ac.ru
+ * Corresponding email: alexonemoreemail@gmail.com
  *
  * ATC (Adiabatic Temperature Calculator) is free software:
  * you can redistribute it and/or modify it under the terms of
@@ -449,12 +449,12 @@ void OptimizationItem::AdiabaticTemperature()
 
 double OptimizationItem::H_kJ_Initial()
 {
-
+	return 0;
 }
 
 double OptimizationItem::H_kJ_Current()
 {
-
+	return 0;
 }
 
 bool OptimizationItem::IsExistAtCurrentTemperature(const int sub_id)
