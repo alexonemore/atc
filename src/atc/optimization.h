@@ -109,7 +109,7 @@ public:
 						   const SubstancesElementComposition& subs_element_composition,
 						   const SubstanceWeights& weights,
 						   const Composition& amounts);
-	OptimizationVector GetData() { return std::move(items); }
+	OptimizationVector& GetData() & { return items; }
 
 private:
 	std::vector<double> MakeTemperatureVector();
