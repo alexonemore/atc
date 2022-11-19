@@ -257,7 +257,7 @@ bool PlotTFModel::CheckIndexValidParent(const QModelIndex& index) const
 }
 
 PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
-										const PlotTFModelFields::TF tf)
+										const PlotTFModelFields::TF tf) &
 {
 	auto&& at_id = data_tf.at(id);
 	switch(tf) {

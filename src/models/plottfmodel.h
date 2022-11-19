@@ -88,7 +88,7 @@ signals:
 
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-	Cell& GetCell(const int id, const PlotTFModelFields::TF tf);
+	Cell& GetCell(const int id, const PlotTFModelFields::TF tf) &;
 	GraphId MakeGraphId(const int id, const PlotTFModelFields::TF tf) const;
 	QString MakeGraphName(const QString& formula,
 						  const PlotTFModelFields::TF tf) const;

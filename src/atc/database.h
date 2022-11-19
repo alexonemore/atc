@@ -101,7 +101,7 @@ public:
 	SubstancesData GetSubstancesData(const ParametersNS::Parameters& parameters);
 	SubstanceTempRangeData GetSubstanceTempRangeData(const int id);
 	SubstancesTempRangeData	GetSubstancesTempRangeData(const QString& ids);
-	const QStringList& GetAvailableElements() const {
+	const QStringList& GetAvailableElements() const & {
 		return available_elements;
 	}
 	std::vector<int> GetAvailableElements(const QString& ids);

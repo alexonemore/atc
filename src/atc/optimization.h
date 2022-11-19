@@ -75,7 +75,7 @@ struct OptimizationItem
 					 const Composition& amounts_,
 					 const double initial_temperature_K);
 	void Calculate();
-	const std::vector<double>& GetC() const { return c; }
+	const std::vector<double>& GetC() const & { return c; }
 	auto GetNumbers() const { return number; }
 private:
 	void DefineOrderOfSubstances();
