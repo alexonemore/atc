@@ -126,16 +126,16 @@ constexpr bool EqualsAllOf(const T1& t1, const T2& t2, const TN& ...tN)
 }
 
 
-template<typename Distribution,
-		 typename Type = typename Distribution::result_type>
+template<typename Distribution>
 class RandomNumberImpl
 {
 	std::default_random_engine re;
 	Distribution dist;
 public:
-	explicit RandomNumberImpl(const Type low, const Type high,
-				 const unsigned int random_number = std::random_device{}())
-		: re{random_number}, dist{low, high}
+	using Type = typename Distribution::result_type;
+	explicit RandomNumberImpl(Type&& low, Type&& high,
+							  const unsigned int random_number = std::random_device{}())
+		: re{random_number}, dist{std::forward<Type>(low), std::forward<Type>(high)}
 	{}
 	Type operator()() { return dist(re); }
 	void seed(const unsigned int random_number = std::random_device{}()) {
