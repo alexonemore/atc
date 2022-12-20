@@ -416,16 +416,24 @@ void CoreApplication::UpdateRangeTabulatedModels()
 
 namespace {
 template<typename ForwardIt, typename UnaryOperation,
-		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag,
-		 typename std::iterator_traits<ForwardIt>::iterator_category>>>
+		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag, typename std::iterator_traits<ForwardIt>::iterator_category>>,
+
+		 typename = std::void_t<std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag, typename std::iterator_traits<ForwardIt>::iterator_category>>,
+								std::enable_if_t<std::is_invocable_v<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>,
+								std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<std::invoke_result_t<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>>>
+								>
+		 >
 QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
-								 UnaryOperation unary_op)
+								 UnaryOperation&& unary_op)
 {
 	using val = typename std::iterator_traits<ForwardIt>::value_type;
-	static_assert(std::is_arithmetic_v<decltype(unary_op(std::declval<val&>()))>);
+	static_assert(std::is_invocable_v<UnaryOperation, val>);
+	static_assert(std::is_arithmetic_v<std::remove_reference_t<std::invoke_result_t<UnaryOperation, val>>>);
 	QStringList strlist;
 	std::transform(first, last, std::back_inserter(strlist),
-				   [unary_op](const auto& i){return QString::number(unary_op(i));});
+				   [&unary_op](const auto& i){
+		return QString::number(std::invoke(std::forward<UnaryOperation>(unary_op),
+										   std::forward<decltype(i)>(i)));});
 	auto str = QStringLiteral("'") + strlist.join("','") + QStringLiteral("'");
 	return str;
 }
@@ -440,7 +448,7 @@ void CoreApplication::SlotStartCalculations()
 	// 1. Make species list
 	auto ids_str = MakeCommaSeparatedString(composition_data.weights.cbegin(),
 											composition_data.weights.cend(),
-								[](const SubstanceWeight& w){return w.id;});
+											&SubstanceWeight::id);
 	LOG(ids_str)
 
 	// 2. Make elements list for the number of elements
