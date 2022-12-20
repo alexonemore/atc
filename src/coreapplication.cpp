@@ -163,8 +163,10 @@ void CoreApplication::Initialize()
 	// must invoke after this was moved to another (non GUI) thread
 	// Databases
 	databases.reserve(ParametersNS::database_filenames.size());
-	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
-	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
+	databases.push_back(std::make_shared<DatabaseThermo>(ParametersNS::database_filenames.at(0)));
+	databases.push_back(std::make_shared<DatabaseHSC>(ParametersNS::database_filenames.at(1)));
+//	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
+//	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
 	// initial parameters
 	auto db = databases.at(static_cast<int>(parameters_.database));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
@@ -263,12 +265,12 @@ QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
 	return vec;
 }
 
-Database* CoreApplication::CurrentDatabase()
+auto CoreApplication::CurrentDatabase()
 {
 	return databases.at(static_cast<int>(parameters_.database));
 }
 
-Database* CoreApplication::Database(ParametersNS::Database database)
+auto CoreApplication::Database(ParametersNS::Database database)
 {
 	return databases.at(static_cast<int>(database));
 }

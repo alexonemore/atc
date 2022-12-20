@@ -203,6 +203,7 @@ Database::Database(const QString& filename)
 
 Database::~Database()
 {
+	LOG()
 }
 
 SubstancesData Database::GetSubstancesData(

@@ -44,7 +44,7 @@ class CoreApplication : public QObject
 
 private:
 	ParametersNS::Parameters parameters_{};
-	QVector<Database*> databases;
+	QVector<std::shared_ptr<Database>> databases;
 	SubstancesTableModel* model_substances;
 	SubstancesTempRangeModel* model_substances_temp_range;
 	SubstancesTabulatedTFModel* model_substances_tabulated_tf;
@@ -124,8 +124,8 @@ public slots:
 
 private:
 	QVector<HeavyContainer> PrepareHeavyCalculations();
-	Database* CurrentDatabase();
-	Database* Database(ParametersNS::Database database);
+	auto CurrentDatabase();
+	auto Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();
 };
 
