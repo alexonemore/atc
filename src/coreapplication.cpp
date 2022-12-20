@@ -415,14 +415,11 @@ void CoreApplication::UpdateRangeTabulatedModels()
  ****************************************************************************/
 
 namespace {
-template<typename ForwardIt, typename UnaryOperation,
-		 typename = std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag, typename std::iterator_traits<ForwardIt>::iterator_category>>,
-
-		 typename = std::void_t<std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag, typename std::iterator_traits<ForwardIt>::iterator_category>>,
-								std::enable_if_t<std::is_invocable_v<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>,
-								std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<std::invoke_result_t<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>>>
-								>
-		 >
+template<typename ForwardIt, typename UnaryOperation, typename = std::void_t<
+			 std::enable_if_t<std::is_base_of_v<std::forward_iterator_tag, typename std::iterator_traits<ForwardIt>::iterator_category>>,
+			 std::enable_if_t<std::is_invocable_v<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>,
+			 std::enable_if_t<std::is_arithmetic_v<std::remove_reference_t<std::invoke_result_t<UnaryOperation, typename std::iterator_traits<ForwardIt>::value_type>>>>
+			 >>
 QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
 								 UnaryOperation&& unary_op)
 {
