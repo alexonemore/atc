@@ -222,15 +222,15 @@ void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& colo
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 									   int threads)
 {
+	Timer t; t.start();
 	if(vec.size() <= 1) {
 		LOG(">> CALCULATION START FOR <= 1 ITEM <<")
 		for(auto&& i : vec) i.Calculate();
 	} else {
 		LOG(">> CALCULATION START <<")
-		Timer t; t.start();
 		QThreadPool::globalInstance()->setMaxThreadCount(threads);
 		fw->setFuture(QtConcurrent::map(vec, &Optimization::OptimizationItem::Calculate));
-		//	fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
+		// fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
 		dialog->exec();
 		fw->waitForFinished();
 #ifndef NDEBUG
@@ -245,12 +245,12 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 		qDebug() << "isStarted  " << fw->future().isStarted();
 #endif
 		assert(fw->future().isFinished());
-		t.stop();
-		QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
-		SlotShowStatusBarText(text);
 	}
-	LOG(">> CALCULATION END <<")
+	t.stop();
+	QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
+	SlotShowStatusBarText(text);
 	QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+	LOG(">> CALCULATION END <<")
 }
 
 void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho) // demo

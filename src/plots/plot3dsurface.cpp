@@ -123,8 +123,7 @@ void Plot3DSurface::AddGraph(QSurfaceDataArray* data)
 void Plot3DSurface::SetTheme(int theme)
 {
 	LOG(theme)
-	plot->activeTheme()->setType(
-				static_cast<Q3DTheme::Theme>(theme));
+	plot->activeTheme()->setType(static_cast<Q3DTheme::Theme>(theme));
 	plot->activeTheme()->setLabelBackgroundEnabled(false);
 }
 
@@ -148,8 +147,7 @@ void Plot3DSurface::SetGradient(int index)
 
 void Plot3DSurface::SetShadowQuality(int index)
 {
-	plot->setShadowQuality(static_cast<
-		QAbstract3DGraph::ShadowQuality>(index));
+	plot->setShadowQuality(static_cast<QAbstract3DGraph::ShadowQuality>(index));
 }
 
 void Plot3DSurface::RemoveGraph()
