@@ -52,10 +52,10 @@ Table::Table(QWidget* parent)
 		context_menu->popup(viewport()->mapToGlobal(pos));
 	});
 
-	connect(copy_action, &QAction::triggered, [this]() {
+	connect(copy_action, &QAction::triggered, this, [this]() {
 		Copy(false);
 	});
-	connect(copy_with_headers_action, &QAction::triggered, [this]() {
+	connect(copy_with_headers_action, &QAction::triggered, this, [this]() {
 		Copy(true);
 	});
 

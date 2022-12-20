@@ -100,6 +100,8 @@ CompositionData AmountsModel::GetCompositionData() const
 
 void AmountsModel::Delete(const QModelIndexList& selected)
 {
+	LOG()
+	// TODO delete only main or value collumn
 	for(auto&& index : selected) {
 		auto row = index.row();
 		if(row > 0) {

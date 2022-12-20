@@ -39,15 +39,18 @@ MainWindow::MainWindow(QWidget *parent)
 	LOG()
 
 	ui->setupUi(this);
+#ifndef NDEBUG
+	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator (DEBUG)"));
+#else
 	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator"));
+#endif
 
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
 			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
 			this, &MainWindow::SignalUpdateButtonClicked);
 	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
-//			this, &MainWindow::SignalStartCalculate);
-			[this](){
+			this, [this](){
 		QGuiApplication::setOverrideCursor(Qt::WaitCursor);
 		emit SignalStartCalculate();
 	});
