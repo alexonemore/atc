@@ -165,8 +165,6 @@ void CoreApplication::Initialize()
 	databases.reserve(ParametersNS::database_filenames.size());
 	databases.push_back(std::make_shared<DatabaseThermo>(ParametersNS::database_filenames.at(0)));
 	databases.push_back(std::make_shared<DatabaseHSC>(ParametersNS::database_filenames.at(1)));
-//	databases.push_back(new DatabaseThermo(ParametersNS::database_filenames.at(0)));
-//	databases.push_back(new DatabaseHSC(ParametersNS::database_filenames.at(1)));
 	// initial parameters
 	auto db = databases.at(static_cast<int>(parameters_.database));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
