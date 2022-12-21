@@ -445,9 +445,10 @@ void CoreApplication::SlotStartCalculations()
 				   composition_data.amounts.cend(),
 				   [](auto&& pair){return pair.second.isEmpty();}))
 	{
-		LOG(">> EMPTY <<")
+		LOG(">> EMPTY <<") // https://godbolt.org/z/bj4YW3T3E
 		return;
 	}
+	QGuiApplication::setOverrideCursor(Qt::WaitCursor);
 
 	auto db = CurrentDatabase();
 

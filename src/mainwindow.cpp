@@ -50,10 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
 			this, &MainWindow::SignalUpdateButtonClicked);
 	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
-			this, [this](){
-		QGuiApplication::setOverrideCursor(Qt::WaitCursor);
-		emit SignalStartCalculate();
-	});
+			this, &MainWindow::SignalStartCalculate);
 
 	//demo
 	std::vector<QAbstractButton*> check_butons{
