@@ -629,12 +629,12 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
+	// TODO units of composition range
 	auto composition = MakeCompositionVector(parameters.composition_range);
 	sum = SumComposition(amounts);
-	std::vector<Composition> new_amounts;
-	for(auto&& val : composition) {
-		new_amounts.emplace_back(MakeNewAmount(amounts, weights, val));
-	}
+	std::vector<Composition> new_amounts(composition.size());
+	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
+				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});
 	return new_amounts;
 }
 

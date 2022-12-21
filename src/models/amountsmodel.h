@@ -52,6 +52,9 @@ struct Amounts {
 	double sum_gram{0.0};
 	double sum_atpct{0.0};
 	double sum_wtpct{0.0};
+#ifndef NDEBUG
+	auto operator<=>(const Amounts&) const = default;
+#endif
 };
 // int = substance ID
 using Composition = std::unordered_map<int, Amounts>;

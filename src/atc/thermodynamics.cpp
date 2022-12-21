@@ -18,7 +18,6 @@
  */
 
 #include "thermodynamics.h"
-#include "utilities.h"
 #include <cmath>
 
 namespace Thermodynamics {

@@ -85,7 +85,7 @@ void TabulateOneTF(const ParametersNS::Range& temperature_range,
 
 
 template<typename Container>
-void RangeTabulator(ParametersNS::Range range, Container& x)
+void RangeTabulator(ParametersNS::Range range, Container&& x)
 {
 	const double start = range.start;
 	const double stop = range.stop;

@@ -439,6 +439,7 @@ QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
 void CoreApplication::SlotStartCalculations()
 {
 	LOG(">> START CALCULATION <<")
+	// TODO get parameters from GUI
 	auto composition_data = model_amounts->GetCompositionData();
 	auto db = CurrentDatabase();
 
