@@ -439,8 +439,16 @@ QString MakeCommaSeparatedString(ForwardIt first, ForwardIt last,
 void CoreApplication::SlotStartCalculations()
 {
 	LOG(">> START CALCULATION <<")
-	// TODO get parameters from GUI
+
 	auto composition_data = model_amounts->GetCompositionData();
+	if(std::all_of(composition_data.amounts.cbegin(),
+				   composition_data.amounts.cend(),
+				   [](auto&& pair){return pair.second.isEmpty();}))
+	{
+		LOG(">> EMPTY <<")
+		return;
+	}
+
 	auto db = CurrentDatabase();
 
 	// 1. Make species list

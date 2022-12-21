@@ -171,5 +171,6 @@ void CalculationParameters::Clear()
 
 void CalculationParameters::CalculateButtonHandler()
 {
+	Update();
 	emit StartCalculate();
 }
