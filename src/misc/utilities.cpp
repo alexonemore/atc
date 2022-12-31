@@ -87,4 +87,3 @@ QColor GetRandomColor()
 	color.setHsv(nonrandhue, sat(), val());
 	return color;
 }
-
