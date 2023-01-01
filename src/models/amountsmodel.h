@@ -55,7 +55,7 @@ struct Amounts {
 #ifndef NDEBUG
 	auto operator<=>(const Amounts&) const = default;
 #endif
-	bool isEmpty() const {
+	bool isZero() const {
 		// I'm not sure if group_1 and group_2 are always summed
 		return !(group_1_mol > 0.0 || group_2_mol > 0.0);
 	}

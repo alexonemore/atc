@@ -443,9 +443,9 @@ void CoreApplication::SlotStartCalculations()
 	auto composition_data = model_amounts->GetCompositionData();
 	if(std::all_of(composition_data.amounts.cbegin(),
 				   composition_data.amounts.cend(),
-				   [](auto&& pair){return pair.second.isEmpty();}))
+				   [](auto&& pair){return pair.second.isZero();}))
 	{
-		LOG(">> EMPTY <<") // https://godbolt.org/z/bj4YW3T3E
+		LOG(">> Amounts are zero <<") // https://godbolt.org/z/bj4YW3T3E
 		return;
 	}
 	QGuiApplication::setOverrideCursor(Qt::WaitCursor);

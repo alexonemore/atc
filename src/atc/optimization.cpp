@@ -216,8 +216,14 @@ OptimizationItem::OptimizationItem(
 		constraint.a_j.resize(number.substances);
 	}
 
+	// TODO change count for contain in exclude
+	// TODO change initial data in this class for shared_ptr
+
 	// Order of substances changes every time when current temperature changes
-	// then changes order in A matrix, i.e. needs to remake constraints vector
+	// then changes order in A matrix, i.e. needs to remake constraints vector.
+
+	// When extrapolation is disabled, the maximum value for the substance
+	// that does not exist at the current temperature is zero.
 
 	FillB(); // vector B depends on amounts
 
@@ -629,7 +635,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
-	// TODO units of composition range
 	auto composition = MakeCompositionVector(parameters.composition_range);
 	sum = SumComposition(amounts);
 	std::vector<Composition> new_amounts(composition.size());
