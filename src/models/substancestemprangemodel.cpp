@@ -19,6 +19,7 @@
 
 #include "substancestemprangemodel.h"
 #include "utilities.h"
+#include <QBrush>
 
 const QStringList SubstancesTempRangeModel::substances_temprange_field_names = {
 	QStringLiteral("T min"),
@@ -83,6 +84,9 @@ int SubstancesTempRangeModel::columnCount(const QModelIndex& parent) const
 QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) const
 {
 	if(!index.isValid()) return QVariant{};
+	if(role == Qt::BackgroundRole) {
+		return QBrush{Qt::white};
+	}
 	auto col = index.column();
 	if(role != Qt::DisplayRole || col >= data_.size()) {
 		return QVariant{};

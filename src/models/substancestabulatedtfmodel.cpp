@@ -20,6 +20,7 @@
 #include "substancestabulatedtfmodel.h"
 #include "utilities.h"
 #include <array>
+#include <QBrush>
 
 namespace SubstancesTabulatedTFFields {
 const QStringList names {
@@ -83,6 +84,9 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 										  int role) const
 {
 	if(!index.isValid()) return QVariant{};
+	if(role == Qt::BackgroundRole) {
+		return QBrush{Qt::white};
+	}
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}

@@ -19,6 +19,7 @@
 
 #include "substancestablemodel.h"
 #include "utilities.h"
+#include <QBrush>
 
 const QStringList SubstancesTableModel::substances_field_names = {
 	QStringLiteral("ID"),
@@ -77,6 +78,9 @@ int SubstancesTableModel::columnCount(const QModelIndex& parent) const
 QVariant SubstancesTableModel::data(const QModelIndex& index, int role) const
 {
 	if(!index.isValid()) return QVariant{};
+	if(role == Qt::BackgroundRole) {
+		return QBrush{Qt::white};
+	}
 	if(role != Qt::DisplayRole) {
 		return QVariant{};
 	}
