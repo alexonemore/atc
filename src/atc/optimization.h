@@ -41,11 +41,11 @@ struct Constraint
 
 struct Numbers
 {
-	size_t elements = 0;	// M
-	size_t substances = 0;	// N
-	size_t gases = 0;		// part of N
-	size_t individuals = 0;	// part of N
-	size_t liquids = 0;		// part of N
+	size_t elements{0};		// M
+	size_t substances{0};	// N
+	size_t gases{0};		// part of N
+	size_t individuals{0};	// part of N
+	size_t liquids{0};		// part of N
 };
 
 struct OptimizationItem
@@ -58,7 +58,7 @@ struct OptimizationItem
 	Composition amounts;
 
 	std::vector<double> n, c;				// size = N, number_of_substances
-	std::vector<double> ub_ini, ub_cur;		// size = N, ub = upper_bounds
+	std::vector<double> ub;					// size = N, ub = upper_bounds
 	std::vector<Constraint> constraints;	// size = M, number_of_elements
 	std::vector<int> substances_id_order;	// size = N, in order
 	double temperature_K_initial{0};
@@ -79,11 +79,10 @@ struct OptimizationItem
 	auto GetNumbers() const { return number; }
 private:
 	void DefineOrderOfSubstances();
-	void MakeConstraints();
-	void FillB();
+	void MakeConstraintsMatrixA();
+	void MakeConstraintsB();
 	void MakeC();
-	void MakeUBini();
-	void MakeUBcur();
+	void MakeUB();
 	void MakeN();
 	void Equilibrium();
 	void Equilibrium(const double temperature_K);

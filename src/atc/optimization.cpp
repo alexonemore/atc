@@ -209,14 +209,13 @@ OptimizationItem::OptimizationItem(
 	substances_id_order.resize(number.substances);
 	n.resize(number.substances);
 	c.resize(number.substances);
-	ub_ini.resize(number.substances);
-	ub_cur.resize(number.substances);
+	ub.resize(number.substances);
 	constraints.resize(number.elements);
 	for(auto&& constraint : constraints) {
 		constraint.a_j.resize(number.substances);
 	}
+	// Do not resize anything later
 
-	// TODO change count for contain in exclude
 	// TODO change initial data in this class for shared_ptr
 
 	// Order of substances changes every time when current temperature changes
@@ -225,10 +224,7 @@ OptimizationItem::OptimizationItem(
 	// When extrapolation is disabled, the maximum value for the substance
 	// that does not exist at the current temperature is zero.
 
-	FillB(); // vector B depends on amounts
-
-
-
+	MakeConstraintsB(); // vector B depends on amounts
 }
 
 void OptimizationItem::Calculate()
@@ -247,7 +243,7 @@ void OptimizationItem::DefineOrderOfSubstances()
 {
 	std::set<int> gas, liq, ind;
 	for(const auto& [id, sub_temp_range] : temp_ranges) {
-		auto tr = Thermodynamics::FindCoef(temperature_K_current, sub_temp_range);
+		auto&& tr = Thermodynamics::FindCoef(temperature_K_current, sub_temp_range);
 		if(tr.phase == QStringLiteral("G")) {
 			gas.insert(id);
 		} else if(tr.phase == QStringLiteral("L")) {
@@ -275,7 +271,7 @@ void OptimizationItem::DefineOrderOfSubstances()
 	std::copy(ind.cbegin(), ind.cend(), back_ins);
 }
 
-void OptimizationItem::MakeConstraints()
+void OptimizationItem::MakeConstraintsMatrixA()
 {
 	// It depends on order of substances
 	// size = N * M
@@ -290,7 +286,7 @@ void OptimizationItem::MakeConstraints()
 	}
 }
 
-void OptimizationItem::FillB()
+void OptimizationItem::MakeConstraintsB()
 {
 	std::unordered_map<int, double> el_id_amount;
 	for(const auto& [sub_id, el_cmp] : subs_element_composition) {
@@ -345,13 +341,14 @@ void OptimizationItem::MakeC()
 	}
 }
 
-void OptimizationItem::MakeUBini()
+void OptimizationItem::MakeUB()
 {
 	// depends on constraints
-	ub_ini.resize(number.substances, std::numeric_limits<double>::max());
-	for(const auto& cnti : constraints) {
-		std::transform(cnti.a_j.cbegin(), cnti.a_j.cend(), ub_ini.cbegin(),
-					   ub_ini.begin(), [bj = cnti.b_j](auto aji, auto ubi){
+	std::fill(ub.begin(), ub.end(), std::numeric_limits<double>::max());
+	for(const auto& constraint : constraints) {
+		std::transform(constraint.a_j.cbegin(), constraint.a_j.cend(),
+					   ub.cbegin(), ub.begin(),
+					   [bj = constraint.b_j](auto aji, auto ubi){
 			if(aji > 0) {
 				auto tmp = bj / aji;
 				return tmp < ubi ? tmp : ubi;
@@ -360,28 +357,24 @@ void OptimizationItem::MakeUBini()
 			}
 		});
 	}
-}
 
-void OptimizationItem::MakeUBcur()
-{
-	// depends on ub_ini
+	// check for extrapolation and zeroize if it not exist
 	switch(parameters.extrapolation) {
 	case ParametersNS::Extrapolation::Disable:
 		std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
-					   ub_ini.cbegin(), ub_cur.begin(),
+					   ub.cbegin(), ub.begin(),
 					   [this](const int sub_id, const double ubi){
 			return IsExistAtCurrentTemperature(sub_id) ? ubi : 0.0;
 		});
 		break;
 	case ParametersNS::Extrapolation::Enable:
-		std::copy(ub_ini.cbegin(), ub_ini.cend(), ub_cur.begin());
 		break;
 	}
 }
 
 void OptimizationItem::MakeN()
 {
-	std::transform(ub_cur.cbegin(), ub_cur.cend(), n.begin(), [](double n){
+	std::transform(ub.cbegin(), ub.cend(), n.begin(), [](double n){
 		return n / 2;
 	});
 }
@@ -389,9 +382,11 @@ void OptimizationItem::MakeN()
 void OptimizationItem::Equilibrium()
 {
 	// TODO
-	MakeUBcur();
+	DefineOrderOfSubstances();
+	MakeConstraintsMatrixA();
+	MakeUB(); // extrapolation is taken into account here
 	MakeC(); // depends on current temperature
-	MakeN(); // refresh to half of ub_cur
+	MakeN(); // refresh to half of ub
 
 	nlopt::result result;
 	result_of_optimization = Minimize(nlopt::LD_SLSQP, result);
@@ -481,7 +476,7 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 	double minf;
 	nlopt::opt opt(algorithm, static_cast<unsigned>(number.substances));
 	opt.set_lower_bounds(0);
-	opt.set_upper_bounds(ub_cur);
+	opt.set_upper_bounds(ub);
 	opt.set_min_objective(Optimization::ThermodinamicFunction, this);
 	for(size_t j = 0; j < number.elements; ++j) {
 		opt.add_equality_constraint(Optimization::ConstraintFunction,
