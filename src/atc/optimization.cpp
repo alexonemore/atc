@@ -82,6 +82,11 @@ static double ThermodinamicFunction(const std::vector<double>& n,
 	}
 	return result;
 }
+static double ThermodinamicFunctionMinus(const std::vector<double>& n,
+									std::vector<double>& grad, void* data)
+{
+	return -ThermodinamicFunction(n, grad, data);
+}
 
 #ifndef NDEBUG
 static const char* NLoptResultToString(nlopt::result result)
@@ -218,6 +223,8 @@ OptimizationItem::OptimizationItem(
 
 	// TODO change initial data in this class for shared_ptr
 
+	// TODO Consider ChooseSubstances
+
 	// Order of substances changes every time when current temperature changes
 	// then changes order in A matrix, i.e. needs to remake constraints vector.
 
@@ -323,6 +330,8 @@ void OptimizationItem::MakeC()
 		}
 		break;
 	case ParametersNS::MinimizationFunction::Entropy:
+		// TODO Replace thermodynamic functions with correct ones
+		// TF_S_J is not correct
 		switch(parameters.database) {
 		case ParametersNS::Database::Thermo:
 			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
@@ -381,12 +390,11 @@ void OptimizationItem::MakeN()
 
 void OptimizationItem::Equilibrium()
 {
-	// TODO
 	DefineOrderOfSubstances();
 	MakeConstraintsMatrixA();
 	MakeUB(); // extrapolation is taken into account here
 	MakeC(); // depends on current temperature
-	MakeN(); // refresh to half of ub
+	MakeN(); // set to half of ub
 
 	nlopt::result result;
 	result_of_optimization = Minimize(nlopt::LD_SLSQP, result);
@@ -477,7 +485,14 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 	nlopt::opt opt(algorithm, static_cast<unsigned>(number.substances));
 	opt.set_lower_bounds(0);
 	opt.set_upper_bounds(ub);
-	opt.set_min_objective(Optimization::ThermodinamicFunction, this);
+	switch(parameters.minimization_function) {
+	case ParametersNS::MinimizationFunction::GibbsEnergy:
+		opt.set_min_objective(Optimization::ThermodinamicFunction, this);
+		break;
+	case ParametersNS::MinimizationFunction::Entropy:
+		opt.set_min_objective(Optimization::ThermodinamicFunctionMinus, this);
+		break;
+	}
 	for(size_t j = 0; j < number.elements; ++j) {
 		opt.add_equality_constraint(Optimization::ConstraintFunction,
 						&constraints[j], Optimization::epsilon_accuracy);
@@ -504,8 +519,8 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 	try {
 		result = opt.optimize(n, minf);
 	}
-#if !defined(NDEBUG)
 	catch(std::exception &e) {
+#if !defined(NDEBUG)
 		qDebug() << "********************************************************";
 		qDebug() << "NLopt failed:" << e.what();
 		qDebug() << "Result:" << Optimization::NLoptResultToString(result) << result;
@@ -519,8 +534,6 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 		qDebug() << "last_optimum_value:" << opt.last_optimum_value();
 		qDebug() << "num_params:" << opt.num_params();
 		qDebug() << "********************************************************";
-#else
-	catch(...) {
 #endif
 		/* bug in nlopt:
 		 * Sometimes the result is out of enum values.
