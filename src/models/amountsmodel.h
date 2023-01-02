@@ -68,8 +68,8 @@ struct CompositionData {
 	Composition amounts;
 };
 
-Amounts SumComposition(const Composition& amounts);
-void SumRecalculate(Composition& amounts);
+Amounts SumCompositionMolAndGram(const Composition& amounts);
+Amounts GetSumAndRecalculate(Composition& amounts);
 
 class AmountsModel : public QAbstractTableModel
 {

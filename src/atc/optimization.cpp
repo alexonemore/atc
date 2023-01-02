@@ -562,7 +562,7 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 				new_amount_at.sum_gram = new_amount_at.group_1_gram +
 						new_amount_at.group_2_gram;
 			}
-			SumRecalculate(new_amount);
+			GetSumAndRecalculate(new_amount);
 		}
 	}
 		break;
@@ -586,7 +586,7 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 				new_amount_at.sum_gram = new_amount_at.group_1_gram +
 						new_amount_at.group_2_gram;
 			}
-			SumRecalculate(new_amount);
+			GetSumAndRecalculate(new_amount);
 		}
 	}
 		break;
@@ -605,7 +605,7 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 				new_amount_at.sum_gram = new_amount_at.group_1_gram +
 						new_amount_at.group_2_gram;
 			}
-			SumRecalculate(new_amount);
+			GetSumAndRecalculate(new_amount);
 		}
 	}
 		break;
@@ -624,7 +624,7 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 				new_amount_at.sum_gram = new_amount_at.group_1_gram +
 						new_amount_at.group_2_gram;
 			}
-			SumRecalculate(new_amount);
+			GetSumAndRecalculate(new_amount);
 		}
 	}
 		break;
@@ -636,7 +636,7 @@ std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
 	auto composition = MakeCompositionVector(parameters.composition_range);
-	sum = SumComposition(amounts);
+	sum = SumCompositionMolAndGram(amounts);
 	std::vector<Composition> new_amounts(composition.size());
 	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
 				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});

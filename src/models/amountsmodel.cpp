@@ -90,7 +90,7 @@ CompositionData AmountsModel::GetCompositionData() const
 	Composition new_amounts;
 	for(const auto& sub : weights) {
 		auto id = sub.id;
-		if(!excluded.count(id)) {
+		if(!excluded.contains(id)) {
 			new_weights.push_back(sub);
 			new_amounts[id] = amounts.at(id);
 		}
@@ -242,9 +242,9 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 			break;
 		case AmountsModelFields::Names::Included:
 			if(role == Qt::CheckStateRole)
-				return excluded.count(weight.id) ? Qt::Unchecked : Qt::Checked;
+				return excluded.contains(weight.id) ? Qt::Unchecked : Qt::Checked;
 			else if(role == Qt::DisplayRole)
-				return excluded.count(weight.id) ? "-" : "+";
+				return excluded.contains(weight.id) ? "-" : "+";
 			else if(role == Qt::BackgroundRole)
 				return QBrush{Qt::white};
 			break;
@@ -389,7 +389,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	} else {
 		auto&& substance_weight = weights.at(row-1); // -1 for Sum row
 		auto&& amount = amounts.at(substance_weight.id);
-		if(excluded.count(substance_weight.id) && role == Qt::EditRole) {
+		if(excluded.contains(substance_weight.id) && role == Qt::EditRole) {
 			amount = Amounts{};
 			RecalculateAndUpdate();
 			return false;
@@ -545,7 +545,7 @@ bool AmountsModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
 
-Amounts SumComposition(const Composition& amounts)
+Amounts SumCompositionMolAndGram(const Composition& amounts)
 {
 	auto sum = Amounts{};
 	for(const auto& [_, amount] : amounts) {
@@ -559,24 +559,23 @@ Amounts SumComposition(const Composition& amounts)
 	return sum;
 }
 
-void SumRecalculate(Composition& amounts)
+Amounts GetSumAndRecalculate(Composition& amounts)
 {
-	auto sum = SumComposition(amounts);
+	auto sum = SumCompositionMolAndGram(amounts);
 	for(auto&& [_, amount] : amounts) {
 		amount.sum_atpct = sum.sum_mol > 0.0 ?
 					(100 * amount.sum_mol / sum.sum_mol) : 0.0;
+		sum.sum_atpct += amount.sum_atpct;
 		amount.sum_wtpct = sum.sum_gram > 0.0 ?
 					(100 * amount.sum_gram / sum.sum_gram) : 0.0;
+		sum.sum_wtpct += amount.sum_wtpct;
 	}
+	return sum;
 }
 
 void AmountsModel::Recalculate()
 {
-	SumRecalculate(amounts);
-	for(const auto& [_, amount] : amounts) {
-		sum.sum_atpct += amount.sum_atpct;
-		sum.sum_wtpct += amount.sum_wtpct;
-	}
+	sum = GetSumAndRecalculate(amounts);
 }
 
 void AmountsModel::RecalculateAndUpdate()
