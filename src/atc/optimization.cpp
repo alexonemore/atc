@@ -207,8 +207,8 @@ OptimizationItem::OptimizationItem(
 	, weights{weights_}
 	, amounts{amounts_}
 	, temperature_K_initial{initial_temperature_K}
+	, temperature_K_current{initial_temperature_K}
 {
-	temperature_K_current = temperature_K_initial;
 	number.elements = elements.size();
 	number.substances = weights.size();
 	substances_id_order.resize(number.substances);
@@ -317,13 +317,13 @@ void OptimizationItem::MakeC()
 		switch(parameters.database) {
 		case ParametersNS::Database::Thermo:
 			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
-						   c.begin(), [this](int id){
+						   c.begin(), [this](const int id){
 				return Thermodynamics::Thermo::TF_c(temperature_K_current,
 													temp_ranges.at(id));});
 			break;
 		case ParametersNS::Database::HSC:
 			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
-						   c.begin(), [this](int id){
+						   c.begin(), [this](const int id){
 				return Thermodynamics::HSC::TF_c(temperature_K_current,
 												 temp_ranges.at(id));});
 			break;
@@ -335,13 +335,13 @@ void OptimizationItem::MakeC()
 		switch(parameters.database) {
 		case ParametersNS::Database::Thermo:
 			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
-						   c.begin(), [this](int id){
+						   c.begin(), [this](const int id){
 				return Thermodynamics::Thermo::TF_S_J(temperature_K_current,
 													  temp_ranges.at(id));});
 			break;
 		case ParametersNS::Database::HSC:
 			std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
-						   c.begin(), [this](int id){
+						   c.begin(), [this](const int id){
 				return Thermodynamics::HSC::TF_S_J(temperature_K_current,
 												   temp_ranges.at(id));});
 			break;
@@ -458,12 +458,77 @@ void OptimizationItem::AdiabaticTemperature()
 
 double OptimizationItem::H_kJ_Initial()
 {
-	return 0;
+	auto H = [this](const int id){
+		switch(parameters.database) {
+		case ParametersNS::Database::Thermo:
+			return Thermodynamics::Thermo::TF_H_kJ(temperature_K_initial,
+												   temp_ranges.at(id));
+		case ParametersNS::Database::HSC:
+			return Thermodynamics::HSC::TF_H_kJ(temperature_K_initial,
+												temp_ranges.at(id));
+		}
+	};
+
+	switch(parameters.choose_substances) {
+	case ParametersNS::ChooseSubstances::AsChecked:
+		return std::accumulate(amounts.cbegin(), amounts.cend(), double{0.0},
+							   [&H](double sum, decltype(amounts)::const_reference amount){
+			if(amount.second.sum_mol > 0.0) {
+				return sum + H(amount.first) * amount.second.sum_mol;
+			} else {
+				return sum;
+			}
+		});
+	case ParametersNS::ChooseSubstances::ByMinimumGibbsEnergy: {
+		auto G = [this](const int id){
+			switch(parameters.database) {
+			case ParametersNS::Database::Thermo:
+				return Thermodynamics::Thermo::TF_G_kJ(temperature_K_initial,
+													   temp_ranges.at(id));
+			case ParametersNS::Database::HSC:
+				return Thermodynamics::HSC::TF_G_kJ(temperature_K_initial,
+													temp_ranges.at(id));
+			}
+		};
+		double H_sum{0.0};
+		for(const auto& [sub_id, amount] : amounts) {
+			if(amount.sum_mol <= 0.0) continue;
+			double G_min = G(sub_id);
+			double G_tmp;
+			int sub_id_G_min = sub_id;
+			const auto& sub_cmp_cur = subs_element_composition.at(sub_id);
+			for(const auto& [sub_id_n, sub_cmp_n] :	subs_element_composition) {
+				if(sub_id_n == sub_id) continue;
+				if(sub_cmp_cur == sub_cmp_n) {
+					G_tmp = G(sub_id_n);
+					if(G_tmp < G_min) {
+						G_min = G_tmp;
+						sub_id_G_min = sub_id_n;
+					}
+				}
+			}
+			H_sum += H(sub_id_G_min) * amount.sum_mol;
+		}
+		return H_sum;
+	}
+	}
 }
 
 double OptimizationItem::H_kJ_Current()
 {
-	return 0;
+	return std::transform_reduce(n.cbegin(), n.cend(),
+								 substances_id_order.cbegin(), double{0.0},
+								 std::plus<>(),
+								 [this](const double ni, const int id){
+		switch(parameters.database) {
+		case ParametersNS::Database::Thermo:
+			return ni * Thermodynamics::Thermo::TF_H_kJ(temperature_K_current,
+														temp_ranges.at(id));
+		case ParametersNS::Database::HSC:
+			return ni * Thermodynamics::HSC::TF_H_kJ(temperature_K_current,
+													 temp_ranges.at(id));
+		}
+	});
 }
 
 bool OptimizationItem::IsExistAtCurrentTemperature(const int sub_id)

@@ -44,17 +44,10 @@
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="5" column="0">
-         <widget class="QComboBox" name="choose_substances">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
+         <widget class="QComboBox" name="choose_substances"/>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_28">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Choose substances</string>
           </property>

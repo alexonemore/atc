@@ -61,7 +61,7 @@ struct OptimizationItem
 	std::vector<double> ub;					// size = N, ub = upper_bounds
 	std::vector<Constraint> constraints;	// size = M, number_of_elements
 	std::vector<int> substances_id_order;	// size = N, in order
-	double temperature_K_initial{0};
+	const double temperature_K_initial;
 	double temperature_K_current{0};
 	double temperature_K_adiabatic{0};
 	Numbers number;
