@@ -111,8 +111,7 @@ void RangeTabulator(ParametersNS::Range range, Container&& x)
 					/ rounding_decimal;
 		}
 		x.push_back(stop);
-		LOG("size = ", size)
-		LOG("x.size = ", x.size())
+		LOG("size =", size, "x.size =", x.size())
 		assert(x.size() == size && "Reserve fail");
 	}
 }

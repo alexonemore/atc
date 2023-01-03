@@ -112,7 +112,7 @@ public:
 
 private:
 	std::vector<double> MakeTemperatureVector();
-	std::vector<double> MakeCompositionVector(ParametersNS::Range range);
+	std::vector<double> MakeCompositionVector();
 	Composition MakeNewAmount(const Composition& amounts,
 							  const SubstanceWeights& weights,
 							  const double value);

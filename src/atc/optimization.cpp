@@ -153,7 +153,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		for(const auto& new_amount : new_amounts) {
 			items.push_back(OptimizationItem{parameters, elements,
 							temp_ranges, subs_element_composition,
-							weights, std::move(new_amount), temperature});
+							weights, new_amount, temperature});
 		}
 	}
 		break;
@@ -165,7 +165,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 			for(const auto& new_amount : new_amounts) {
 				items.push_back(OptimizationItem{parameters, elements,
 								temp_ranges, subs_element_composition,
-								weights, std::move(new_amount), temperature});
+								weights, new_amount, temperature});
 			}
 		}
 	}
@@ -184,11 +184,10 @@ std::vector<double> OptimizationItemsMaker::MakeTemperatureVector()
 	return temperature;
 }
 
-std::vector<double> OptimizationItemsMaker::MakeCompositionVector(
-		ParametersNS::Range range)
+std::vector<double> OptimizationItemsMaker::MakeCompositionVector()
 {
 	std::vector<double> composition;
-	Thermodynamics::RangeTabulator(range, composition);
+	Thermodynamics::RangeTabulator(parameters.composition_range, composition);
 	return composition;
 }
 
@@ -223,8 +222,6 @@ OptimizationItem::OptimizationItem(
 
 	// TODO change initial data in this class for shared_ptr
 
-	// TODO Consider ChooseSubstances
-
 	// Order of substances changes every time when current temperature changes
 	// then changes order in A matrix, i.e. needs to remake constraints vector.
 
@@ -234,7 +231,7 @@ OptimizationItem::OptimizationItem(
 	MakeConstraintsB(); // vector B depends on amounts
 }
 
-void OptimizationItem::Calculate()
+void OptimizationItem::Calculate() try
 {
 	LOGV()
 	switch(parameters.target) {
@@ -245,6 +242,10 @@ void OptimizationItem::Calculate()
 		Equilibrium(temperature_K_initial);
 		break;
 	}
+} catch(std::exception& e) {
+	LOG("exception:", e.what())
+} catch(...) {
+	LOG("catch ...")
 }
 
 void OptimizationItem::DefineOrderOfSubstances()
@@ -614,6 +615,11 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 		 */
 		result = nlopt::FAILURE;
 	}
+	catch(...) {
+		LOG("BIG PROBLEM HERE catch(...)")
+		result = nlopt::FAILURE;
+	}
+
 	return minf;
 }
 
@@ -717,11 +723,13 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
-	auto composition = MakeCompositionVector(parameters.composition_range);
+	auto composition = MakeCompositionVector();
 	sum = SumCompositionMolAndGram(amounts);
 	std::vector<Composition> new_amounts(composition.size());
 	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
 				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});
+	assert(new_amounts.size() == composition.size());
+	assert(new_amounts.size() > 0);
 	return new_amounts;
 }
 
