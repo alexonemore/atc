@@ -40,6 +40,7 @@ PlotTFView::PlotTFView(QWidget *parent)
 	auto layout = new QHBoxLayout(this);
 	setLayout(layout);
 	layout->addWidget(splitter);
+	layout->setContentsMargins(0, 0, 0, 0);
 
 	table->setSelectionMode(QAbstractItemView::SingleSelection);
 	table->setSelectionBehavior(QAbstractItemView::SelectItems);

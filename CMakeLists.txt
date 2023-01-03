@@ -36,130 +36,132 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DataVisualization)
 message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 
 set(PROJECT_SOURCES
-    # core
-    src/main.cpp
-    src/coreapplication.h
-    src/coreapplication.cpp
+	# core
+	src/main.cpp
+	src/coreapplication.h
+	src/coreapplication.cpp
 
-    # GUI
-    src/mainwindow.h
-    src/mainwindow.cpp
-    src/mainwindow.ui
-    src/calculationparameters.h
-    src/calculationparameters.cpp
-    src/calculationparameters.ui
-    src/periodictable.h
-    src/periodictable.cpp
-    src/periodictable.ui
+	# GUI
+	src/mainwindow.h
+	src/mainwindow.cpp
+	src/mainwindow.ui
+	src/calculationparameters.h
+	src/calculationparameters.cpp
+	src/calculationparameters.ui
+	src/periodictable.h
+	src/periodictable.cpp
+	src/periodictable.ui
 
-    # tmp
-    src/heavycontainer.h
-    src/heavycontainer.cpp
+	# tmp
+	src/heavycontainer.h
+	src/heavycontainer.cpp
 
-    # atc
-    src/atc/thermodynamics.h
-    src/atc/thermodynamics.cpp
-    src/atc/parameters.h
-    src/atc/parameters.cpp
-    src/atc/database.h
-    src/atc/database.cpp
-    src/atc/optimization.h
-    src/atc/optimization.cpp
+	# atc
+	src/atc/thermodynamics.h
+	src/atc/thermodynamics.cpp
+	src/atc/parameters.h
+	src/atc/parameters.cpp
+	src/atc/database.h
+	src/atc/database.cpp
+	src/atc/optimization.h
+	src/atc/optimization.cpp
 
-    # plots
-    src/plots/plots.h
-    src/plots/plots.cpp
-    src/plots/plot2dbase.h
-    src/plots/plot2dbase.cpp
-    src/plots/plot2dgraph.h
-    src/plots/plot2dgraph.cpp
-    src/plots/plot2dheatmap.h
-    src/plots/plot2dheatmap.cpp
-    src/plots/plot3dsurface.h
-    src/plots/plot3dsurface.cpp
-    src/plots/plot3dsurface.ui
+	# plots
+	src/plots/plots.h
+	src/plots/plots.cpp
+	src/plots/plot2dbase.h
+	src/plots/plot2dbase.cpp
+	src/plots/plot2dgraph.h
+	src/plots/plot2dgraph.cpp
+	src/plots/plot2dheatmap.h
+	src/plots/plot2dheatmap.cpp
+	src/plots/plot3dsurface.h
+	src/plots/plot3dsurface.cpp
+	src/plots/plot3dsurface.ui
 
-    # plots auxiliary dialogs
-    src/plots/dialogchangetext.h
-    src/plots/dialogchangetext.cpp
-    src/plots/dialogchangetext.ui
-    src/plots/dialogchangegraphsettings.h
-    src/plots/dialogchangegraphsettings.cpp
-    src/plots/dialogchangegraphsettings.ui
+	# plots auxiliary dialogs
+	src/plots/dialogchangetext.h
+	src/plots/dialogchangetext.cpp
+	src/plots/dialogchangetext.ui
+	src/plots/dialogchangegraphsettings.h
+	src/plots/dialogchangegraphsettings.cpp
+	src/plots/dialogchangegraphsettings.ui
 
-    # models
-    src/models/amountsmodel.h
-    src/models/amountsmodel.cpp
-    src/models/substancestablemodel.h
-    src/models/substancestablemodel.cpp
-    src/models/substancestemprangemodel.h
-    src/models/substancestemprangemodel.cpp
-    src/models/substancestabulatedtfmodel.h
-    src/models/substancestabulatedtfmodel.cpp
-    src/models/plottfmodel.h
-    src/models/plottfmodel.cpp
-    src/models/specialdelegates.h
-    src/models/specialdelegates.cpp
+	# models
+	src/models/amountsmodel.h
+	src/models/amountsmodel.cpp
+	src/models/substancestablemodel.h
+	src/models/substancestablemodel.cpp
+	src/models/substancestemprangemodel.h
+	src/models/substancestemprangemodel.cpp
+	src/models/substancestabulatedtfmodel.h
+	src/models/substancestabulatedtfmodel.cpp
+	src/models/plottfmodel.h
+	src/models/plottfmodel.cpp
+	src/models/specialdelegates.h
+	src/models/specialdelegates.cpp
 
-    # views
-    src/views/substancestableview.h
-    src/views/substancestableview.cpp
-    src/views/table.h
-    src/views/table.cpp
-    src/views/plottfview.h
-    src/views/plottfview.cpp
+	# views
+	src/views/substancestableview.h
+	src/views/substancestableview.cpp
+	src/views/table.h
+	src/views/table.cpp
+	src/views/plottfview.h
+	src/views/plottfview.cpp
+	src/views/resultview.h
+	src/views/resultview.cpp
 
-    # misc
-    src/misc/utilities.h
-    src/misc/utilities.cpp
+	# misc
+	src/misc/utilities.h
+	src/misc/utilities.cpp
 
-    # logo
-    images/logo.rc
+	# logo
+	images/logo.rc
 )
 
 set(ICON_FILES
-    images/bc.svg
-    images/bl.svg
-    images/br.svg
-    images/cancel.svg
-    images/clear.svg
-    images/copy.svg
-    images/crosshair.svg
-    images/mc.svg
-    images/ml.svg
-    images/mr.svg
-    images/ok.svg
-    images/tc.svg
-    images/tl.svg
-    images/tr.svg
-    images/update.svg
+	images/bc.svg
+	images/bl.svg
+	images/br.svg
+	images/cancel.svg
+	images/clear.svg
+	images/copy.svg
+	images/crosshair.svg
+	images/mc.svg
+	images/ml.svg
+	images/mr.svg
+	images/ok.svg
+	images/tc.svg
+	images/tl.svg
+	images/tr.svg
+	images/update.svg
 )
 
 set(DATABASE_FILES
-    databases/hsc_database.db
-    databases/thermo_database.db
+	databases/hsc_database.db
+	databases/thermo_database.db
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(${PROJECT_NAME}
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
+	qt_add_executable(${PROJECT_NAME}
+		MANUAL_FINALIZATION
+		${PROJECT_SOURCES}
+	)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET mta APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(${PROJECT_NAME} SHARED
-            ${PROJECT_SOURCES}
-        )
-    # Define properties for Android with Qt 5 after find_package() calls as:
-    #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+	if(ANDROID)
+		add_library(${PROJECT_NAME} SHARED
+			${PROJECT_SOURCES}
+		)
+	# Define properties for Android with Qt 5 after find_package() calls as:
+	#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
 else()
-    add_executable(${PROJECT_NAME}
-        ${PROJECT_SOURCES}
-    )
+	add_executable(${PROJECT_NAME}
+		${PROJECT_SOURCES}
+	)
 endif()
 endif()
 
@@ -169,44 +171,44 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::DataVisualization)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+	MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+	MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+	MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+	MACOSX_BUNDLE TRUE
+	WIN32_EXECUTABLE TRUE
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(${PROJECT_NAME})
+	qt_finalize_executable(${PROJECT_NAME})
 endif()
 
 target_include_directories(${PROJECT_NAME}
-    PRIVATE ${CMAKE_SOURCE_DIR}/src
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/atc
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/misc
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/models
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/plots
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/views
-    PRIVATE ${CMAKE_SOURCE_DIR}/images
-    PRIVATE ${CMAKE_SOURCE_DIR}/databases
+	PRIVATE ${CMAKE_SOURCE_DIR}/src
+	PRIVATE ${CMAKE_SOURCE_DIR}/src/atc
+	PRIVATE ${CMAKE_SOURCE_DIR}/src/misc
+	PRIVATE ${CMAKE_SOURCE_DIR}/src/models
+	PRIVATE ${CMAKE_SOURCE_DIR}/src/plots
+	PRIVATE ${CMAKE_SOURCE_DIR}/src/views
+	PRIVATE ${CMAKE_SOURCE_DIR}/images
+	PRIVATE ${CMAKE_SOURCE_DIR}/databases
 )
 
 # libs
 if(WIN32)
-    set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
-    set(QCUSTOMPLOT_BUILD_TYPE SHARED)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE QCUSTOMPLOT_USE_LIBRARY)
+	set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+	set(QCUSTOMPLOT_BUILD_TYPE SHARED)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE QCUSTOMPLOT_USE_LIBRARY)
 else()
-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-    set(QCUSTOMPLOT_BUILD_TYPE STATIC)
+	set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+	set(QCUSTOMPLOT_BUILD_TYPE STATIC)
 endif()
 message(STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
 # qcustomplot
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    add_subdirectory(libs/qcustomplot-qt6-fixed)
+	add_subdirectory(libs/qcustomplot-qt6-fixed)
 else()
-    add_subdirectory(libs/qcustomplot)
+	add_subdirectory(libs/qcustomplot)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE qcustomplot)
 
@@ -218,30 +220,30 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 install(FILES ${ICON_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/images)
 install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/databases)
 install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 )
 
 # copy files while building by QtCreator
 if(DEFINED QT_QMAKE_EXECUTABLE)
-    message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
-    file(COPY ${ICON_FILES} DESTINATION ${CMAKE_BINARY_DIR}/images)
-    file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR}/databases)
+	message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
+	file(COPY ${ICON_FILES} DESTINATION ${CMAKE_BINARY_DIR}/images)
+	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR}/databases)
 endif()
 
 # no cmd window
 if(WIN32 AND MSVC)
-    if(CMAKE_CL_64)
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS,5.02 /ENTRY:mainCRTStartup")
-    else()
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS,5.01 /ENTRY:mainCRTStartup")
-    endif()
+	if(CMAKE_CL_64)
+		set_target_properties(${PROJECT_NAME} PROPERTIES
+			LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS,5.02 /ENTRY:mainCRTStartup")
+	else()
+		set_target_properties(${PROJECT_NAME} PROPERTIES
+			LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS,5.01 /ENTRY:mainCRTStartup")
+	endif()
 endif()
 if(MINGW)
-    set(CMAKE_EXE_LINKER_FLAGS
-        "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows")
+	set(CMAKE_EXE_LINKER_FLAGS
+		"${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows")
 endif()
 

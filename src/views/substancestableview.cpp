@@ -39,6 +39,7 @@ SubstancesTableView::SubstancesTableView(QWidget* parent)
 
 	setLayout(layout);
 	layout->addWidget(splitter);
+	layout->setContentsMargins(0, 0, 0, 0);
 
 	splitter->addWidget(substances);
 	splitter->addWidget(right_widget);
