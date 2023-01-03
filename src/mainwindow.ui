@@ -20,7 +20,7 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tab_1_Demo">
        <attribute name="title">
         <string>Demo</string>
        </attribute>
@@ -271,7 +271,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_2_ATC">
        <attribute name="title">
         <string>ATC</string>
        </attribute>
@@ -303,9 +303,9 @@
         <item>
          <widget class="QTabWidget" name="tabWidget_2">
           <property name="currentIndex">
-           <number>2</number>
+           <number>3</number>
           </property>
-          <widget class="QWidget" name="tab_3">
+          <widget class="QWidget" name="tab_3_Substances">
            <attribute name="title">
             <string>Substances</string>
            </attribute>
@@ -327,7 +327,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_4">
+          <widget class="QWidget" name="tab_4_Thermodynamic_functions">
            <attribute name="title">
             <string>Thermodynamic functions</string>
            </attribute>
@@ -349,7 +349,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_5">
+          <widget class="QWidget" name="tab_5_Amounts">
            <attribute name="title">
             <string>Amounts</string>
            </attribute>
@@ -370,6 +370,11 @@
              <widget class="Table" name="amounts_view"/>
             </item>
            </layout>
+          </widget>
+          <widget class="QWidget" name="tab_6_Result">
+           <attribute name="title">
+            <string>Result</string>
+           </attribute>
           </widget>
          </widget>
         </item>

@@ -1,5 +1,5 @@
 /* This file is part of ATC (Adiabatic Temperature Calculator).
- * Copyright (c) 2022 Alexandr Shchukin
+ * Copyright (c) 2023 Alexandr Shchukin
  * Corresponding email: alexonemoreemail@gmail.com
  *
  * ATC (Adiabatic Temperature Calculator) is free software:
@@ -103,7 +103,7 @@ constexpr double max_composition = 1E10;
 constexpr double min_range_step = 1E-5;
 
 Parameters::Parameters()
-	: threads{QThread::idealThreadCount()}
+	: threads{MaxThreadsCount()}
 {
 
 }
@@ -157,7 +157,7 @@ void Parameters::FixInputParameters()
 	FixRange(pressure_range);
 }
 
-int Parameters::MaxThreadsCount() const
+int Parameters::MaxThreadsCount() noexcept
 {
 	return QThread::idealThreadCount();
 }
