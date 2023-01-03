@@ -231,7 +231,7 @@ OptimizationItem::OptimizationItem(
 	MakeConstraintsB(); // vector B depends on amounts
 }
 
-void OptimizationItem::Calculate() try
+void OptimizationItem::Calculate()
 {
 	LOGV()
 	switch(parameters.target) {
@@ -242,10 +242,6 @@ void OptimizationItem::Calculate() try
 		Equilibrium(temperature_K_initial);
 		break;
 	}
-} catch(std::exception& e) {
-	LOG("exception:", e.what())
-} catch(...) {
-	LOG("catch ...")
 }
 
 void OptimizationItem::DefineOrderOfSubstances()
@@ -284,13 +280,12 @@ void OptimizationItem::MakeConstraintsMatrixA()
 {
 	// It depends on order of substances
 	// size = N * M
-	size_t sub_id, el_id;
-	for(size_t j = 0; j != number.elements; ++j) {
-		el_id = elements.at(j);
-		auto&& a_j = constraints.at(j).a_j;
-		for(size_t i = 0; i != number.substances; ++i) {
-			sub_id = substances_id_order.at(i);
-			a_j.at(i) = subs_element_composition.at(sub_id).at(el_id);
+	for(size_t j = 0; auto&& element_id : elements) {
+		auto&& a_j = constraints.at(j++).a_j;
+		for(size_t i = 0; auto&& substance_id : substances_id_order) {
+			const auto& sub = subs_element_composition.at(substance_id);
+			auto element_it = sub.find(element_id);
+			a_j.at(i++) = (element_it == sub.cend()) ? 0.0 : element_it->second;
 		}
 	}
 }
@@ -615,11 +610,6 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 		 */
 		result = nlopt::FAILURE;
 	}
-	catch(...) {
-		LOG("BIG PROBLEM HERE catch(...)")
-		result = nlopt::FAILURE;
-	}
-
 	return minf;
 }
 
@@ -628,11 +618,10 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 {
 	// Group 1 - main composition
 	// Group 2 - variable composition
-	Composition new_amount;
+	Composition new_amount{amounts};
 	switch(parameters.composition_range_unit) {
 	case ParametersNS::CompositionUnit::AtomicPercent: {
 		if(sum.group_1_mol > 0.0 && sum.group_2_mol > 0.0) {
-			new_amount = amounts;
 			auto new_sum_group2 = sum.sum_mol * value / 100;
 			auto new_sum_group1 = sum.sum_mol - new_sum_group2;
 			auto coef1 = new_sum_group1 / sum.group_1_mol;
@@ -656,7 +645,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 		break;
 	case ParametersNS::CompositionUnit::WeightPercent: {
 		if(sum.group_1_gram > 0.0 && sum.group_2_gram > 0.0) {
-			new_amount = amounts;
 			auto new_sum_group2 = sum.sum_gram * value / 100;
 			auto new_sum_group1 = sum.sum_gram - new_sum_group2;
 			auto coef1 = new_sum_group1 / sum.group_1_gram;
@@ -680,7 +668,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 		break;
 	case ParametersNS::CompositionUnit::Mol: {
 		if(sum.group_2_mol > 0.0) {
-			new_amount = amounts;
 			auto coef = value / sum.group_2_mol;
 			for(const auto& weight : weights) {
 				auto id = weight.id;
@@ -699,7 +686,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 		break;
 	case ParametersNS::CompositionUnit::Gram: {
 		if(sum.group_2_gram > 0.0) {
-			new_amount = amounts;
 			auto coef = value / sum.group_2_gram;
 			for(const auto& weight : weights) {
 				auto id = weight.id;
@@ -723,8 +709,14 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
 		const Composition& amounts, const SubstanceWeights& weights)
 {
-	auto composition = MakeCompositionVector();
 	sum = SumCompositionMolAndGram(amounts);
+	std::vector<double> composition;
+	if(sum.group_2_mol > 0.0) {
+		composition = MakeCompositionVector();
+	} else {
+		LOG("Variable composition is empty, calculate only 1 element")
+		composition.push_back(0.0);
+	}
 	std::vector<Composition> new_amounts(composition.size());
 	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
 				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});
