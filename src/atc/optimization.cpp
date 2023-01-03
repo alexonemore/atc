@@ -236,6 +236,7 @@ OptimizationItem::OptimizationItem(
 
 void OptimizationItem::Calculate()
 {
+	LOGV()
 	switch(parameters.target) {
 	case ParametersNS::Target::Equilibrium:
 		AdiabaticTemperature();
@@ -466,6 +467,8 @@ double OptimizationItem::H_kJ_Initial()
 		case ParametersNS::Database::HSC:
 			return Thermodynamics::HSC::TF_H_kJ(temperature_K_initial,
 												temp_ranges.at(id));
+		default:
+			throw std::logic_error("default in switch");
 		}
 	};
 
@@ -488,6 +491,8 @@ double OptimizationItem::H_kJ_Initial()
 			case ParametersNS::Database::HSC:
 				return Thermodynamics::HSC::TF_G_kJ(temperature_K_initial,
 													temp_ranges.at(id));
+			default:
+				throw std::logic_error("default in switch");
 			}
 		};
 		double H_sum{0.0};
@@ -511,6 +516,8 @@ double OptimizationItem::H_kJ_Initial()
 		}
 		return H_sum;
 	}
+	default:
+		throw std::logic_error("default in switch");
 	}
 }
 
@@ -527,6 +534,8 @@ double OptimizationItem::H_kJ_Current()
 		case ParametersNS::Database::HSC:
 			return ni * Thermodynamics::HSC::TF_H_kJ(temperature_K_current,
 													 temp_ranges.at(id));
+		default:
+			throw std::logic_error("default in switch");
 		}
 	});
 }
