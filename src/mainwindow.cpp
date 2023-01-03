@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// setup dialog
 	dialog = new QProgressDialog(this);
+	dialog->setLabelText(windowTitle());
 	dialog->setModal(true);
 	dialog->setMinimumDuration(100);
 	dialog->setLabelText(tr("Calculating ..."));
@@ -244,8 +245,8 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 		assert(fw->future().isFinished());
 	}
 	t.stop();
-	QString text{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
-	SlotShowStatusBarText(text);
+	QString time{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
+	SlotShowStatusBarText(time);
 	QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
 	LOG(">> CALCULATION END <<")
 }
