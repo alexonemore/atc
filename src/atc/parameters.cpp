@@ -157,5 +157,10 @@ void Parameters::FixInputParameters()
 	FixRange(pressure_range);
 }
 
+int Parameters::MaxThreadsCount() const
+{
+	return QThread::idealThreadCount();
+}
+
 } // namespace ParametersNS
 

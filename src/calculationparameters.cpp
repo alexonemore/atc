@@ -130,7 +130,7 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 	ui->at_accuracy->setRange(ParametersNS::at_accuracy_min,
 							  ParametersNS::at_accuracy_max);
 	ui->at_accuracy->setValue(p.at_accuracy);
-	ui->threads->setRange(1, p.threads);
+	ui->threads->setRange(1, p.MaxThreadsCount());
 	ui->threads->setValue(p.threads);
 
 	ui->temperature_initial->setText(QString::number(p.temperature_initial));

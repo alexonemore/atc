@@ -145,6 +145,7 @@ struct Parameters
 
 	Parameters();
 	void FixInputParameters();
+	int MaxThreadsCount() const;
 };
 
 enum GUISize {
