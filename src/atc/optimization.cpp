@@ -236,10 +236,10 @@ void OptimizationItem::Calculate()
 	LOGV()
 	switch(parameters.target) {
 	case ParametersNS::Target::Equilibrium:
-		AdiabaticTemperature();
+		Equilibrium(temperature_K_initial);
 		break;
 	case ParametersNS::Target::AdiabaticTemperature:
-		Equilibrium(temperature_K_initial);
+		AdiabaticTemperature();
 		break;
 	}
 }
