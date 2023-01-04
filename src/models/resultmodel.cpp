@@ -18,6 +18,7 @@
  */
 
 #include "resultmodel.h"
+#include "utilities.h"
 
 ResultModel::ResultModel(QObject *parent)
 	: QAbstractTableModel{parent}
@@ -30,27 +31,40 @@ ResultModel::~ResultModel()
 
 }
 
+void ResultModel::SetNewData(Optimization::OptimizationVector& vec)
+{
+	LOG()
+	beginResetModel();
+	items = vec;
+	endResetModel();
+}
 
 int ResultModel::rowCount(const QModelIndex& parent) const
 {
+	return 0;
 }
 
 int ResultModel::columnCount(const QModelIndex& parent) const
 {
+	return 0;
 }
 
 QVariant ResultModel::data(const QModelIndex& index, int role) const
 {
+	return QVariant();
 }
 
 bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+	return false;
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+	return QVariant();
 }
 
 Qt::ItemFlags ResultModel::flags(const QModelIndex& index) const
 {
+	return QAbstractTableModel::flags(index);
 }

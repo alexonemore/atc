@@ -21,17 +21,18 @@
 #define RESULTMODEL_H
 
 #include <QAbstractTableModel>
+#include "optimization.h"
 
 class ResultModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultModel)
 private:
-
+	Optimization::OptimizationVector items;
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData();
+	void SetNewData(Optimization::OptimizationVector& vec);
 	// QAbstractItemModel interface
 public:
 	int rowCount(const QModelIndex& parent) const override;

@@ -64,6 +64,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	gui->SetSubstancesTabulatedModel(model_substances_tabulated_tf);
 	gui->SetTFPlotModel(model_plot_tf);
 	gui->SetAmountsModel(model_amounts);
+	gui->SetResultModel(model_result);
 	gui->Initialize(); // must be called after set models
 
 	// demo
@@ -85,6 +86,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			gui, &MainWindow::SlotSetSelectedSubstanceLabel);
 	connect(gui, &MainWindow::SignalStartCalculate,
 			this, &CoreApplication::SlotStartCalculations);
+	connect(gui, &MainWindow::SignalSendResult,
+			this, &CoreApplication::SlotResieveResult);
 
 	//demo
 	connect(gui, &MainWindow::SignalSendRequest,
@@ -477,6 +480,12 @@ void CoreApplication::SlotStartCalculations()
 	emit SignalStartCalculations(vec, parameters_.threads);
 
 	LOG(">> END CALCULATION <<")
+}
+
+void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
+{
+	LOG("vec.size:", vec.size())
+	model_result->SetNewData(vec);
 }
 
 

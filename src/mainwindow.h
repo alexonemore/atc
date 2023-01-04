@@ -113,6 +113,7 @@ private slots:
 	void MenuShowAbout();
 
 signals:
+	void SignalSendResult(Optimization::OptimizationVector& vec);
 	void SignalUpdate(const ParametersNS::Parameters parameters);
 	void SignalUpdateButtonClicked(const ParametersNS::Parameters parameters);
 	void SignalStartCalculate();

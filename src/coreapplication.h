@@ -94,6 +94,7 @@ private slots:
 	void SlotSubstancesTableSelectionHandler(int id);
 	// calculate
 	void SlotStartCalculations();
+	void SlotResieveResult(Optimization::OptimizationVector& vec);
 
 	// tf plots: model to view
 private slots:

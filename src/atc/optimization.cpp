@@ -20,6 +20,11 @@
 #include "optimization.h"
 #include "thermodynamics.h"
 
+#ifndef NDEBUG
+std::atomic_int32_t i_maker{0};
+std::atomic_int32_t i_items{0};
+#endif
+
 namespace Optimization {
 constexpr static double epsilon_log = 1E-9;
 constexpr static double epsilon_accuracy = 1E-6;
@@ -120,7 +125,7 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	: parameters{parameters_}
 	, number_of_substances{static_cast<size_t>(weights.size())}
 {
-	LOG()
+	LOG(i = ++i_maker)
 	assert(number_of_substances == subs_element_composition.size());
 	assert(number_of_substances == amounts.size());
 	assert(number_of_substances == temp_ranges.size());
@@ -130,18 +135,18 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		items.reserve(1);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
-		items.push_back(OptimizationItem{parameters, elements, temp_ranges,
-						subs_element_composition, weights, amounts,
-						temperature});
+		items.emplace_back(parameters, elements, temp_ranges,
+						   subs_element_composition, weights, amounts,
+						   temperature);
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
 		auto temperatures = MakeTemperatureVector();
 		items.reserve(temperatures.size());
 		for(const auto& temperature : temperatures) {
-			items.push_back(OptimizationItem{parameters, elements,
-							temp_ranges, subs_element_composition,
-							weights, amounts, temperature});
+			items.emplace_back(parameters, elements,
+							   temp_ranges, subs_element_composition,
+							   weights, amounts, temperature);
 		}
 	}
 		break;
@@ -151,9 +156,9 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		std::vector<Composition> new_amounts = MakeNewAmounts(amounts, weights);
 		items.reserve(new_amounts.size());
 		for(const auto& new_amount : new_amounts) {
-			items.push_back(OptimizationItem{parameters, elements,
-							temp_ranges, subs_element_composition,
-							weights, new_amount, temperature});
+			items.emplace_back(parameters, elements,
+							   temp_ranges, subs_element_composition,
+							   weights, new_amount, temperature);
 		}
 	}
 		break;
@@ -163,15 +168,22 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		items.reserve(new_amounts.size() * temperatures.size());
 		for(const auto& temperature : temperatures) {
 			for(const auto& new_amount : new_amounts) {
-				items.push_back(OptimizationItem{parameters, elements,
-								temp_ranges, subs_element_composition,
-								weights, new_amount, temperature});
+				items.emplace_back(parameters, elements,
+								   temp_ranges, subs_element_composition,
+								   weights, new_amount, temperature);
 			}
 		}
 	}
 		break;
 	}
 }
+
+#ifndef NDEBUG
+OptimizationItemsMaker::~OptimizationItemsMaker()
+{
+	LOG(i, "/", i_maker)
+}
+#endif
 
 std::vector<double> OptimizationItemsMaker::MakeTemperatureVector()
 {
@@ -208,6 +220,7 @@ OptimizationItem::OptimizationItem(
 	, temperature_K_initial{initial_temperature_K}
 	, temperature_K_current{initial_temperature_K}
 {
+	LOG(i = ++i_items)
 	number.elements = elements.size();
 	number.substances = weights.size();
 	substances_id_order.resize(number.substances);
@@ -230,6 +243,13 @@ OptimizationItem::OptimizationItem(
 
 	MakeConstraintsB(); // vector B depends on amounts
 }
+
+#ifndef NDEBUG
+OptimizationItem::~OptimizationItem()
+{
+	LOG(i, "/", i_items)
+}
+#endif
 
 void OptimizationItem::Calculate()
 {

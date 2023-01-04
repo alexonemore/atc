@@ -48,7 +48,7 @@ struct Numbers
 	size_t liquids{0};		// part of N
 };
 
-struct OptimizationItem
+struct OptimizationItem final
 {
 	ParametersNS::Parameters parameters;
 	std::vector<int> elements;
@@ -74,6 +74,10 @@ struct OptimizationItem
 					 const SubstanceWeights& weights_,
 					 const Composition& amounts_,
 					 const double initial_temperature_K);
+#ifndef NDEBUG
+	int i;
+	~OptimizationItem();
+#endif
 	void Calculate();
 	const std::vector<double>& GetC() const & { return c; }
 	auto GetNumbers() const { return number; }
@@ -93,9 +97,16 @@ private:
 	double Minimize(const nlopt::algorithm algorithm, nlopt::result& result);
 };
 
+/* TODO
+class OptimizationVector
+{
+	common_data_for_all;
+	QVector<different_data>;
+};*/
+
 using OptimizationVector = QVector<OptimizationItem>;
 
-class OptimizationItemsMaker
+class OptimizationItemsMaker final
 {
 	ParametersNS::Parameters parameters;
 	size_t number_of_substances{0};	// N
@@ -108,6 +119,10 @@ public:
 						   const SubstancesElementComposition& subs_element_composition,
 						   const SubstanceWeights& weights,
 						   const Composition& amounts);
+#ifndef NDEBUG
+	int i;
+	~OptimizationItemsMaker();
+#endif
 	OptimizationVector& GetData() & { return items; }
 
 private:
