@@ -135,6 +135,7 @@ set(ICON_FILES
 	images/tl.svg
 	images/tr.svg
 	images/update.svg
+	images/logo_atc.svg
 )
 
 set(DATABASE_FILES

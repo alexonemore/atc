@@ -32,13 +32,15 @@
 using namespace QtDataVisualization;
 #endif
 
-namespace {
+namespace win {
+const QString win_logo = QStringLiteral("images/logo_atc.svg");
 const QString win_title =
 #ifndef NDEBUG
 			QStringLiteral("Adiabatic Temperature Calculator (DEBUG)");
 #else
 			QStringLiteral("Adiabatic Temperature Calculator");
 #endif
+const QString win_title_short = QStringLiteral("ATC");
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -48,7 +50,8 @@ MainWindow::MainWindow(QWidget *parent)
 	LOG()
 
 	ui->setupUi(this);
-	setWindowTitle(win_title);
+	setWindowTitle(win::win_title);
+	setWindowIcon(QIcon(win::win_logo));
 
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
 			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
@@ -85,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// setup dialog
 	dialog = new QProgressDialog(this);
-	dialog->setWindowTitle(win_title);
+	dialog->setWindowTitle(win::win_title_short);
 	dialog->setModal(true);
 	dialog->setMinimumDuration(100);
 	dialog->setLabelText(tr("Calculating ..."));
@@ -395,9 +398,37 @@ void MainWindow::SlotLoadDatabase()
 
 void MainWindow::MenuShowAbout()
 {
-	LOG()
-	QMessageBox::about(this, tr("About ATC"),
-					   tr("Text about <b>ATC</b> program"));
+#ifndef NDEBUG
+	int major, minor, bugfix;
+	nlopt::version(major, minor, bugfix);
+	const QString nlopt_version = tr("%1.%2.%3").arg(major).arg(minor).arg(bugfix);
+#endif
+	const QString text_about = tr(
+				"<h3>ATC Adiabatic Temperature Calculator</h3>"
+				"<p>ATC is a high quality, visual, open source tool "
+				"for thermodynamic calculations.</p>"
+				"<p>ATC is licensed under the GNU General Public License Version 3.</p>"
+				"<p>Copyright (c) %1 %2</p>"
+				"<p>Corresponding email: <a href=\"mailto:%3\">%3</a></p>"
+				"<p>ATC developed as an open source project. "
+				"See <a href=\"https://%4/\">%4</a> for more information.</p>"
+#ifndef NDEBUG
+				"<p>This program uses:</p>"
+				"<ul><li>Qt version %5</li>"
+				"<li>NLopt version %6</li>"
+				"<li>QCustomPlot version %7</li></ul>"
+#endif
+				).arg(QStringLiteral("2023")
+					  , QStringLiteral("Alexandr Shchukin")
+					  , QStringLiteral("alexonemoreemail@gmail.com")
+					  , QStringLiteral("github.com/alexonemore/atc")
+#ifndef NDEBUG
+					  , QLatin1String(QT_VERSION_STR)
+					  , nlopt_version
+					  , QStringLiteral(QCUSTOMPLOT_VERSION_STR)
+#endif
+					  );
+	QMessageBox::about(this, tr("About ATC"), text_about);
 }
 
 void MainWindow::MenuOpenDatabase()
