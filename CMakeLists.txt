@@ -100,6 +100,8 @@ set(PROJECT_SOURCES
 	src/models/plottfmodel.cpp
 	src/models/specialdelegates.h
 	src/models/specialdelegates.cpp
+	src/models/resultmodel.h
+	src/models/resultmodel.cpp
 
 	# views
 	src/views/substancestableview.h

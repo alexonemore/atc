@@ -66,12 +66,10 @@ MainWindow::MainWindow(QWidget *parent)
 		ui->check_button_2,
 		ui->check_button_3
 	};
-
 	std::vector<QAbstractButton*> buttons{
 		ui->button_1,
 		ui->button_2
 	};
-
 	for(auto&& button : check_butons) {
 		connect(button, &QRadioButton::clicked,
 				this, &MainWindow::CheckButtonHandler);
@@ -80,9 +78,9 @@ MainWindow::MainWindow(QWidget *parent)
 		connect(button, &QPushButton::clicked,
 				this, &MainWindow::PushButtonHandler);
 	}
-
 	connect(ui->button_heavy, &QPushButton::clicked,
 			this, &MainWindow::PushButtonHeavyHandler);
+
 
 	SetupMenu();
 
@@ -187,6 +185,12 @@ void MainWindow::SetAmountsModel(QAbstractItemModel* model)
 {
 	LOG()
 	ui->amounts_view->setModel(model);
+}
+
+void MainWindow::SetResultModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->result_view->SetModel(model);
 }
 
 void MainWindow::SetModel_1(QAbstractItemModel* model)

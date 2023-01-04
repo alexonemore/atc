@@ -62,7 +62,7 @@ PlotTFView::PlotTFView(QWidget *parent)
 
 	color_delegate = new ColorPickerDelegate(this);
 	int i = PlotTFModelFields::names.size();
-	int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
+	const int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
 	for(; i <= max; ++i) {
 		table->setItemDelegateForColumn(i, color_delegate);
 	}
@@ -81,7 +81,7 @@ void PlotTFView::SetModel(QAbstractItemModel* model)
 void PlotTFView::Initialize()
 {
 	int i = PlotTFModelFields::names.size();
-	int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
+	const int max = PlotTFModelFields::names.size() + ParametersNS::thermodynamic_function.size();
 	for(; i <= max; ++i) {
 		table->setColumnWidth(i, ParametersNS::GUISize::table_column_width);
 	}

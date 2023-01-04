@@ -35,6 +35,7 @@
 #include "parameters.h"
 #include "plottfmodel.h"
 #include "amountsmodel.h"
+#include "resultmodel.h"
 #include "optimization.h"
 
 class CoreApplication : public QObject
@@ -50,6 +51,7 @@ private:
 	SubstancesTabulatedTFModel* model_substances_tabulated_tf;
 	PlotTFModel* model_plot_tf;
 	AmountsModel* model_amounts;
+	ResultModel* model_result;
 
 	// selected substance in TempRange and TabulatedTF
 	int selected_substance_id;

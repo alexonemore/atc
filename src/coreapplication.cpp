@@ -53,6 +53,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	model_substances_tabulated_tf = new SubstancesTabulatedTFModel(this);
 	model_plot_tf = new PlotTFModel(this);
 	model_amounts = new AmountsModel(this);
+	model_result = new ResultModel(this);
 	// demo
 	table_1 = new QStringListModel(this);
 

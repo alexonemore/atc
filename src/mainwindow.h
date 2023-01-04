@@ -65,6 +65,7 @@ public:
 	void SetSubstancesTabulatedModel(QAbstractItemModel* model);
 	void SetTFPlotModel(QAbstractItemModel* model);
 	void SetAmountsModel(QAbstractItemModel* model);
+	void SetResultModel(QAbstractItemModel* model);
 
 	// demo
 	void SetModel_1(QAbstractItemModel* model);
