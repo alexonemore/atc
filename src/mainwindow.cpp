@@ -407,7 +407,6 @@ void MainWindow::MenuShowAbout()
 				"<h3>ATC Adiabatic Temperature Calculator</h3>"
 				"<p>ATC is a high quality, visual, open source tool "
 				"for thermodynamic calculations. "
-				"ATC developed as an open source project. "
 				"See <a href=\"https://%4/\">%4</a> for more information.</p>"
 				"<p>ATC is licensed under the GNU General Public License Version 3.</p>"
 				"<p>Copyright (c) %1 %2</p>"
