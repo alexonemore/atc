@@ -406,12 +406,12 @@ void MainWindow::MenuShowAbout()
 	const QString text_about = tr(
 				"<h3>ATC Adiabatic Temperature Calculator</h3>"
 				"<p>ATC is a high quality, visual, open source tool "
-				"for thermodynamic calculations.</p>"
+				"for thermodynamic calculations. "
+				"ATC developed as an open source project. "
+				"See <a href=\"https://%4/\">%4</a> for more information.</p>"
 				"<p>ATC is licensed under the GNU General Public License Version 3.</p>"
 				"<p>Copyright (c) %1 %2</p>"
 				"<p>Corresponding email: <a href=\"mailto:%3\">%3</a></p>"
-				"<p>ATC developed as an open source project. "
-				"See <a href=\"https://%4/\">%4</a> for more information.</p>"
 #ifndef NDEBUG
 				"<p>This program uses:</p>"
 				"<ul><li>Qt version %5</li>"
@@ -425,7 +425,7 @@ void MainWindow::MenuShowAbout()
 #ifndef NDEBUG
 					  , QLatin1String(QT_VERSION_STR)
 					  , nlopt_version
-					  , QStringLiteral(QCUSTOMPLOT_VERSION_STR)
+					  , QLatin1String(QCUSTOMPLOT_VERSION_STR)
 #endif
 					  );
 	QMessageBox::about(this, tr("About ATC"), text_about);
