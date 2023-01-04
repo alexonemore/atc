@@ -24,7 +24,7 @@
 #include "utilities.h"
 
 namespace AmountsModelFields {
-extern const QStringList names{
+const QStringList names{
 	QT_TR_NOOP("ID"),
 	QT_TR_NOOP("Formula"),
 	QT_TR_NOOP("Weight"),

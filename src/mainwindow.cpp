@@ -32,6 +32,15 @@
 using namespace QtDataVisualization;
 #endif
 
+namespace {
+const QString win_title =
+#ifndef NDEBUG
+			QStringLiteral("Adiabatic Temperature Calculator (DEBUG)");
+#else
+			QStringLiteral("Adiabatic Temperature Calculator");
+#endif
+}
+
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow{parent}
 	, ui{new Ui::MainWindow}
@@ -39,11 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
 	LOG()
 
 	ui->setupUi(this);
-#ifndef NDEBUG
-	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator (DEBUG)"));
-#else
-	setWindowTitle(QStringLiteral("Adiabatic Temperature Calculator"));
-#endif
+	setWindowTitle(win_title);
 
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
 			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
@@ -80,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// setup dialog
 	dialog = new QProgressDialog(this);
-	dialog->setLabelText(windowTitle());
+	dialog->setWindowTitle(win_title);
 	dialog->setModal(true);
 	dialog->setMinimumDuration(100);
 	dialog->setLabelText(tr("Calculating ..."));
