@@ -19,29 +19,31 @@
 
 #include "resultview.h"
 #include <QSplitter>
+#include <QTabWidget>
 
 ResultView::ResultView(QWidget *parent)
 	: QWidget{parent}
 {
 	table = new Table(this);
+	table_data = new Table(this);
 	plot2d_graph = new Plot2DGraph(this);
 	plot2d_heatmap = new Plot2DHeatMap(this);
 	plot3d = new Plot3DSurface(this);
 
-	auto splitter_v1 = new QSplitter(Qt::Orientation::Horizontal, this);
-	auto splitter_v2 = new QSplitter(Qt::Orientation::Horizontal, this);
-	auto splitter_h1 = new QSplitter(Qt::Orientation::Vertical, this);
+	auto splitter = new QSplitter(Qt::Orientation::Horizontal, this);
+	auto tabs = new QTabWidget(this);
 
-	splitter_v1->addWidget(table);
-	splitter_v1->addWidget(splitter_h1);
-	splitter_h1->addWidget(splitter_v2);
-	splitter_h1->addWidget(plot3d);
-	splitter_v2->addWidget(plot2d_graph);
-	splitter_v2->addWidget(plot2d_heatmap);
+	splitter->setChildrenCollapsible(false);
+	splitter->addWidget(table);
+	splitter->addWidget(tabs);
+	tabs->addTab(table_data, tr("Table"));
+	tabs->addTab(plot2d_graph, tr("Graph"));
+	tabs->addTab(plot2d_heatmap, tr("HeatMap"));
+	tabs->addTab(plot3d, tr("3DView"));
 
 	auto layout = new QHBoxLayout(this);
 	setLayout(layout);
-	layout->addWidget(splitter_v1);
+	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0);
 
 }

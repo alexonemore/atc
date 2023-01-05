@@ -54,11 +54,6 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 	return QVariant();
 }
 
-bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int role)
-{
-	return false;
-}
-
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 	return QVariant();

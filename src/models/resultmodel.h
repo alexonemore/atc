@@ -23,12 +23,33 @@
 #include <QAbstractTableModel>
 #include "optimization.h"
 
+enum class Variable
+{
+	NoVariable,
+	TemperatureInitial,
+	TemperatureCalculation,
+	Composition
+};
+
+enum class ColNames
+{
+	ID,
+	Formula,
+	Mol,
+	Gram,
+	AtPct,
+	WtPct,
+	Check
+};
+
 class ResultModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultModel)
 private:
 	Optimization::OptimizationVector items;
+	int row_count{1};
+	int col_count{1};
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
@@ -38,7 +59,6 @@ public:
 	int rowCount(const QModelIndex& parent) const override;
 	int columnCount(const QModelIndex& parent) const override;
 	QVariant data(const QModelIndex& index, int role) const override;
-	bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 	QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
