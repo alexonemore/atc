@@ -38,8 +38,7 @@ enum class ColNames
 	Mol,
 	Gram,
 	AtPct,
-	WtPct,
-	Check
+	WtPct
 };
 
 class ResultModel : public QAbstractTableModel
