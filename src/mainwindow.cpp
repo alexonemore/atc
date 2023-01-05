@@ -154,6 +154,7 @@ void MainWindow::Initialize()
 {
 	ui->view_substances->Initialize();
 	ui->plot_tf_view->Initialize();
+	ui->result_view->Initialize();
 	ui->amounts_view->setColumnHidden(static_cast<int>(AmountsModelFields::Names::ID), true);
 }
 

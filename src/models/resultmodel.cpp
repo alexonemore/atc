@@ -20,8 +20,20 @@
 #include "resultmodel.h"
 #include "utilities.h"
 
+namespace ResultFields {
+const QStringList names{
+	QT_TR_NOOP("ID"),
+	QT_TR_NOOP("Formula"),
+	QT_TR_NOOP("Mol"),
+	QT_TR_NOOP("Gram"),
+	QT_TR_NOOP("At.%"),
+	QT_TR_NOOP("Wt.%")
+};
+}
+
 ResultModel::ResultModel(QObject *parent)
 	: QAbstractTableModel{parent}
+	, col_count{static_cast<int>(ResultFields::names.size())}
 {
 
 }
@@ -41,25 +53,61 @@ void ResultModel::SetNewData(Optimization::OptimizationVector& vec)
 
 int ResultModel::rowCount(const QModelIndex& parent) const
 {
-	return 0;
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return row_count;
+	}
 }
 
 int ResultModel::columnCount(const QModelIndex& parent) const
 {
-	return 0;
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return col_count;
+	}
 }
 
 QVariant ResultModel::data(const QModelIndex& index, int role) const
 {
+	if(!CheckIndexValidParent(index)) return QVariant{};
+
 	return QVariant();
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-	return QVariant();
+	if(role == Qt::DisplayRole) {
+		if(orientation == Qt::Horizontal) {
+			return ResultFields::names.at(section);
+		} else {
+			return section;
+		}
+	} else {
+		return QVariant{};
+	}
 }
 
 Qt::ItemFlags ResultModel::flags(const QModelIndex& index) const
 {
-	return QAbstractTableModel::flags(index);
+	if(!CheckIndexValidParent(index)) return Qt::ItemFlags{};
+	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
+	auto col = index.column();
+	switch(static_cast<ResultFields::ColNames>(col)) {
+	case ResultFields::ColNames::Formula:
+		flags |= Qt::ItemIsUserCheckable;
+		flags |= Qt::ItemIsEditable;
+		flags ^= Qt::ItemIsSelectable;
+		return  flags;
+	default:
+		return flags;
+	}
+}
+
+bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
+{
+	return checkIndex(index,
+					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
+					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }

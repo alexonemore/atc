@@ -46,6 +46,10 @@ ResultView::ResultView(QWidget *parent)
 	layout->addWidget(splitter);
 	layout->setContentsMargins(0, 0, 0, 0);
 
+	table->setSelectionMode(QAbstractItemView::SingleSelection);
+	table->setSelectionBehavior(QAbstractItemView::SelectItems);
+	table->verticalHeader()->setVisible(false);
+
 }
 
 ResultView::~ResultView()
@@ -56,4 +60,9 @@ ResultView::~ResultView()
 void ResultView::SetModel(QAbstractItemModel* model)
 {
 	table->setModel(model);
+}
+
+void ResultView::Initialize()
+{
+	table->setColumnHidden(0, true);
 }

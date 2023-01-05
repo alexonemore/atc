@@ -23,6 +23,7 @@
 #include <QAbstractTableModel>
 #include "optimization.h"
 
+namespace ResultFields {
 enum class Variable
 {
 	NoVariable,
@@ -30,7 +31,6 @@ enum class Variable
 	TemperatureCalculation,
 	Composition
 };
-
 enum class ColNames
 {
 	ID,
@@ -40,6 +40,8 @@ enum class ColNames
 	AtPct,
 	WtPct
 };
+extern const QStringList names;
+}
 
 class ResultModel : public QAbstractTableModel
 {
@@ -47,12 +49,13 @@ class ResultModel : public QAbstractTableModel
 	Q_DISABLE_COPY_MOVE(ResultModel)
 private:
 	Optimization::OptimizationVector items;
-	int row_count{1};
-	int col_count{1};
+	int row_count{0};
+	const int col_count;
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
 	void SetNewData(Optimization::OptimizationVector& vec);
+
 	// QAbstractItemModel interface
 public:
 	int rowCount(const QModelIndex& parent) const override;
@@ -60,6 +63,8 @@ public:
 	QVariant data(const QModelIndex& index, int role) const override;
 	QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
+private:
+	bool CheckIndexValidParent(const QModelIndex& index) const;
 };
 
 #endif // RESULTMODEL_H

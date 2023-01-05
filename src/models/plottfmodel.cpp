@@ -26,7 +26,7 @@ const QStringList names{
 	QT_TR_NOOP("ID"),
 	QT_TR_NOOP("Formula")
 };
-};
+}
 
 PlotTFModel::PlotTFModel(QObject *parent)
 	: QAbstractTableModel(parent),
