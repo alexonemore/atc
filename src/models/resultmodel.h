@@ -43,13 +43,17 @@ enum class ColNames
 extern const QStringList names;
 }
 
+struct SumResult {
+	double mol{0.0}, gram{0.0}, atpct{0.0}, wtpct{0.0};
+};
+
 class ResultModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultModel)
 private:
 	Optimization::OptimizationVector items;
-	Amounts sum{};
+
 	std::set<int> checked;
 	int row_count{1};
 	const int col_count;

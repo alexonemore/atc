@@ -52,6 +52,7 @@ void ResultModel::SetNewData(Optimization::OptimizationVector& vec)
 	row_count = items.cbegin()->number.substances + 1;
 
 
+
 	endResetModel();
 }
 
@@ -84,6 +85,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 		} else if(role == Qt::DisplayRole) {
 			switch(col) {
 			case ResultFields::ColNames::ID:
+				break;
 			case ResultFields::ColNames::Formula:
 				return tr("Sum");
 			case ResultFields::ColNames::Mol:
@@ -99,6 +101,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 	} else {
 		switch(col) {
 		case ResultFields::ColNames::ID:
+
 		case ResultFields::ColNames::Formula:
 			return tr("Sum");
 		case ResultFields::ColNames::Mol:
@@ -108,9 +111,6 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 			break;
 		}
 	}
-
-
-
 	return QVariant();
 }
 
