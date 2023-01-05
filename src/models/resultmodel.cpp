@@ -19,6 +19,7 @@
 
 #include "resultmodel.h"
 #include "utilities.h"
+#include <QBrush>
 
 namespace ResultFields {
 const QStringList names{
@@ -47,7 +48,10 @@ void ResultModel::SetNewData(Optimization::OptimizationVector& vec)
 {
 	LOG()
 	beginResetModel();
-	items = vec;
+	items = std::move(vec);
+	row_count = items.cbegin()->number.substances + 1;
+
+
 	endResetModel();
 }
 
@@ -72,8 +76,47 @@ int ResultModel::columnCount(const QModelIndex& parent) const
 QVariant ResultModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
+	auto col = static_cast<ResultFields::ColNames>(index.column());
+	auto row = index.row();
+	if(row == 0) {
+		if(role == Qt::BackgroundRole) {
+			return QBrush{Qt::lightGray};
+		} else if(role == Qt::DisplayRole) {
+			switch(col) {
+			case ResultFields::ColNames::ID:
+			case ResultFields::ColNames::Formula:
+				return tr("Sum");
+			case ResultFields::ColNames::Mol:
+				return sum.sum_mol;
+			case ResultFields::ColNames::Gram:
+				return sum.sum_gram;
+			case ResultFields::ColNames::AtPct:
+				return sum.sum_atpct;
+			case ResultFields::ColNames::WtPct:
+				return sum.sum_wtpct;
+			}
+		}
+	} else {
+		switch(col) {
+		case ResultFields::ColNames::ID:
+		case ResultFields::ColNames::Formula:
+			return tr("Sum");
+		case ResultFields::ColNames::Mol:
+		case ResultFields::ColNames::Gram:
+		case ResultFields::ColNames::AtPct:
+		case ResultFields::ColNames::WtPct:
+			break;
+		}
+	}
+
+
 
 	return QVariant();
+}
+
+bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+	return false;
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -93,8 +136,8 @@ Qt::ItemFlags ResultModel::flags(const QModelIndex& index) const
 {
 	if(!CheckIndexValidParent(index)) return Qt::ItemFlags{};
 	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
-	auto col = index.column();
-	switch(static_cast<ResultFields::ColNames>(col)) {
+	auto col = static_cast<ResultFields::ColNames>(index.column());
+	switch(col) {
 	case ResultFields::ColNames::Formula:
 		flags |= Qt::ItemIsUserCheckable;
 		flags |= Qt::ItemIsEditable;
@@ -111,3 +154,5 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
+
+
