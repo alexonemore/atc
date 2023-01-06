@@ -265,6 +265,8 @@ void OptimizationItem::Calculate()
 		AdiabaticTemperature();
 		break;
 	}
+
+	MakeAmountsOfEquilibrium();
 }
 
 void OptimizationItem::DefineOrderOfSubstances()
@@ -632,6 +634,33 @@ double OptimizationItem::Minimize(const nlopt::algorithm algorithm,
 		result = nlopt::FAILURE;
 	}
 	return minf;
+}
+
+void OptimizationItem::MakeAmountsOfEquilibrium()
+{
+	assert(std::is_sorted(weights.cbegin(), weights.cend(),
+						  [](const SubstanceWeight& lhs, const SubstanceWeight& rhs){
+			   return lhs.id < rhs.id; }));
+	struct EquilibriumComposition {
+		int id;
+		double mol;
+	};
+	std::vector<EquilibriumComposition> vec_ec{number.substances};
+	std::transform(substances_id_order.cbegin(), substances_id_order.cend(),
+				   n.cbegin(), vec_ec.begin(), [](auto&& sub_id, auto&& n_i){
+		return EquilibriumComposition{sub_id, n_i};});
+	std::sort(vec_ec.begin(), vec_ec.end(), [](auto&& lhs, auto&& rhs){
+		return lhs.id < rhs.id;
+	});
+	assert(vec_ec.size() == weights.size());
+	for(size_t i = 0; const auto& weight : weights) {
+		auto [id, mol] = vec_ec.at(i++);
+		assert(id == weight.id);
+		auto w = weight.weight;
+		auto gram = mol * w;
+		amounts_of_equilibrium[id] = Amounts{mol, gram, 0.0, 0.0, mol, gram, 0.0, 0.0};
+	}
+	sum_of_equilibrium = GetSumAndRecalculate(amounts_of_equilibrium);
 }
 
 Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,

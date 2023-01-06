@@ -56,6 +56,8 @@ struct OptimizationItem final
 	SubstancesElementComposition subs_element_composition;
 	SubstanceWeights weights;
 	Composition amounts;
+	Composition amounts_of_equilibrium;
+	Amounts sum_of_equilibrium;
 
 	std::vector<double> n, c;				// size = N, number_of_substances
 	std::vector<double> ub;					// size = N, ub = upper_bounds
@@ -96,6 +98,7 @@ private:
 	double H_kJ_Current();
 	bool IsExistAtCurrentTemperature(const int sub_id);
 	double Minimize(const nlopt::algorithm algorithm, nlopt::result& result);
+	void MakeAmountsOfEquilibrium();
 };
 
 /* TODO
