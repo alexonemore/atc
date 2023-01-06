@@ -34,11 +34,7 @@ enum class Variable
 enum class ColNames
 {
 	ID,
-	Formula,
-	Mol,
-	Gram,
-	AtPct,
-	WtPct
+	Formula
 };
 extern const QStringList names;
 }

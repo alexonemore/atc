@@ -24,11 +24,7 @@
 namespace ResultFields {
 const QStringList names{
 	QT_TR_NOOP("ID"),
-	QT_TR_NOOP("Formula"),
-	QT_TR_NOOP("Mol"),
-	QT_TR_NOOP("Gram"),
-	QT_TR_NOOP("At.%"),
-	QT_TR_NOOP("Wt.%")
+	QT_TR_NOOP("Formula")
 };
 }
 
@@ -88,27 +84,15 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 				break;
 			case ResultFields::ColNames::Formula:
 				return tr("Sum");
-			case ResultFields::ColNames::Mol:
-				return sum.sum_mol;
-			case ResultFields::ColNames::Gram:
-				return sum.sum_gram;
-			case ResultFields::ColNames::AtPct:
-				return sum.sum_atpct;
-			case ResultFields::ColNames::WtPct:
-				return sum.sum_wtpct;
 			}
 		}
 	} else {
 		switch(col) {
 		case ResultFields::ColNames::ID:
-
+			break;
 		case ResultFields::ColNames::Formula:
 			return tr("Sum");
-		case ResultFields::ColNames::Mol:
-		case ResultFields::ColNames::Gram:
-		case ResultFields::ColNames::AtPct:
-		case ResultFields::ColNames::WtPct:
-			break;
+
 		}
 	}
 	return QVariant();

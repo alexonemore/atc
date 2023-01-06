@@ -241,7 +241,6 @@ OptimizationItem::OptimizationItem(
 	// When extrapolation is disabled, the maximum value for the substance
 	// that does not exist at the current temperature is zero.
 
-	MakeConstraintsB(); // vector B depends on amounts
 }
 
 #ifndef NDEBUG
@@ -254,9 +253,13 @@ OptimizationItem::~OptimizationItem()
 void OptimizationItem::Calculate()
 {
 	LOGV()
+	MakeConstraintsB(); // vector B depends on amounts
+	H_kJ_Initial();
+
 	switch(parameters.target) {
 	case ParametersNS::Target::Equilibrium:
 		Equilibrium(temperature_K_initial);
+		H_current = H_kJ_Current();
 		break;
 	case ParametersNS::Target::AdiabaticTemperature:
 		AdiabaticTemperature();
@@ -431,49 +434,45 @@ void OptimizationItem::AdiabaticTemperature()
 {
 	double T_min = 298.15;
 	double T_max = 10000;
-	double T_cur, H_min, H_max, H_cur;
-	const double H_initial = H_kJ_Initial();
+	double T_cur;
 	Equilibrium(T_min);
-	H_min = H_kJ_Current();
-	if(H_initial < H_min) {
-		temperature_K_adiabatic = T_min;
+	H_current = H_kJ_Current();
+	if(H_initial < H_current) {
 		return;
 	}
 	Equilibrium(T_max);
-	H_max = H_kJ_Current();
-	if(H_initial > H_max) {
-		temperature_K_adiabatic = T_max;
+	H_current = H_kJ_Current();
+	if(H_initial > H_current) {
 		return;
 	}
 	T_cur = (T_min + T_max) / 2;
 	Equilibrium(T_cur);
-	H_cur = H_kJ_Current();
+	H_current = H_kJ_Current();
 	double at_epsilon = std::pow(10, -parameters.at_accuracy)/2;
 #if !defined(NDEBUG) && defined(VERBOSE_DEBUG)
 	int n = 0;
 #endif
 	while((std::abs(T_max - T_min) > at_epsilon))
 	{
-		if(H_initial < H_cur) {
+		if(H_initial < H_current) {
 			T_max = T_cur;
 		} else {
 			T_min = T_cur;
 		}
 		T_cur = (T_min + T_max) / 2;
 		Equilibrium(T_cur);
-		H_cur = H_kJ_Current();
+		H_current = H_kJ_Current();
 
 #if !defined(NDEBUG) && defined(VERBOSE_DEBUG)
 		qDebug() << Qt::fixed << qSetRealNumberPrecision(10) << ++n
-				 << "H_cur:" << H_cur << "\tT_cur" << T_cur
-				 << "\tdelta_H:" << std::abs(H_cur - H_initial)
+				 << "H_current:" << H_current << "\tT_cur" << T_cur
+				 << "\tdelta_H:" << std::abs(H_current - H_initial)
 				 << "\tdelta_T:" << std::abs(T_max - T_min);
 #endif
 	}
-	temperature_K_adiabatic = T_cur;
 }
 
-double OptimizationItem::H_kJ_Initial()
+void OptimizationItem::H_kJ_Initial()
 {
 	auto H = [this](const int id){
 		switch(parameters.database) {
@@ -490,14 +489,15 @@ double OptimizationItem::H_kJ_Initial()
 
 	switch(parameters.choose_substances) {
 	case ParametersNS::ChooseSubstances::AsChecked:
-		return std::accumulate(amounts.cbegin(), amounts.cend(), double{0.0},
-							   [&H](double sum, decltype(amounts)::const_reference amount){
+		H_initial = std::accumulate(amounts.cbegin(), amounts.cend(), double{0.0},
+									[&H](double sum, decltype(amounts)::const_reference amount){
 			if(amount.second.sum_mol > 0.0) {
 				return sum + H(amount.first) * amount.second.sum_mol;
 			} else {
 				return sum;
 			}
 		});
+		break;
 	case ParametersNS::ChooseSubstances::ByMinimumGibbsEnergy: {
 		auto G = [this](const int id){
 			switch(parameters.database) {
@@ -530,8 +530,9 @@ double OptimizationItem::H_kJ_Initial()
 			}
 			H_sum += H(sub_id_G_min) * amount.sum_mol;
 		}
-		return H_sum;
+		H_initial = H_sum;
 	}
+		break;
 	default:
 		throw std::logic_error("default in switch");
 	}

@@ -63,7 +63,8 @@ struct OptimizationItem final
 	std::vector<int> substances_id_order;	// size = N, in order
 	double temperature_K_initial{0};
 	double temperature_K_current{0};
-	double temperature_K_adiabatic{0};
+	double H_initial{0};
+	double H_current{0};
 	Numbers number;
 	double result_of_optimization;
 
@@ -91,7 +92,7 @@ private:
 	void Equilibrium();
 	void Equilibrium(const double temperature_K);
 	void AdiabaticTemperature();
-	double H_kJ_Initial();
+	void H_kJ_Initial();
 	double H_kJ_Current();
 	bool IsExistAtCurrentTemperature(const int sub_id);
 	double Minimize(const nlopt::algorithm algorithm, nlopt::result& result);
