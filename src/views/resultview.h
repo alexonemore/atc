@@ -31,8 +31,8 @@ class ResultView : public QWidget
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultView)
 private:
-	Table* table;
-	Table* table_data;
+	QTableView* table_check;
+	Table* table_detail;
 	Plot2DGraph* plot2d_graph;
 	Plot2DHeatMap* plot2d_heatmap;
 	Plot3DSurface* plot3d;
