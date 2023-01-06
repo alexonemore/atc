@@ -485,7 +485,12 @@ void CoreApplication::SlotStartCalculations()
 void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 {
 	LOG("vec.size:", vec.size())
-	model_result->SetNewData(vec);
+	SubstanceNames names(vec.cbegin()->number.substances);
+	std::copy(vec.cbegin()->weights.cbegin(), vec.cbegin()->weights.cend(), names.begin());
+	model_result->SetNewData(std::move(names), vec.cbegin()->parameters.target);
+
+
+
 }
 
 

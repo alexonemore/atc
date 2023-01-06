@@ -22,6 +22,7 @@
 
 #include <QAbstractTableModel>
 #include "optimization.h"
+#include <QColor>
 
 namespace ResultFields {
 enum class Variable
@@ -34,29 +35,57 @@ enum class Variable
 enum class ColNames
 {
 	ID,
-	Formula
+	Name,
+	Show
 };
 extern const QStringList names;
-}
-
-struct SumResult {
-	double mol{0.0}, gram{0.0}, atpct{0.0}, wtpct{0.0};
+enum class RowEquilibrium {
+	T_equilibrium,
+	T_initial,
+	H_initial,
+	H_equilibrium,
+	c_equilibrium,
+	Sum_mol,
+	Sum_gram,
+	Sum_atpct,
+	Sum_wtpct
 };
+extern const QStringList row_equilibrium_names;
+enum class RowAdiabatic {
+	T_adiabatic,
+	T_initial,
+	H_initial,
+	H_equilibrium,
+	c_equilibrium,
+	Sum_mol,
+	Sum_gram,
+	Sum_atpct,
+	Sum_wtpct
+};
+extern const QStringList row_adiabatic_names;
+
+} // namespace ResultFields
 
 class ResultModel : public QAbstractTableModel
 {
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultModel)
 private:
-	Optimization::OptimizationVector items;
-
-	std::set<int> checked;
-	int row_count{1};
+	struct Cell {
+		QColor color{Qt::white};
+		Qt::CheckState checked{Qt::Unchecked};
+	};
+private:
+	SubstanceNames items;
+	ParametersNS::Target target;
+	std::unordered_map<int, Cell> checked; // int = just row
+	int row_count{0};
 	const int col_count;
+	const int row_offset;
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData(Optimization::OptimizationVector& vec);
+	void SetNewData(SubstanceNames&& vec, ParametersNS::Target tar);
 
 	// QAbstractItemModel interface
 public:

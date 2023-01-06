@@ -38,8 +38,8 @@ const QStringList names{
 	QT_TR_NOOP("Sum\nwt.%"),
 	QT_TR_NOOP("Included")
 };
-const QColor group_1_color{171, 211, 255};
-const QColor group_2_color{255, 215, 171};
+const QColor group_1_color{109, 255, 109};
+const QColor group_2_color{255, 109, 109};
 }
 
 AmountsModel::AmountsModel(QObject *parent)

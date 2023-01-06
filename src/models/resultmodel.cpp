@@ -24,13 +24,34 @@
 namespace ResultFields {
 const QStringList names{
 	QT_TR_NOOP("ID"),
-	QT_TR_NOOP("Formula")
+	QT_TR_NOOP("Name"),
+	QT_TR_NOOP("Show")
 };
+const QStringList row_equilibrium{
+	QT_TR_NOOP("T equilibrium"),
+};
+const QStringList row_adiabatic{
+	QT_TR_NOOP("T adiabatic"),
+};
+const QStringList row_all{
+	QT_TR_NOOP("T initial"),
+	QT_TR_NOOP("H initial"),
+	QT_TR_NOOP("H equilibrium"),
+	QT_TR_NOOP("c equilibrium"),
+	QT_TR_NOOP("Sum mol"),
+	QT_TR_NOOP("Sum gram"),
+	QT_TR_NOOP("Sum at.%"),
+	QT_TR_NOOP("Sum wt.%")
+};
+const QStringList row_equilibrium_names = row_equilibrium + row_all;
+const QStringList row_adiabatic_names = row_adiabatic + row_all;
+
 }
 
 ResultModel::ResultModel(QObject *parent)
 	: QAbstractTableModel{parent}
 	, col_count{static_cast<int>(ResultFields::names.size())}
+	, row_offset{static_cast<int>(ResultFields::row_equilibrium_names.size())}
 {
 
 }
@@ -40,15 +61,23 @@ ResultModel::~ResultModel()
 
 }
 
-void ResultModel::SetNewData(Optimization::OptimizationVector& vec)
+void ResultModel::SetNewData(SubstanceNames&& vec, ParametersNS::Target tar)
 {
-	LOG()
 	beginResetModel();
 	items = std::move(vec);
-	row_count = items.cbegin()->number.substances + 1;
-
-
-
+	row_count = items.size() + row_offset;
+	target = tar;
+	checked.clear();
+	switch(target) {
+	case ParametersNS::Target::Equilibrium:
+		checked[static_cast<int>(ResultFields::RowEquilibrium::c_equilibrium)] =
+				Cell{GetRandomColor(), Qt::CheckState::Checked};
+		break;
+	case ParametersNS::Target::AdiabaticTemperature:
+		checked[static_cast<int>(ResultFields::RowAdiabatic::T_adiabatic)] =
+				Cell{GetRandomColor(), Qt::CheckState::Checked};
+		break;
+	}
 	endResetModel();
 }
 
@@ -75,32 +104,93 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 	if(!CheckIndexValidParent(index)) return QVariant{};
 	auto col = static_cast<ResultFields::ColNames>(index.column());
 	auto row = index.row();
-	if(row == 0) {
-		if(role == Qt::BackgroundRole) {
-			return QBrush{Qt::lightGray};
-		} else if(role == Qt::DisplayRole) {
-			switch(col) {
-			case ResultFields::ColNames::ID:
-				break;
-			case ResultFields::ColNames::Formula:
-				return tr("Sum");
+
+	if(role == Qt::CheckStateRole) {
+		switch(col) {
+		case ResultFields::ColNames::Show: {
+			auto find = checked.find(row);
+			if(find != checked.cend()) {
+				return find->second.checked;
+			} else {
+				return Qt::CheckState::Unchecked;
 			}
 		}
-	} else {
+		default:
+			break;
+		}
+	} else if(role == Qt::DisplayRole) {
 		switch(col) {
 		case ResultFields::ColNames::ID:
+			if(row >= row_offset) {
+				return items.at(row - row_offset).id;
+			}
 			break;
-		case ResultFields::ColNames::Formula:
-			return tr("Sum");
-
+		case ResultFields::ColNames::Name:
+			if(row < row_offset) {
+				switch(target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::row_equilibrium_names.at(row);
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::row_adiabatic_names.at(row);
+				}
+			} else {
+				return items.at(row - row_offset).formula;
+			}
+			break;
+		default:
+			break;
 		}
+	} else if(role == Qt::BackgroundRole) {
+		switch(col) {
+		case ResultFields::ColNames::Show: {
+			auto find = checked.find(row);
+			if(find != checked.cend()) {
+				return find->second.color;
+			}
+		}
+		default:
+			break;
+		}
+		return QBrush{Qt::white};
 	}
+
 	return QVariant();
 }
 
 bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-	return false;
+	if(!CheckIndexValidParent(index)) return false;
+	auto row = index.row();
+	auto&& cell = checked[row]; // exactly []
+	//
+	auto graph_id = MakeGraphId(substance.id, tf);
+	//
+	if(role == Qt::CheckStateRole) {
+		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
+			cell.color = GetRandomColor();
+		}
+		cell.checked = value.value<Qt::CheckState>();
+		//
+		if(cell.checked == Qt::CheckState::Checked) {
+			auto name = MakeGraphName(substance.formula, tf);
+			LOG(name)
+			emit AddGraph(graph_id, name, cell.color);
+		} else {
+			cell.color = Qt::white;
+			emit RemoveGraph(graph_id);
+		}
+		//
+	} else if(role == Qt::EditRole) {
+		cell.color = value.value<QColor>();
+		//
+		LOG(cell.color)
+		emit ChangeColorGraph(graph_id, cell.color);
+		//
+	} else {
+		return false;
+	}
+	emit dataChanged(index, index);
+	return true;
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -122,7 +212,7 @@ Qt::ItemFlags ResultModel::flags(const QModelIndex& index) const
 	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
 	auto col = static_cast<ResultFields::ColNames>(index.column());
 	switch(col) {
-	case ResultFields::ColNames::Formula:
+	case ResultFields::ColNames::Name:
 		flags |= Qt::ItemIsUserCheckable;
 		flags |= Qt::ItemIsEditable;
 		flags ^= Qt::ItemIsSelectable;

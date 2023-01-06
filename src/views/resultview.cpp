@@ -64,5 +64,5 @@ void ResultView::SetModel(QAbstractItemModel* model)
 
 void ResultView::Initialize()
 {
-	table->setColumnHidden(0, true);
+	//table->setColumnHidden(0, true);
 }
