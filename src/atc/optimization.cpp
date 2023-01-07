@@ -115,6 +115,25 @@ static const char* NLoptResultToString(nlopt::result result)
 }
 #endif
 
+auto OptimizationItemsMaker::MakeNewAmounts(const Composition& amounts,
+											const SubstanceWeights& weights)
+{
+	sum = SumCompositionMolAndGram(amounts);
+	std::vector<double> composition;
+	if(sum.group_2_mol > 0.0) {
+		composition = MakeCompositionVector();
+	} else {
+		LOG("Variable composition is empty, calculate only 1 element")
+		composition.push_back(0.0);
+	}
+	std::vector<Composition> new_amounts(composition.size());
+	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
+				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});
+	assert(new_amounts.size() == composition.size());
+	assert(new_amounts.size() > 0);
+	return std::make_pair(composition, new_amounts);
+}
+
 OptimizationItemsMaker::OptimizationItemsMaker(
 		const ParametersNS::Parameters& parameters_,
 		const std::vector<int>& elements,
@@ -153,24 +172,28 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	case ParametersNS::Workmode::CompositionRange: {
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
-		std::vector<Composition> new_amounts = MakeNewAmounts(amounts, weights);
+		auto [composition, new_amounts] = MakeNewAmounts(amounts, weights);
 		items.reserve(new_amounts.size());
-		for(const auto& new_amount : new_amounts) {
+		// std::transform makes copy, emplace_back doesn't
+		for(size_t i = 0; const auto& new_amount : new_amounts) {
 			items.emplace_back(parameters, elements,
 							   temp_ranges, subs_element_composition,
-							   weights, new_amount, temperature);
+							   weights, new_amount, temperature,
+							   composition.at(i++));
 		}
+
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		auto temperatures = MakeTemperatureVector();
-		std::vector<Composition> new_amounts = MakeNewAmounts(amounts, weights);
+		auto [composition, new_amounts] = MakeNewAmounts(amounts, weights);
 		items.reserve(new_amounts.size() * temperatures.size());
 		for(const auto& temperature : temperatures) {
-			for(const auto& new_amount : new_amounts) {
+			for(size_t i = 0; const auto& new_amount : new_amounts) {
 				items.emplace_back(parameters, elements,
 								   temp_ranges, subs_element_composition,
-								   weights, new_amount, temperature);
+								   weights, new_amount, temperature,
+								   composition.at(i++));
 			}
 		}
 	}
@@ -210,7 +233,8 @@ OptimizationItem::OptimizationItem(
 		const SubstancesElementComposition& subs_element_composition_,
 		const SubstanceWeights& weights_,
 		const Composition& amounts_,
-		const double initial_temperature_K)
+		const double initial_temperature_K,
+		const double variable_composition)
 	: parameters{parameters_}
 	, elements{elements_}
 	, temp_ranges{temp_ranges_}
@@ -219,6 +243,7 @@ OptimizationItem::OptimizationItem(
 	, amounts{amounts_}
 	, temperature_K_initial{initial_temperature_K}
 	, temperature_K_current{initial_temperature_K}
+	, composition_variable{variable_composition}
 {
 	LOG(i = ++i_items)
 	number.elements = elements.size();
@@ -754,25 +779,6 @@ Composition OptimizationItemsMaker::MakeNewAmount(const Composition& amounts,
 		break;
 	}
 	return new_amount;
-}
-
-std::vector<Composition> OptimizationItemsMaker::MakeNewAmounts(
-		const Composition& amounts, const SubstanceWeights& weights)
-{
-	sum = SumCompositionMolAndGram(amounts);
-	std::vector<double> composition;
-	if(sum.group_2_mol > 0.0) {
-		composition = MakeCompositionVector();
-	} else {
-		LOG("Variable composition is empty, calculate only 1 element")
-		composition.push_back(0.0);
-	}
-	std::vector<Composition> new_amounts(composition.size());
-	std::transform(composition.cbegin(), composition.cend(), new_amounts.begin(),
-				   [&](auto&& val){return MakeNewAmount(amounts, weights, val);});
-	assert(new_amounts.size() == composition.size());
-	assert(new_amounts.size() > 0);
-	return new_amounts;
 }
 
 } // namespace Optimization

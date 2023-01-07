@@ -61,14 +61,14 @@ ResultModel::~ResultModel()
 
 }
 
-void ResultModel::SetNewData(SubstanceNames&& vec, ParametersNS::Target tar)
+void ResultModel::SetNewData(SubstanceNames&& vec, ParametersNS::Parameters par)
 {
 	beginResetModel();
 	items = std::move(vec);
 	row_count = items.size() + row_offset;
-	target = tar;
+	parameters = par;
 	checked.clear();
-	switch(target) {
+	switch(parameters.target) {
 	case ParametersNS::Target::Equilibrium:
 		checked[static_cast<int>(ResultFields::RowEquilibrium::c_equilibrium)] =
 				Cell{GetRandomColor(), Qt::CheckState::Checked};
@@ -102,95 +102,33 @@ int ResultModel::columnCount(const QModelIndex& parent) const
 QVariant ResultModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
-	auto col = static_cast<ResultFields::ColNames>(index.column());
-	auto row = index.row();
-
-	if(role == Qt::CheckStateRole) {
-		switch(col) {
-		case ResultFields::ColNames::Show: {
-			auto find = checked.find(row);
-			if(find != checked.cend()) {
-				return find->second.checked;
-			} else {
-				return Qt::CheckState::Unchecked;
-			}
-		}
-		default:
-			break;
-		}
-	} else if(role == Qt::DisplayRole) {
-		switch(col) {
-		case ResultFields::ColNames::ID:
-			if(row >= row_offset) {
-				return items.at(row - row_offset).id;
-			}
-			break;
-		case ResultFields::ColNames::Name:
-			if(row < row_offset) {
-				switch(target) {
-				case ParametersNS::Target::Equilibrium:
-					return ResultFields::row_equilibrium_names.at(row);
-				case ParametersNS::Target::AdiabaticTemperature:
-					return ResultFields::row_adiabatic_names.at(row);
-				}
-			} else {
-				return items.at(row - row_offset).formula;
-			}
-			break;
-		default:
-			break;
-		}
-	} else if(role == Qt::BackgroundRole) {
-		switch(col) {
-		case ResultFields::ColNames::Show: {
-			auto find = checked.find(row);
-			if(find != checked.cend()) {
-				return find->second.color;
-			}
-		}
-		default:
-			break;
-		}
-		return QBrush{Qt::white};
+	switch (parameters.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		return dataSingle(index, role);
+	case ParametersNS::Workmode::TemperatureRange:
+		return dataTemperatureRange(index, role);
+	case ParametersNS::Workmode::CompositionRange:
+		return dataCompositionRange(index, role);
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		return dataTempCompRange(index, role);
 	}
-
-	return QVariant();
+	return QVariant{};
 }
 
 bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
 	if(!CheckIndexValidParent(index)) return false;
-	auto row = index.row();
-	auto&& cell = checked[row]; // exactly []
-	//
-	auto graph_id = MakeGraphId(substance.id, tf);
-	//
-	if(role == Qt::CheckStateRole) {
-		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
-			cell.color = GetRandomColor();
-		}
-		cell.checked = value.value<Qt::CheckState>();
-		//
-		if(cell.checked == Qt::CheckState::Checked) {
-			auto name = MakeGraphName(substance.formula, tf);
-			LOG(name)
-			emit AddGraph(graph_id, name, cell.color);
-		} else {
-			cell.color = Qt::white;
-			emit RemoveGraph(graph_id);
-		}
-		//
-	} else if(role == Qt::EditRole) {
-		cell.color = value.value<QColor>();
-		//
-		LOG(cell.color)
-		emit ChangeColorGraph(graph_id, cell.color);
-		//
-	} else {
-		return false;
+	switch (parameters.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		return setDataSingle(index, value, role);
+	case ParametersNS::Workmode::TemperatureRange:
+		return setDataTemperatureRange(index, value, role);
+	case ParametersNS::Workmode::CompositionRange:
+		return setDataCompositionRange(index, value, role);
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		return setDataTempCompRange(index, value, role);
 	}
-	emit dataChanged(index, index);
-	return true;
+	return false;
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -227,6 +165,98 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 	return checkIndex(index,
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
+}
+
+QVariant ResultModel::dataSingle(const QModelIndex& index, int role) const
+{
+	auto col = static_cast<ResultFields::ColNames>(index.column());
+	auto row = index.row();
+
+	if(role == Qt::CheckStateRole) {
+		switch(col) {
+		case ResultFields::ColNames::Show: {
+			auto find = checked.find(row);
+			if(find != checked.cend()) {
+				return find->second.checked;
+			} else {
+				return Qt::CheckState::Unchecked;
+			}
+		}
+		default:
+			break;
+		}
+	} else if(role == Qt::DisplayRole) {
+		switch(col) {
+		case ResultFields::ColNames::ID:
+			if(row >= row_offset) {
+				return items.at(row - row_offset).id;
+			}
+			break;
+		case ResultFields::ColNames::Name:
+			if(row < row_offset) {
+				switch(parameters.target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::row_equilibrium_names.at(row);
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::row_adiabatic_names.at(row);
+				}
+			} else {
+				return items.at(row - row_offset).formula;
+			}
+			break;
+		default:
+			break;
+		}
+	} else if(role == Qt::BackgroundRole) {
+		switch(col) {
+		case ResultFields::ColNames::Show: {
+			auto find = checked.find(row);
+			if(find != checked.cend()) {
+				return find->second.color;
+			}
+		}
+		default:
+			break;
+		}
+		return QBrush{Qt::white};
+	}
+
+	return QVariant();
+}
+
+QVariant ResultModel::dataTemperatureRange(const QModelIndex& index, int role) const
+{
+	return QVariant();
+}
+
+QVariant ResultModel::dataCompositionRange(const QModelIndex& index, int role) const
+{
+	return QVariant();
+}
+
+QVariant ResultModel::dataTempCompRange(const QModelIndex& index, int role) const
+{
+	return QVariant();
+}
+
+bool ResultModel::setDataSingle(const QModelIndex& index, const QVariant& value, int role)
+{
+	return false;
+}
+
+bool ResultModel::setDataTemperatureRange(const QModelIndex& index, const QVariant& value, int role)
+{
+	return false;
+}
+
+bool ResultModel::setDataCompositionRange(const QModelIndex& index, const QVariant& value, int role)
+{
+	return false;
+}
+
+bool ResultModel::setDataTempCompRange(const QModelIndex& index, const QVariant& value, int role)
+{
+	return false;
 }
 
 

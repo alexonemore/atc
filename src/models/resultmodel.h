@@ -63,7 +63,9 @@ enum class RowAdiabatic {
 	Sum_wtpct
 };
 extern const QStringList row_adiabatic_names;
-
+extern const QStringList row_equilibrium;
+extern const QStringList row_adiabatic;
+extern const QStringList row_all;
 } // namespace ResultFields
 
 class ResultModel : public QAbstractTableModel
@@ -77,7 +79,7 @@ private:
 	};
 private:
 	SubstanceNames items;
-	ParametersNS::Target target;
+	ParametersNS::Parameters parameters;
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
 	const int col_count;
@@ -85,7 +87,7 @@ private:
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData(SubstanceNames&& vec, ParametersNS::Target tar);
+	void SetNewData(SubstanceNames&& vec, ParametersNS::Parameters par);
 
 	// QAbstractItemModel interface
 public:
@@ -97,7 +99,14 @@ public:
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-
+	QVariant dataSingle(const QModelIndex& index, int role) const;
+	QVariant dataTemperatureRange(const QModelIndex& index, int role) const;
+	QVariant dataCompositionRange(const QModelIndex& index, int role) const;
+	QVariant dataTempCompRange(const QModelIndex& index, int role) const;
+	bool setDataSingle(const QModelIndex& index, const QVariant& value, int role);
+	bool setDataTemperatureRange(const QModelIndex& index, const QVariant& value, int role);
+	bool setDataCompositionRange(const QModelIndex& index, const QVariant& value, int role);
+	bool setDataTempCompRange(const QModelIndex& index, const QVariant& value, int role);
 };
 
 #endif // RESULTMODEL_H

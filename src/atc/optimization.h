@@ -69,6 +69,7 @@ struct OptimizationItem final
 	double H_current{0};
 	Numbers number;
 	double result_of_optimization;
+	double composition_variable;
 
 	OptimizationItem(const ParametersNS::Parameters& parameters_,
 					 const std::vector<int>& elements_,
@@ -76,7 +77,8 @@ struct OptimizationItem final
 					 const SubstancesElementComposition& subs_element_composition_,
 					 const SubstanceWeights& weights_,
 					 const Composition& amounts_,
-					 const double initial_temperature_K);
+					 const double initial_temperature_K,
+					 const double variable_composition = 0.0);
 #ifndef NDEBUG
 	int i;
 	~OptimizationItem();
@@ -135,8 +137,8 @@ private:
 	Composition MakeNewAmount(const Composition& amounts,
 							  const SubstanceWeights& weights,
 							  const double value);
-	std::vector<Composition> MakeNewAmounts(const Composition& amounts,
-											const SubstanceWeights& weights);
+	auto MakeNewAmounts(const Composition& amounts,
+						const SubstanceWeights& weights);
 };
 
 } // namespace Optimization
