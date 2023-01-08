@@ -52,6 +52,7 @@ private:
 	PlotTFModel* model_plot_tf;
 	AmountsModel* model_amounts;
 	ResultModel* model_result;
+	ResultDetailModel* model_detail_result;
 
 	Optimization::OptimizationVector result_data;
 
@@ -115,8 +116,6 @@ private slots:
 	void SlotGraphRemovedPlotTFVtM(const GraphId id);
 	void SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids);
 
-
-
 public slots:
 	void Initialize();
 	//demo
@@ -132,6 +131,11 @@ private:
 	auto CurrentDatabase();
 	auto Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();
+
+private: // show result
+
+
+
 };
 
 #endif // COREAPPLICATION_H

@@ -54,6 +54,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	model_plot_tf = new PlotTFModel(this);
 	model_amounts = new AmountsModel(this);
 	model_result = new ResultModel(this);
+	model_detail_result = new ResultDetailModel(this);
 	// demo
 	table_1 = new QStringListModel(this);
 
@@ -65,6 +66,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	gui->SetTFPlotModel(model_plot_tf);
 	gui->SetAmountsModel(model_amounts);
 	gui->SetResultModel(model_result);
+	gui->SetResultDetailModel(model_detail_result);
 	gui->Initialize(); // must be called after set models
 
 	// demo
@@ -485,23 +487,14 @@ void CoreApplication::SlotStartCalculations()
 void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 {
 	LOG("vec.size:", vec.size())
+	model_result->Clear();
+	model_detail_result->Clear();
+
 	result_data = std::move(vec);
-	auto first = result_data.cbegin();
-	SubstanceNames names(first->number.substances);
-	std::copy(first->weights.cbegin(), first->weights.cend(), names.begin());
-	model_result->SetNewData(std::move(names), parameters_.target);
 
-	switch (parameters_.workmode) {
-	case ParametersNS::Workmode::SinglePoint:
+	model_result->SetNewData(&(result_data.cbegin()->weights),
+							 parameters_.target);
+	model_detail_result->SetNewData(&result_data);
 
-		break;
-	case ParametersNS::Workmode::TemperatureRange:
-		break;
-	case ParametersNS::Workmode::CompositionRange:
-		break;
-	case ParametersNS::Workmode::TemperatureCompositionRange:
-		break;
-	}
 }
-
 

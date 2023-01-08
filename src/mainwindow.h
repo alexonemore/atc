@@ -66,6 +66,7 @@ public:
 	void SetTFPlotModel(QAbstractItemModel* model);
 	void SetAmountsModel(QAbstractItemModel* model);
 	void SetResultModel(QAbstractItemModel* model);
+	void SetResultDetailModel(QAbstractItemModel* model);
 
 	// demo
 	void SetModel_1(QAbstractItemModel* model);

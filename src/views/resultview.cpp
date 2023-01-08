@@ -50,6 +50,10 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setSelectionBehavior(QAbstractItemView::SelectItems);
 	table_check->verticalHeader()->setVisible(false);
 
+	table_detail->setSelectionBehavior(QAbstractItemView::SelectItems);
+	table_detail->verticalHeader()->setVisible(false);
+	table_detail->horizontalHeader()->setVisible(false);
+
 }
 
 ResultView::~ResultView()
@@ -60,6 +64,11 @@ ResultView::~ResultView()
 void ResultView::SetModel(QAbstractItemModel* model)
 {
 	table_check->setModel(model);
+}
+
+void ResultView::SetDetailModel(QAbstractItemModel* model)
+{
+	table_detail->setModel(model);
 }
 
 void ResultView::Initialize()

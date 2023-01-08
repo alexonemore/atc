@@ -53,12 +53,21 @@ ResultModel::~ResultModel()
 
 }
 
-void ResultModel::SetNewData(SubstanceNames&& vec, ParametersNS::Target tar)
+void ResultModel::SetNewData(const SubstanceWeights* vec, ParametersNS::Target tar)
 {
 	beginResetModel();
-	items = std::move(vec);
-	row_count = items.size() + ResultFields::row_names_size;
+	items = vec;
+	row_count = items->size() + ResultFields::row_names_size;
 	target = tar;
+	checked.clear();
+	endResetModel();
+}
+
+void ResultModel::Clear()
+{
+	beginResetModel();
+	row_count = 0;
+	items = nullptr;
 	checked.clear();
 	endResetModel();
 }
@@ -105,7 +114,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 	case ResultFields::ColNames::ID:
 		if(role == Qt::DisplayRole) {
 			if(row >= ResultFields::row_names_size) {
-				return items.at(row - ResultFields::row_names_size).id;
+				return items->at(row - ResultFields::row_names_size).id;
 			}
 		}
 		break;
@@ -123,7 +132,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 					return ResultFields::row_names.at(row);
 				}
 			} else {
-				return items.at(row - ResultFields::row_names_size).formula;
+				return items->at(row - ResultFields::row_names_size).formula;
 			}
 		}
 		break;
@@ -147,7 +156,7 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 	LOG()
 	if(!CheckIndexValidParent(index)) return false;
 
-
+	// TODO
 
 	return false;
 }
@@ -186,4 +195,67 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 	return checkIndex(index,
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
+}
+
+ResultDetailModel::ResultDetailModel(QObject* parent)
+	: QAbstractTableModel{parent}
+{
+
+}
+
+ResultDetailModel::~ResultDetailModel()
+{
+
+}
+
+void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec)
+{
+	beginResetModel();
+	items = vec;
+	row_count = items->cbegin()->number.substances + ResultFields::row_names_size;
+	col_count = items->size();
+	endResetModel();
+}
+
+void ResultDetailModel::Clear()
+{
+	beginResetModel();
+	row_count = 0;
+	col_count = 0;
+	items = nullptr;
+	endResetModel();
+}
+
+bool ResultDetailModel::CheckIndexValidParent(const QModelIndex& index) const
+{
+	return checkIndex(index,
+					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
+					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
+}
+
+
+int ResultDetailModel::rowCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return row_count;
+	}
+}
+
+int ResultDetailModel::columnCount(const QModelIndex& parent) const
+{
+	if(parent.isValid()) {
+		return 0;
+	} else {
+		return col_count;
+	}
+}
+
+QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
+{
+	if(role == Qt::DisplayRole) {
+		return QString{QString::number(index.row())+'/'+QString::number(index.column())};
+	}
+	return QVariant{};
 }

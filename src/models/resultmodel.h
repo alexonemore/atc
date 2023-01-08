@@ -24,6 +24,7 @@
 #include <QColor>
 #include "database.h"
 #include "parameters.h"
+#include "optimization.h"
 
 namespace ResultFields {
 enum class ColNames
@@ -57,14 +58,15 @@ private:
 		Qt::CheckState checked{Qt::Unchecked};
 	};
 private:
-	SubstanceNames items;
+	const SubstanceWeights* items;
 	ParametersNS::Target target;
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData(SubstanceNames&& vec, ParametersNS::Target tar);
+	void SetNewData(const SubstanceWeights* vec, ParametersNS::Target tar);
+	void Clear();
 
 signals:
 	void AddGraph();
@@ -83,6 +85,31 @@ public:
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
 
+};
+
+class ResultDetailModel : public QAbstractTableModel
+{
+	Q_OBJECT
+	Q_DISABLE_COPY_MOVE(ResultDetailModel)
+private:
+	const Optimization::OptimizationVector* items;
+	int row_count;
+	int col_count;
+public:
+	explicit ResultDetailModel(QObject *parent = nullptr);
+	~ResultDetailModel() override;
+	void SetNewData(const Optimization::OptimizationVector* vec);
+	void Clear();
+
+private:
+	bool CheckIndexValidParent(const QModelIndex& index) const;
+
+
+	// QAbstractItemModel interface
+public:
+	int rowCount(const QModelIndex& parent) const override;
+	int columnCount(const QModelIndex& parent) const override;
+	QVariant data(const QModelIndex& index, int role) const override;
 };
 
 #endif // RESULTMODEL_H

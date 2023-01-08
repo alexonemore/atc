@@ -194,6 +194,12 @@ void MainWindow::SetResultModel(QAbstractItemModel* model)
 	ui->result_view->SetModel(model);
 }
 
+void MainWindow::SetResultDetailModel(QAbstractItemModel* model)
+{
+	LOG()
+	ui->result_view->SetDetailModel(model);
+}
+
 void MainWindow::SetModel_1(QAbstractItemModel* model)
 {
 	LOG()

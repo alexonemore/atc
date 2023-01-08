@@ -40,6 +40,7 @@ public:
 	explicit ResultView(QWidget *parent = nullptr);
 	~ResultView() override;
 	void SetModel(QAbstractItemModel* model);
+	void SetDetailModel(QAbstractItemModel* model);
 	void Initialize();
 signals:
 

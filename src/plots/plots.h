@@ -23,9 +23,9 @@
 #include <unordered_map>
 
 struct GraphIdImpl {
-	int substance_id{0};
-	int option{0};
-	int database{0};
+	int substance_id;
+	int option;
+	int database;
 };
 
 bool operator==(const GraphIdImpl& lhs, const GraphIdImpl& rhs);
