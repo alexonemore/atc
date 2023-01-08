@@ -21,26 +21,20 @@
 #define RESULTMODEL_H
 
 #include <QAbstractTableModel>
-#include "optimization.h"
 #include <QColor>
+#include "database.h"
+#include "parameters.h"
 
 namespace ResultFields {
-enum class Variable
-{
-	NoVariable,
-	TemperatureInitial,
-	TemperatureCalculation,
-	Composition
-};
 enum class ColNames
 {
 	ID,
 	Name,
 	Show
 };
-extern const QStringList names;
-enum class RowEquilibrium {
-	T_equilibrium,
+extern const QStringList col_names;
+enum class RowNames {
+	T_result,
 	T_initial,
 	H_initial,
 	H_equilibrium,
@@ -50,22 +44,7 @@ enum class RowEquilibrium {
 	Sum_atpct,
 	Sum_wtpct
 };
-extern const QStringList row_equilibrium_names;
-enum class RowAdiabatic {
-	T_adiabatic,
-	T_initial,
-	H_initial,
-	H_equilibrium,
-	c_equilibrium,
-	Sum_mol,
-	Sum_gram,
-	Sum_atpct,
-	Sum_wtpct
-};
-extern const QStringList row_adiabatic_names;
-extern const QStringList row_equilibrium;
-extern const QStringList row_adiabatic;
-extern const QStringList row_all;
+extern const QStringList row_names;
 } // namespace ResultFields
 
 class ResultModel : public QAbstractTableModel
@@ -79,15 +58,19 @@ private:
 	};
 private:
 	SubstanceNames items;
-	ParametersNS::Parameters parameters;
+	ParametersNS::Target target;
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
-	const int col_count;
-	const int row_offset;
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData(SubstanceNames&& vec, ParametersNS::Parameters par);
+	void SetNewData(SubstanceNames&& vec, ParametersNS::Target tar);
+
+signals:
+	void AddGraph();
+	void AddGraphSubstance(const int id, const QColor& color);
+	void AddGraphResult(const ResultFields::RowNames row_name,
+						const QColor& color);
 
 	// QAbstractItemModel interface
 public:
@@ -99,14 +82,7 @@ public:
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-	QVariant dataSingle(const QModelIndex& index, int role) const;
-	QVariant dataTemperatureRange(const QModelIndex& index, int role) const;
-	QVariant dataCompositionRange(const QModelIndex& index, int role) const;
-	QVariant dataTempCompRange(const QModelIndex& index, int role) const;
-	bool setDataSingle(const QModelIndex& index, const QVariant& value, int role);
-	bool setDataTemperatureRange(const QModelIndex& index, const QVariant& value, int role);
-	bool setDataCompositionRange(const QModelIndex& index, const QVariant& value, int role);
-	bool setDataTempCompRange(const QModelIndex& index, const QVariant& value, int role);
+
 };
 
 #endif // RESULTMODEL_H

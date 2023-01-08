@@ -53,6 +53,8 @@ private:
 	AmountsModel* model_amounts;
 	ResultModel* model_result;
 
+	Optimization::OptimizationVector result_data;
+
 	// selected substance in TempRange and TabulatedTF
 	int selected_substance_id;
 	bool is_selected{false};
