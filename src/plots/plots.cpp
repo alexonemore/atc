@@ -22,7 +22,7 @@
 bool operator==(const GraphIdImpl& lhs, const GraphIdImpl& rhs)
 {
 	return (lhs.substance_id == rhs.substance_id &&
-			lhs.thermodynamic_function == rhs.thermodynamic_function &&
+			lhs.option == rhs.option &&
 			lhs.database == rhs.database);
 }
 

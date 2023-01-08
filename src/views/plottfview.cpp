@@ -91,7 +91,7 @@ void PlotTFView::Initialize()
 void PlotTFView::AddGraph(const GraphId id, const QString& name,
 						  const QColor& color, QVector<double>& x, QVector<double>& y)
 {
-	switch(id.thermodynamic_function) {
+	switch(static_cast<ParametersNS::ThermodynamicFunction>(id.option)) {
 	case ParametersNS::ThermodynamicFunction::G_kJ:
 	case ParametersNS::ThermodynamicFunction::H_kJ:
 		plot->AddGraphY1(id, name, std::move(x), std::move(y), color);

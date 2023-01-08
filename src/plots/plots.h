@@ -21,13 +21,11 @@
 #define PLOTS_H
 
 #include <unordered_map>
-#include "parameters.h"
 
 struct GraphIdImpl {
 	int substance_id{0};
-	ParametersNS::ThermodynamicFunction thermodynamic_function{
-		ParametersNS::ThermodynamicFunction::G_kJ};
-	ParametersNS::Database database{ParametersNS::Database::Thermo};
+	int option{0};
+	int database{0};
 };
 
 bool operator==(const GraphIdImpl& lhs, const GraphIdImpl& rhs);
@@ -37,7 +35,7 @@ template<> struct hash<GraphIdImpl> {
 	std::size_t operator()(const GraphIdImpl& rhs) const noexcept {
 		constexpr int n = 10;
 		return std::hash<int>{}((rhs.substance_id * n +
-			static_cast<int>(rhs.thermodynamic_function)) * n +
+			static_cast<int>(rhs.option)) * n +
 			static_cast<int>(rhs.database));
 	}
 };

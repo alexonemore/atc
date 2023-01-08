@@ -206,11 +206,11 @@ void PlotTFModel::SlotRemoveAllGraphs()
 
 void PlotTFModel::SlotRemoveOneGraph(const GraphId id)
 {
-	if(id.database != database) return;
+	if(static_cast<ParametersNS::Database>(id.database) != database) return;
 	auto row = data_tf.find(id.substance_id);
 	if(row == data_tf.end()) return;
 	auto&& cell = row->second;
-	switch(id.thermodynamic_function) {
+	switch(static_cast<ParametersNS::ThermodynamicFunction>(id.option)) {
 	case PlotTFModelFields::TF::G_kJ:	cell.G = Cell{}; break;
 	case PlotTFModelFields::TF::H_kJ:	cell.H = Cell{}; break;
 	case PlotTFModelFields::TF::F_J:	cell.F = Cell{}; break;
@@ -232,11 +232,11 @@ void PlotTFModel::SlotRemoveGraphs(const QVector<GraphId>& ids)
 
 void PlotTFModel::SlotChangeColotGraph(const GraphId id, const QColor& color)
 {
-	if(id.database != database) return;
+	if(static_cast<ParametersNS::Database>(id.database) != database) return;
 	auto row = data_tf.find(id.substance_id);
 	if(row == data_tf.end()) return;
 	auto&& cell = row->second;
-	switch(id.thermodynamic_function) {
+	switch(static_cast<ParametersNS::ThermodynamicFunction>(id.option)) {
 	case PlotTFModelFields::TF::G_kJ:	cell.G.color = color; break;
 	case PlotTFModelFields::TF::H_kJ:	cell.H.color = color; break;
 	case PlotTFModelFields::TF::F_J:	cell.F.color = color; break;
@@ -274,7 +274,7 @@ PlotTFModel::Cell& PlotTFModel::GetCell(const int id,
 GraphId PlotTFModel::MakeGraphId(const int id,
 								 const PlotTFModelFields::TF tf) const
 {
-	return GraphId{id, tf, database};
+	return GraphId{id, static_cast<int>(tf), static_cast<int>(database)};
 }
 
 QString PlotTFModel::MakeGraphName(const QString& formula,
@@ -294,6 +294,6 @@ QModelIndex PlotTFModel::GetIndex(const GraphId& id) const
 		return i.id == id.substance_id;
 	});
 	auto row = std::distance(data_names.cbegin(), find);
-	auto col = static_cast<int>(id.thermodynamic_function) + field_names_size;
+	auto col = static_cast<int>(id.option) + field_names_size;
 	return index(row, col);
 }

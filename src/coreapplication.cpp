@@ -333,13 +333,13 @@ void CoreApplication::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 	graphs_tf_view[id].color = color;
 	graphs_tf_view[id].name = name;
 	QVector<double> x, y;
-	auto db = Database(id.database);
+	auto db = Database(static_cast<ParametersNS::Database>(id.database));
 	auto data_temp_range = db->GetSubstanceTempRangeData(id.substance_id);
 	Thermodynamics::TabulateOneTF(parameters_.temperature_range,
 								  parameters_.temperature_range_unit,
 								  parameters_.extrapolation,
-								  id.database,
-								  id.thermodynamic_function,
+								  static_cast<ParametersNS::Database>(id.database),
+								  static_cast<ParametersNS::ThermodynamicFunction>(id.option),
 								  data_temp_range, x, y);
 	emit SignalAddGraphPlotTF(id, name, color, x, y);
 }
@@ -489,10 +489,19 @@ void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 	auto first = result_data.cbegin();
 	SubstanceNames names(first->number.substances);
 	std::copy(first->weights.cbegin(), first->weights.cend(), names.begin());
-	model_result->SetNewData(std::move(names), first->parameters.target);
+	model_result->SetNewData(std::move(names), parameters_.target);
 
+	switch (parameters_.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
 
-
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+		break;
+	case ParametersNS::Workmode::CompositionRange:
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		break;
+	}
 }
 
 
