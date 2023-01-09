@@ -105,7 +105,7 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 	p.checked_elements = ui->periodic_table->GetCheckedElements();
 
 	p.temperature_result_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_result_units->currentIndex());
-	p.composition_range_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition_result_units->currentIndex());
+	p.composition_result_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition_result_units->currentIndex());
 
 	p.FixInputParameters();
 	SetupParameters(p);
