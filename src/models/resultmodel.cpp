@@ -527,16 +527,8 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 				}
 				break;
 			case 1:
-				switch (parameters.workmode) {
-				case ParametersNS::Workmode::TemperatureRange:
-					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_result_unit));
-				case ParametersNS::Workmode::CompositionRange:
-					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_initial_unit));
-				default:
-					break;
-				}
+				return ParametersNS::temperature_units.at(
+							static_cast<int>(parameters.temperature_result_unit));
 			}
 			if(col >= 2) {
 				auto i = col - 2;
