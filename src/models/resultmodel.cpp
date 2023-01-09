@@ -697,8 +697,5 @@ QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 			break;
 		}
 	}
-	if(role == Qt::BackgroundRole) {
-		return QBrush{QColor{Qt::green}};
-	}
 	return QVariant{};
 }
