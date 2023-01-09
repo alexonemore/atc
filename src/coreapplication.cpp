@@ -281,6 +281,7 @@ auto CoreApplication::Database(ParametersNS::Database database)
 
 void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 {
+	LOG()
 	if(parameters.database != parameters_.database) {
 		is_selected = false;
 		model_plot_tf->Clear();
@@ -306,6 +307,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	model_plot_tf->SetDatabase(parameters_.database);
 	model_plot_tf->SetNewData(std::move(names));
 	model_amounts->SetNewData(std::move(weights));
+	model_detail_result->UpdateParameters(parameters_);
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 	emit SignalSetPlotXAxisUnit(parameters_.temperature_range_unit);
@@ -314,6 +316,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 void CoreApplication::SlotUpdateButtonHandler(
 		const ParametersNS::Parameters parameters)
 {
+	LOG()
 	SlotUpdate(parameters);
 
 	// plots TF update

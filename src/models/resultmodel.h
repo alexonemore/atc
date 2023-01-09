@@ -130,6 +130,7 @@ public:
 	void SetNewData(const Optimization::OptimizationVector* vec,
 					const ParametersNS::Parameters params,
 					const int x_size, const int y_size);
+	void UpdateParameters(const ParametersNS::Parameters& params);
 	void Clear();
 
 private:

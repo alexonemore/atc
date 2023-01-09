@@ -264,6 +264,14 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 	endResetModel();
 }
 
+void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
+{
+	beginResetModel();
+	parameters.temperature_result_unit = params.temperature_result_unit;
+	parameters.composition_result_unit = params.composition_result_unit;
+	endResetModel();
+}
+
 void ResultDetailModel::Clear()
 {
 	beginResetModel();

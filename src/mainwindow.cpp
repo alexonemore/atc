@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
 	setWindowIcon(QIcon(win::win_logo));
 
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateParameters,
-			this, &MainWindow::UpdateButtonHandler); // SignalUpdate
+			this, &MainWindow::UpdateParametersHandler); // SignalUpdate
 	connect(ui->calculation_parameters, &CalculationParameters::UpdateButtonClicked,
 			this, &MainWindow::SignalUpdateButtonClicked);
 	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
@@ -483,7 +483,7 @@ void MainWindow::SetupMenu()
 
 }
 
-void MainWindow::UpdateButtonHandler(const ParametersNS::Parameters parameters)
+void MainWindow::UpdateParametersHandler(const ParametersNS::Parameters parameters)
 {
 	// TODO update mainwindow for new parameters
 	// I don't know what to update in the mainwindow yet.

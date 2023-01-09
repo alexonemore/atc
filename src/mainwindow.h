@@ -130,7 +130,7 @@ signals:
 
 private:
 	void SetupMenu();
-	void UpdateButtonHandler(const ParametersNS::Parameters parameters);
+	void UpdateParametersHandler(const ParametersNS::Parameters parameters);
 	//demo
 	void CheckButtonHandler();
 	void PushButtonHandler();
