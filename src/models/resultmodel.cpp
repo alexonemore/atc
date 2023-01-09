@@ -240,6 +240,7 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 								   const ParametersNS::Parameters params,
 								   const int x_size, const int y_size)
 {
+	LOG("row_count:", row_count)
 	beginResetModel();
 	items = vec;
 	parameters = params;
@@ -265,6 +266,7 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 
 void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
 {
+	LOG("row_count:", row_count)
 	beginResetModel();
 	parameters.temperature_result_unit = params.temperature_result_unit;
 	parameters.composition_result_unit = params.composition_result_unit;
@@ -273,6 +275,7 @@ void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
 
 void ResultDetailModel::Clear()
 {
+	LOG("row_count:", row_count)
 	beginResetModel();
 	row_count = 0;
 	col_count = 0;
@@ -308,6 +311,7 @@ int ResultDetailModel::columnCount(const QModelIndex& parent) const
 QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
+	if(items == nullptr) return QVariant{};
 	switch (parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		return DataSingle(index, role);
@@ -453,7 +457,7 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
-QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const try
+QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 {
 	auto col = index.column();
 	auto row = index.row();
@@ -628,20 +632,13 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const try
 		}
 	}
 	return QVariant{};
-} catch(std::exception& e) {
-	LOG(e.what())
-	LOG(index, role)
-	return QVariant{};
 }
-
 
 QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 									   int role) const
 {
 #if 1
-	if(section >= row_count) {
-		LOG("section:", section)
-		LOG("row_count:", row_count)
+	if(section >= row_count || items == nullptr) {
 		return QVariant{};
 	}
 	if(role == Qt::DisplayRole && orientation == Qt::Vertical) {

@@ -492,6 +492,7 @@ void CoreApplication::SlotStartCalculations()
 void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 {
 	LOG("vec.size:", vec.size())
+	if(vec.empty()) return;
 	model_result->Clear();
 	model_detail_result->Clear();
 

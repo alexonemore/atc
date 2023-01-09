@@ -250,6 +250,9 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 		// fw->setFuture(QtConcurrent::map(vec.begin(), vec.end(), &Optimization::OptimizationItem::Calculate));
 		dialog->exec();
 		fw->waitForFinished();
+		if(fw->future().isCanceled()) {
+			vec.clear();
+		}
 #ifndef NDEBUG
 		qDebug() << "isFinished " << fw->future().isFinished();
 		qDebug() << "isCanceled " << fw->future().isCanceled();
