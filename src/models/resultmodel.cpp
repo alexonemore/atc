@@ -509,6 +509,40 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			}
 			break;
 		case ResultFields::DetailRowNames1D::T_result:
+			switch (col) {
+			case 0:
+				switch (target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::detail_row_names_1d.at(row).arg(tr("equilibrium"));
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::detail_row_names_1d.at(row).arg(tr("adiabatic"));
+				}
+				break;
+			case 1:
+				switch (workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return ParametersNS::temperature_units.at(
+								static_cast<int>(items->cbegin()->parameters.temperature_range_unit));
+				case ParametersNS::Workmode::CompositionRange:
+					return ParametersNS::temperature_units.at(
+								static_cast<int>(items->cbegin()->parameters.temperature_initial_unit));
+				default:
+					break;
+				}
+			}
+			if(col >= 2) {
+				auto i = col - 2;
+				switch (workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
+													  items->at(i).parameters.temperature_range_unit);
+				case ParametersNS::Workmode::CompositionRange:
+					return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
+													  items->at(i).parameters.temperature_initial_unit);
+				default:
+					break;
+				}
+			}
 			break;
 		case ResultFields::DetailRowNames1D::T_initial:
 			break;
