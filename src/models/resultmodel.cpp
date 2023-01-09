@@ -27,6 +27,8 @@ const QStringList col_names{
 	QT_TR_NOOP("Name"),
 	QT_TR_NOOP("Show")
 };
+const int col_names_size = static_cast<int>(col_names.size());
+
 const QStringList row_names{
 	QT_TR_NOOP("T %1"),
 	QT_TR_NOOP("T initial"),
@@ -38,9 +40,33 @@ const QStringList row_names{
 	QT_TR_NOOP("Sum at.%"),
 	QT_TR_NOOP("Sum wt.%")
 };
-const int col_names_size{static_cast<int>(col_names.size())};
-const int row_names_size{static_cast<int>(row_names.size())};
-}
+const int row_names_size = static_cast<int>(row_names.size());
+
+const QStringList detail_row_names_single{
+	QT_TR_NOOP("T units"),
+	QT_TR_NOOP("T %1"),
+	QT_TR_NOOP("T initial"),
+	QT_TR_NOOP("H initial"),
+	QT_TR_NOOP("H equilibrium"),
+	QT_TR_NOOP("c equilibrium"),
+	QT_TR_NOOP("Sum units"),
+	QT_TR_NOOP("Sum")
+};
+const int detail_row_names_single_size = static_cast<int>(detail_row_names_single.size());
+
+const QStringList detail_row_names_1d{
+	QT_TR_NOOP("%1"),
+	QT_TR_NOOP("T %1"),
+	QT_TR_NOOP("T initial"),
+	QT_TR_NOOP("H initial"),
+	QT_TR_NOOP("H equilibrium"),
+	QT_TR_NOOP("c equilibrium"),
+	QT_TR_NOOP("Sum")
+};
+const int detail_row_names_1d_size = static_cast<int>(detail_row_names_1d.size());
+
+
+} // namespace ResultFields
 
 ResultModel::ResultModel(QObject *parent)
 	: QAbstractTableModel{parent}
@@ -208,12 +234,31 @@ ResultDetailModel::~ResultDetailModel()
 
 }
 
-void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec)
+void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
+								   const int x_size, const int y_size)
 {
 	beginResetModel();
 	items = vec;
-	row_count = items->cbegin()->number.substances + ResultFields::row_names_size;
-	col_count = items->size();
+	workmode = items->cbegin()->parameters.workmode;
+	target = items->cbegin()->parameters.target;
+	row_count = items->cbegin()->number.substances;
+	col_count = x_size;
+	switch (workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		row_count += ResultFields::detail_row_names_single_size;
+		col_count += ParametersNS::composition_units.size();
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+	case ParametersNS::Workmode::CompositionRange:
+		row_count += ResultFields::detail_row_names_1d_size;
+		col_count += 2; // Names, Units
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		row_count = y_size + 1;
+		col_count += 1;
+		break;
+		break;
+	}
 	endResetModel();
 }
 
@@ -232,7 +277,6 @@ bool ResultDetailModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::IndexIsValid |
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
-
 
 int ResultDetailModel::rowCount(const QModelIndex& parent) const
 {
@@ -254,8 +298,49 @@ int ResultDetailModel::columnCount(const QModelIndex& parent) const
 
 QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
 {
+	if(!CheckIndexValidParent(index)) return QVariant{};
+	auto col = index.column();
+	auto row = index.row();
+	if(role == Qt::BackgroundRole) {
+		return QBrush{Qt::white};
+	}
 	if(role == Qt::DisplayRole) {
-		return QString{QString::number(index.row())+'/'+QString::number(index.column())};
+		switch (workmode) {
+		case ParametersNS::Workmode::SinglePoint:
+			return DataSingle(row, col);
+		case ParametersNS::Workmode::TemperatureRange:
+			break;
+		case ParametersNS::Workmode::CompositionRange:
+			break;
+		case ParametersNS::Workmode::TemperatureCompositionRange:
+			break;
+		}
 	}
 	return QVariant{};
 }
+
+QVariant ResultDetailModel::DataSingle(const int row, const int col) const
+{
+	switch (static_cast<ResultFields::DetailRowNamesSingle>(row)) {
+	case ResultFields::DetailRowNamesSingle::T_units:
+		switch (col) {
+		case 0: return tr("T units");
+		case 1: return tr("K");
+		case 2: return tr("C");
+		case 3: return tr("F");
+		default: break;
+		}
+		break;
+	case ResultFields::DetailRowNamesSingle::T_result:
+
+	case ResultFields::DetailRowNamesSingle::T_initial:
+	case ResultFields::DetailRowNamesSingle::H_initial:
+	case ResultFields::DetailRowNamesSingle::H_equilibrium:
+	case ResultFields::DetailRowNamesSingle::c_equilibrium:
+	case ResultFields::DetailRowNamesSingle::Sum_units:
+	case ResultFields::DetailRowNamesSingle::Sum_value:
+		break;
+	}
+	return QVariant{};
+}
+

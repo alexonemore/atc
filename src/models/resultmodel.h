@@ -27,13 +27,14 @@
 #include "optimization.h"
 
 namespace ResultFields {
-enum class ColNames
-{
+enum class ColNames {
 	ID,
 	Name,
 	Show
 };
 extern const QStringList col_names;
+extern const int col_names_size;
+
 enum class RowNames {
 	T_result,
 	T_initial,
@@ -46,6 +47,33 @@ enum class RowNames {
 	Sum_wtpct
 };
 extern const QStringList row_names;
+extern const int row_names_size;
+
+enum class DetailRowNamesSingle {
+	T_units,
+	T_result,
+	T_initial,
+	H_initial,
+	H_equilibrium,
+	c_equilibrium,
+	Sum_units,
+	Sum_value
+};
+extern const QStringList detail_row_names_single;
+extern const int detail_row_names_single_size;
+
+enum class DetailRowNames1D {
+	X_Axis_values,
+	T_result,
+	T_initial,
+	H_initial,
+	H_equilibrium,
+	c_equilibrium,
+	Sum_value
+};
+extern const QStringList detail_row_names_1d;
+extern const int detail_row_names_1d_size;
+
 } // namespace ResultFields
 
 class ResultModel : public QAbstractTableModel
@@ -93,17 +121,20 @@ class ResultDetailModel : public QAbstractTableModel
 	Q_DISABLE_COPY_MOVE(ResultDetailModel)
 private:
 	const Optimization::OptimizationVector* items;
+	ParametersNS::Workmode workmode;
+	ParametersNS::Target target;
 	int row_count;
 	int col_count;
 public:
 	explicit ResultDetailModel(QObject *parent = nullptr);
 	~ResultDetailModel() override;
-	void SetNewData(const Optimization::OptimizationVector* vec);
+	void SetNewData(const Optimization::OptimizationVector* vec,
+					const int x_size, const int y_size);
 	void Clear();
 
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-
+	QVariant DataSingle(const int row, const int col) const;
 
 	// QAbstractItemModel interface
 public:

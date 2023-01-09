@@ -118,6 +118,8 @@ class OptimizationItemsMaker final
 	size_t number_of_substances{0};	// N
 	Amounts sum;
 	OptimizationVector items;
+	int x_size{0};
+	int y_size{0};
 public:
 	OptimizationItemsMaker(const ParametersNS::Parameters& parameters_,
 						   const std::vector<int>& elements,
@@ -130,6 +132,8 @@ public:
 	~OptimizationItemsMaker();
 #endif
 	OptimizationVector& GetData() & { return items; }
+	auto GetXSize() const { return x_size; }
+	auto GetYSize() const { return y_size; }
 
 private:
 	std::vector<double> MakeTemperatureVector();

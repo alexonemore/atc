@@ -154,6 +154,8 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		items.reserve(1);
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
+		x_size = 1;
+		y_size = 1;
 		items.emplace_back(parameters, elements, temp_ranges,
 						   subs_element_composition, weights, amounts,
 						   temperature);
@@ -161,7 +163,9 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
 		auto temperatures = MakeTemperatureVector();
-		items.reserve(temperatures.size());
+		x_size = temperatures.size();
+		y_size = 1;
+		items.reserve(x_size);
 		for(const auto& temperature : temperatures) {
 			items.emplace_back(parameters, elements,
 							   temp_ranges, subs_element_composition,
@@ -173,7 +177,9 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		auto temperature = Thermodynamics::ToKelvin(parameters.temperature_initial,
 													parameters.temperature_initial_unit);
 		auto [composition, new_amounts] = MakeNewAmounts(amounts, weights);
-		items.reserve(new_amounts.size());
+		x_size = new_amounts.size();
+		y_size = 1;
+		items.reserve(x_size);
 		// std::transform makes copy, emplace_back doesn't
 		for(size_t i = 0; const auto& new_amount : new_amounts) {
 			items.emplace_back(parameters, elements,
@@ -187,7 +193,9 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		auto temperatures = MakeTemperatureVector();
 		auto [composition, new_amounts] = MakeNewAmounts(amounts, weights);
-		items.reserve(new_amounts.size() * temperatures.size());
+		x_size = temperatures.size();
+		y_size = new_amounts.size();
+		items.reserve(x_size * y_size);
 		for(const auto& temperature : temperatures) {
 			for(size_t i = 0; const auto& new_amount : new_amounts) {
 				items.emplace_back(parameters, elements,

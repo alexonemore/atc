@@ -477,6 +477,8 @@ void CoreApplication::SlotStartCalculations()
 	Optimization::OptimizationItemsMaker oim(parameters_, elements, temp_ranges,
 		subs_element_composition, composition_data.weights, composition_data.amounts);
 	auto vec{std::move(oim.GetData())};
+	x_size = oim.GetXSize();
+	y_size = oim.GetYSize();
 
 	// 6. emit vector
 	emit SignalStartCalculations(vec, parameters_.threads);
@@ -494,7 +496,7 @@ void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 
 	model_result->SetNewData(&(result_data.cbegin()->weights),
 							 parameters_.target);
-	model_detail_result->SetNewData(&result_data);
+	model_detail_result->SetNewData(&result_data, x_size, y_size);
 
 }
 

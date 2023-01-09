@@ -55,6 +55,8 @@ private:
 	ResultDetailModel* model_detail_result;
 
 	Optimization::OptimizationVector result_data;
+	int y_size{0};
+	int x_size{0};
 
 	// selected substance in TempRange and TabulatedTF
 	int selected_substance_id;
