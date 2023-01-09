@@ -86,8 +86,8 @@ private:
 		Qt::CheckState checked{Qt::Unchecked};
 	};
 private:
-	const SubstanceWeights* items;
-	ParametersNS::Target target;
+	const SubstanceWeights* items{nullptr};
+	ParametersNS::Target target{ParametersNS::Target::AdiabaticTemperature};
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
 public:
@@ -120,10 +120,10 @@ class ResultDetailModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_DISABLE_COPY_MOVE(ResultDetailModel)
 private:
-	const Optimization::OptimizationVector* items;
-	ParametersNS::Parameters parameters;
-	int row_count;
-	int col_count;
+	const Optimization::OptimizationVector* items{nullptr};
+	ParametersNS::Parameters parameters{};
+	int row_count{0};
+	int col_count{0};
 public:
 	explicit ResultDetailModel(QObject *parent = nullptr);
 	~ResultDetailModel() override;

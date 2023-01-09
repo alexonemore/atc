@@ -259,7 +259,6 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 		row_count = y_size + 1;
 		col_count += 1;
 		break;
-		break;
 	}
 	endResetModel();
 }
@@ -454,7 +453,7 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
-QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
+QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const try
 {
 	auto col = index.column();
 	auto row = index.row();
@@ -629,12 +628,22 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 		}
 	}
 	return QVariant{};
+} catch(std::exception& e) {
+	LOG(e.what())
+	LOG(index, role)
+	return QVariant{};
 }
 
 
 QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 									   int role) const
 {
+#if 1
+	if(section >= row_count) {
+		LOG("section:", section)
+		LOG("row_count:", row_count)
+		return QVariant{};
+	}
 	if(role == Qt::DisplayRole && orientation == Qt::Vertical) {
 		switch (parameters.workmode) {
 		case ParametersNS::Workmode::SinglePoint:
@@ -697,5 +706,6 @@ QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 			break;
 		}
 	}
+#endif
 	return QVariant{};
 }
