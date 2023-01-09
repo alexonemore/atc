@@ -197,7 +197,7 @@ void MainWindow::SetResultModel(QAbstractItemModel* model)
 void MainWindow::SetResultDetailModel(QAbstractItemModel* model)
 {
 	LOG()
-	ui->result_view->SetDetailModel(model);
+	ui->result_table_view->setModel(model);
 }
 
 void MainWindow::SetModel_1(QAbstractItemModel* model)

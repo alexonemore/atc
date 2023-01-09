@@ -159,7 +159,9 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 	// Table headers
 	if (with_headers) {
-		html_result.append("<tr><th>");
+		html_result.append("<tr><th>***</th><th>");
+		result.append("***");
+		result.append(fieldSepText);
 		int firstColumn = *cols_in_indexes.begin();
 
 		for(int col : cols_in_indexes) {
@@ -178,7 +180,17 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 	// Iterate over rows x cols checking if the index actually exists
 	// when needed, in order to support non-rectangular selections.
-	for(const int row : rows_in_indexes) {
+	for(int ff = 0; const int row : rows_in_indexes) {
+		if(with_headers) {
+			QByteArray headerText = model()->headerData(row,
+								Qt::Vertical, Qt::DisplayRole).toByteArray();
+			if (ff++) {
+				result.append(rowSepText); // if row is not first
+			}
+			result.append(headerText);
+			result.append(fieldSepText);
+			html_result.append(QString{"<tr><td>%1</td>"}.arg(headerText));
+		}
 		for(const int column : cols_in_indexes) {
 			const QModelIndex index = indices.first().sibling(row, column);
 			QString style;
@@ -204,9 +216,13 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			// Separators. For first cell, only opening table row tags
 			// must be added for the HTML and nothing for the text version.
 			if (index.row() == *rows_in_indexes.begin() && index.column() == *cols_in_indexes.begin()) {
-				html_result.append(QString("<tr><td %1>").arg(style));
+				if(!with_headers) {
+					html_result.append(QString("<tr><td %1>").arg(style));
+				}
 			} else if (index.row() != current_row) {
-				result.append(rowSepText);
+				if(!with_headers) {
+					result.append(rowSepText);
+				}
 				html_result.append(QString("</td></tr><tr><td %1>").arg(style));
 			} else {
 				result.append(fieldSepText);
@@ -248,6 +264,9 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 	mime_data->setHtml(html_result + "</td></tr></table></body></html>");
 	mime_data->setText(result);
+
+	LOG(result)
+	LOG(html_result)
 }
 
 void Table::keyPressEvent(QKeyEvent* event)

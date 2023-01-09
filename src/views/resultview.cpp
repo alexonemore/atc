@@ -25,7 +25,6 @@ ResultView::ResultView(QWidget *parent)
 	: QWidget{parent}
 {
 	table_check = new QTableView(this);
-	table_detail = new Table(this);
 	plot2d_graph = new Plot2DGraph(this);
 	plot2d_heatmap = new Plot2DHeatMap(this);
 	plot3d = new Plot3DSurface(this);
@@ -36,7 +35,6 @@ ResultView::ResultView(QWidget *parent)
 	splitter->setChildrenCollapsible(false);
 	splitter->addWidget(table_check);
 	splitter->addWidget(tabs);
-	tabs->addTab(table_detail, tr("Table"));
 	tabs->addTab(plot2d_graph, tr("Graph"));
 	tabs->addTab(plot2d_heatmap, tr("HeatMap"));
 	tabs->addTab(plot3d, tr("3DView"));
@@ -50,10 +48,6 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setSelectionBehavior(QAbstractItemView::SelectItems);
 	table_check->verticalHeader()->setVisible(false);
 
-	table_detail->setSelectionBehavior(QAbstractItemView::SelectItems);
-	table_detail->verticalHeader()->setVisible(true);
-	table_detail->horizontalHeader()->setVisible(false);
-
 }
 
 ResultView::~ResultView()
@@ -64,11 +58,6 @@ ResultView::~ResultView()
 void ResultView::SetModel(QAbstractItemModel* model)
 {
 	table_check->setModel(model);
-}
-
-void ResultView::SetDetailModel(QAbstractItemModel* model)
-{
-	table_detail->setModel(model);
 }
 
 void ResultView::Initialize()

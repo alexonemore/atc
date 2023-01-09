@@ -24,7 +24,6 @@
 #include "plot2dgraph.h"
 #include "plot2dheatmap.h"
 #include "plot3dsurface.h"
-#include "table.h"
 
 class ResultView : public QWidget
 {
@@ -32,7 +31,6 @@ class ResultView : public QWidget
 	Q_DISABLE_COPY_MOVE(ResultView)
 private:
 	QTableView* table_check;
-	Table* table_detail;
 	Plot2DGraph* plot2d_graph;
 	Plot2DHeatMap* plot2d_heatmap;
 	Plot3DSurface* plot3d;
@@ -40,7 +38,6 @@ public:
 	explicit ResultView(QWidget *parent = nullptr);
 	~ResultView() override;
 	void SetModel(QAbstractItemModel* model);
-	void SetDetailModel(QAbstractItemModel* model);
 	void Initialize();
 signals:
 

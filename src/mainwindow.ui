@@ -371,6 +371,28 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="tab_result_table">
+           <attribute name="title">
+            <string>Result Table</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="Table" name="result_table_view"/>
+            </item>
+           </layout>
+          </widget>
           <widget class="QWidget" name="tab_6_Result">
            <attribute name="title">
             <string>Result</string>
