@@ -496,7 +496,7 @@ void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 
 	model_result->SetNewData(&(result_data.cbegin()->weights),
 							 parameters_.target);
-	model_detail_result->SetNewData(&result_data, x_size, y_size);
+	model_detail_result->SetNewData(&result_data, parameters_, x_size, y_size);
 
 }
 

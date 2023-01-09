@@ -142,6 +142,8 @@ struct Parameters
 	int				at_accuracy			{1}; // digits after the decimal point
 	ShowPhases		show_phases			{};
 	QStringList		checked_elements;
+	TemperatureUnit	temperature_result_unit {TemperatureUnit::Kelvin};
+	CompositionUnit	composition_result_unit {CompositionUnit::Mol};
 
 	Parameters();
 	void FixInputParameters();

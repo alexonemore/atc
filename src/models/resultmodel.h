@@ -121,14 +121,14 @@ class ResultDetailModel : public QAbstractTableModel
 	Q_DISABLE_COPY_MOVE(ResultDetailModel)
 private:
 	const Optimization::OptimizationVector* items;
-	ParametersNS::Workmode workmode;
-	ParametersNS::Target target;
+	ParametersNS::Parameters parameters;
 	int row_count;
 	int col_count;
 public:
 	explicit ResultDetailModel(QObject *parent = nullptr);
 	~ResultDetailModel() override;
 	void SetNewData(const Optimization::OptimizationVector* vec,
+					const ParametersNS::Parameters params,
 					const int x_size, const int y_size);
 	void Clear();
 

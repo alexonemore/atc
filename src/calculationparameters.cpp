@@ -38,6 +38,8 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 	ui->temperature_units->addItems(ParametersNS::temperature_units);
 	ui->pressure_initial_units->addItems(ParametersNS::pressure_units);
 	ui->pressure_units->addItems(ParametersNS::pressure_units);
+	ui->temperature_result_units->addItems(ParametersNS::temperature_units);
+	ui->composition_result_units->addItems(ParametersNS::composition_units);
 
 	connect(ui->update, &QPushButton::clicked,
 			this, &CalculationParameters::UpdateButtonHandler);
@@ -49,7 +51,7 @@ CalculationParameters::CalculationParameters(QWidget *parent) :
 			this, &CalculationParameters::Clear);
 
 	connect(ui->periodic_table, &PeriodicTable::SignalClickedElementButton,
-			this, &CalculationParameters::Update);
+			this, &CalculationParameters::UpdateSelectedElements);
 
 	SetupParameters();
 }
@@ -102,6 +104,9 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 
 	p.checked_elements = ui->periodic_table->GetCheckedElements();
 
+	p.temperature_result_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_result_units->currentIndex());
+	p.composition_range_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition_result_units->currentIndex());
+
 	p.FixInputParameters();
 	SetupParameters(p);
 	return p;
@@ -150,9 +155,12 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 	ui->show_solid->setChecked(p.show_phases.solid);
 	ui->show_aqueous->setChecked(p.show_phases.aqueous);
 	ui->show_ions->setChecked(p.show_phases.ions);
+
+	ui->temperature_result_units->setCurrentIndex(static_cast<int>(p.temperature_result_unit));
+	ui->composition_result_units->setCurrentIndex(static_cast<int>(p.composition_result_unit));
 }
 
-void CalculationParameters::Update()
+void CalculationParameters::UpdateSelectedElements()
 {
 	emit UpdateParameters(GetCurrentParameters());
 }
@@ -171,6 +179,6 @@ void CalculationParameters::Clear()
 
 void CalculationParameters::CalculateButtonHandler()
 {
-	Update();
+	UpdateSelectedElements();
 	emit StartCalculate();
 }

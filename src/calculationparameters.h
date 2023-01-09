@@ -41,7 +41,7 @@ private:
 	ParametersNS::Parameters GetCurrentParameters();
 	void SetupParameters(const ParametersNS::Parameters p = ParametersNS::Parameters{});
 private slots:
-	void Update();
+	void UpdateSelectedElements();
 	void UpdateButtonHandler();
 	void Clear();
 	void CalculateButtonHandler();
