@@ -185,11 +185,15 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			QByteArray headerText = model()->headerData(row,
 								Qt::Vertical, Qt::DisplayRole).toByteArray();
 			if (ff++) {
-				result.append(rowSepText); // if row is not first
+				// if row is not first
+				result.append(rowSepText);
+				html_result.append(QString{"</td></tr><tr><td>%1</td>"}.arg(headerText));
+			} else {
+				html_result.append(QString{"<tr><td>%1</td>"}.arg(headerText));
 			}
 			result.append(headerText);
 			result.append(fieldSepText);
-			html_result.append(QString{"<tr><td>%1</td>"}.arg(headerText));
+
 		}
 		for(const int column : cols_in_indexes) {
 			const QModelIndex index = indices.first().sibling(row, column);
@@ -218,12 +222,16 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			if (index.row() == *rows_in_indexes.begin() && index.column() == *cols_in_indexes.begin()) {
 				if(!with_headers) {
 					html_result.append(QString("<tr><td %1>").arg(style));
+				} else {
+					html_result.append(QString("<td %1>").arg(style));
 				}
 			} else if (index.row() != current_row) {
 				if(!with_headers) {
 					result.append(rowSepText);
+					html_result.append(QString("</td></tr><tr><td %1>").arg(style));
+				} else {
+					html_result.append(QString("<td %1>").arg(style));
 				}
-				html_result.append(QString("</td></tr><tr><td %1>").arg(style));
 			} else {
 				result.append(fieldSepText);
 				html_result.append(QString("</td><td %1>").arg(style));
