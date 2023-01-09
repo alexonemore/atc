@@ -135,6 +135,7 @@ public:
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
 	QVariant DataSingle(const QModelIndex& index, int role) const;
+	QVariant Data1D(const QModelIndex& index, int role) const;
 
 	// QAbstractItemModel interface
 public:

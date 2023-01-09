@@ -305,9 +305,8 @@ QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
 	case ParametersNS::Workmode::SinglePoint:
 		return DataSingle(index, role);
 	case ParametersNS::Workmode::TemperatureRange:
-		break;
 	case ParametersNS::Workmode::CompositionRange:
-		break;
+		return Data1D(index, role);
 	case ParametersNS::Workmode::TemperatureCompositionRange:
 		break;
 	}
@@ -447,3 +446,86 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
+QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
+{
+	auto col = index.column();
+	auto row = index.row();
+	if(role == Qt::BackgroundRole) {
+		switch (static_cast<ResultFields::DetailRowNames1D>(row)) {
+		case ResultFields::DetailRowNames1D::X_Axis_values:
+			return QBrush{ResultFields::red};
+		case ResultFields::DetailRowNames1D::T_result:
+			return QBrush{ResultFields::green};
+		case ResultFields::DetailRowNames1D::T_initial:
+		case ResultFields::DetailRowNames1D::H_initial:
+		case ResultFields::DetailRowNames1D::H_equilibrium:
+		case ResultFields::DetailRowNames1D::c_equilibrium:
+			break;
+		case ResultFields::DetailRowNames1D::Sum_value:
+			return QBrush{Qt::lightGray};
+		default:
+			break;
+		}
+		return QBrush{Qt::white};
+	}
+	if(role == Qt::DisplayRole) {
+		switch (static_cast<ResultFields::DetailRowNames1D>(row)) {
+		case ResultFields::DetailRowNames1D::X_Axis_values:
+			switch (col) {
+			case 0:
+				switch (workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return ResultFields::detail_row_names_1d.at(row).arg(tr("T initial"));
+				case ParametersNS::Workmode::CompositionRange:
+					return ResultFields::detail_row_names_1d.at(row).arg(tr("Composition"));
+				default:
+					break;
+				}
+				break;
+			case 1:
+				switch (workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return ParametersNS::temperature_units.at(
+								static_cast<int>(items->cbegin()->parameters.temperature_range_unit));
+				case ParametersNS::Workmode::CompositionRange:
+					return ParametersNS::composition_units.at(
+								static_cast<int>(items->cbegin()->parameters.composition_range_unit));
+				default:
+					break;
+				}
+				break;
+			}
+			if(col >= 2) {
+				auto i = col - 2;
+				switch (workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
+													  items->at(i).parameters.temperature_range_unit);
+				case ParametersNS::Workmode::CompositionRange:
+					return items->at(i).composition_variable;
+				default:
+					break;
+				}
+			}
+			break;
+		case ResultFields::DetailRowNames1D::T_result:
+			break;
+		case ResultFields::DetailRowNames1D::T_initial:
+			break;
+		case ResultFields::DetailRowNames1D::H_initial:
+			break;
+		case ResultFields::DetailRowNames1D::H_equilibrium:
+			break;
+		case ResultFields::DetailRowNames1D::c_equilibrium:
+			break;
+		case ResultFields::DetailRowNames1D::Sum_value:
+			break;
+		default:
+			break;
+		}
+		if(row >= ResultFields::detail_row_names_1d_size) {
+
+		}
+	}
+	return QVariant{};
+}
