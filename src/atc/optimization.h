@@ -110,7 +110,11 @@ class OptimizationVector
 	QVector<different_data>;
 };*/
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+using OptimizationVector = std::vector<OptimizationItem>;
+#else
 using OptimizationVector = QVector<OptimizationItem>;
+#endif
 
 class OptimizationItemsMaker final
 {
