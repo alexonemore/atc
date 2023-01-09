@@ -494,7 +494,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
 					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_range_unit));
+								static_cast<int>(parameters.temperature_result_unit));
 				case ParametersNS::Workmode::CompositionRange:
 					return ParametersNS::composition_units.at(
 								static_cast<int>(parameters.composition_range_unit));
@@ -508,7 +508,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
 					return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
-													  parameters.temperature_range_unit);
+													  parameters.temperature_result_unit);
 				case ParametersNS::Workmode::CompositionRange:
 					return items->at(i).composition_variable;
 				default:
@@ -530,7 +530,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
 					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_range_unit));
+								static_cast<int>(parameters.temperature_result_unit));
 				case ParametersNS::Workmode::CompositionRange:
 					return ParametersNS::temperature_units.at(
 								static_cast<int>(parameters.temperature_initial_unit));
@@ -540,16 +540,8 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			}
 			if(col >= 2) {
 				auto i = col - 2;
-				switch (parameters.workmode) {
-				case ParametersNS::Workmode::TemperatureRange:
-					return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
-													  parameters.temperature_range_unit);
-				case ParametersNS::Workmode::CompositionRange:
-					return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
-													  parameters.temperature_initial_unit);
-				default:
-					break;
-				}
+				return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
+												  parameters.temperature_result_unit);
 			}
 			break;
 		case ResultFields::DetailRowNames1D::T_initial:
@@ -557,29 +549,13 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			case 0:
 				return ResultFields::detail_row_names_1d.at(row);
 			case 1:
-				switch (parameters.workmode) {
-				case ParametersNS::Workmode::TemperatureRange:
-					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_range_unit));
-				case ParametersNS::Workmode::CompositionRange:
-					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_initial_unit));
-				default:
-					break;
-				}
+				return ParametersNS::temperature_units.at(
+							static_cast<int>(parameters.temperature_result_unit));
 			}
 			if(col >= 2) {
 				auto i = col - 2;
-				switch (parameters.workmode) {
-				case ParametersNS::Workmode::TemperatureRange:
-					return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
-													  parameters.temperature_range_unit);
-				case ParametersNS::Workmode::CompositionRange:
-					return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
-													  parameters.temperature_initial_unit);
-				default:
-					break;
-				}
+				return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
+												  parameters.temperature_result_unit);
 			}
 			break;
 		case ResultFields::DetailRowNames1D::H_initial:
@@ -616,11 +592,21 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			switch (col) {
 			case 0: return ResultFields::detail_row_names_1d.at(row);
 			case 1:
-				return tr("[mol]");
+				return ParametersNS::composition_units.at(
+							static_cast<int>(parameters.composition_result_unit));
 			}
 			if(col >= 2) {
-				auto i = col - 2;
-				return items->at(i).sum_of_equilibrium.sum_mol;
+				auto j = col - 2;
+				switch (parameters.composition_result_unit) {
+				case ParametersNS::CompositionUnit::AtomicPercent:
+					return items->at(j).sum_of_equilibrium.sum_atpct;
+				case ParametersNS::CompositionUnit::WeightPercent:
+					return items->at(j).sum_of_equilibrium.sum_wtpct;
+				case ParametersNS::CompositionUnit::Mol:
+					return items->at(j).sum_of_equilibrium.sum_mol;
+				case ParametersNS::CompositionUnit::Gram:
+					return items->at(j).sum_of_equilibrium.sum_gram;
+				}
 			}
 			break;
 		}
@@ -631,12 +617,22 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			case 0:
 				return first->weights.at(i).formula;
 			case 1:
-				return tr("mol");
+				return ParametersNS::composition_units.at(
+							static_cast<int>(parameters.composition_result_unit));
 			}
 			if(col >= 2) {
 				auto j = col - 2;
-				return items->at(j).amounts_of_equilibrium.at(
-							first->weights.at(i).id).sum_mol;
+				const auto& val = items->at(j).amounts_of_equilibrium.at(first->weights.at(i).id);
+				switch (parameters.composition_result_unit) {
+				case ParametersNS::CompositionUnit::AtomicPercent:
+					return val.sum_atpct;
+				case ParametersNS::CompositionUnit::WeightPercent:
+					return val.sum_wtpct;
+				case ParametersNS::CompositionUnit::Mol:
+					return val.sum_mol;
+				case ParametersNS::CompositionUnit::Gram:
+					return val.sum_gram;
+				}
 			}
 		}
 	}
