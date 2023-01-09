@@ -227,6 +227,7 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 
 ResultDetailModel::ResultDetailModel(QObject* parent)
 	: QAbstractTableModel{parent}
+	, col_count{ResultFields::detail_row_names_single_size}
 {
 
 }

@@ -20,6 +20,8 @@
 #include "resultview.h"
 #include <QSplitter>
 #include <QTabWidget>
+#include "parameters.h"
+#include "resultmodel.h"
 
 ResultView::ResultView(QWidget *parent)
 	: QWidget{parent}
@@ -62,6 +64,7 @@ void ResultView::SetModel(QAbstractItemModel* model)
 
 void ResultView::Initialize()
 {
-	//table->setColumnHidden(0, true);
-//	table_detail->setColumnHidden(0, true);
+	table_check->setColumnHidden(static_cast<int>(ResultFields::ColNames::ID), true);
+	table_check->setColumnWidth(static_cast<int>(ResultFields::ColNames::Show),
+								ParametersNS::GUISize::table_column_width);
 }
