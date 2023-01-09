@@ -630,3 +630,75 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 	}
 	return QVariant{};
 }
+
+
+QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
+									   int role) const
+{
+	if(role == Qt::DisplayRole && orientation == Qt::Vertical) {
+		switch (parameters.workmode) {
+		case ParametersNS::Workmode::SinglePoint:
+			switch (static_cast<ResultFields::DetailRowNamesSingle>(section)) {
+			case ResultFields::DetailRowNamesSingle::T_result:
+				switch (parameters.target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::detail_row_names_single.at(section).arg(tr("equilibrium"));
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::detail_row_names_single.at(section).arg(tr("adiabatic"));
+				}
+			case ResultFields::DetailRowNamesSingle::T_units:
+			case ResultFields::DetailRowNamesSingle::T_initial:
+			case ResultFields::DetailRowNamesSingle::H_initial:
+			case ResultFields::DetailRowNamesSingle::H_equilibrium:
+			case ResultFields::DetailRowNamesSingle::c_equilibrium:
+			case ResultFields::DetailRowNamesSingle::Sum_units:
+			case ResultFields::DetailRowNamesSingle::Sum_value:
+				return ResultFields::detail_row_names_single.at(section);
+			}
+			if(section >= ResultFields::detail_row_names_single_size) {
+				auto i = section - ResultFields::detail_row_names_single_size;
+				return items->cbegin()->weights.at(i).formula;
+			}
+			break;
+		case ParametersNS::Workmode::TemperatureRange:
+		case ParametersNS::Workmode::CompositionRange:
+			switch (static_cast<ResultFields::DetailRowNames1D>(section)) {
+			case ResultFields::DetailRowNames1D::X_Axis_values:
+				switch (parameters.workmode) {
+				case ParametersNS::Workmode::TemperatureRange:
+					return ResultFields::detail_row_names_1d.at(section).arg(tr("T initial"));
+				case ParametersNS::Workmode::CompositionRange:
+					return ResultFields::detail_row_names_1d.at(section).arg(tr("Composition"));
+				default:
+					break;
+				}
+				break;
+			case ResultFields::DetailRowNames1D::T_result:
+				switch (parameters.target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::detail_row_names_1d.at(section).arg(tr("equilibrium"));
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::detail_row_names_1d.at(section).arg(tr("adiabatic"));
+				}
+				break;
+			case ResultFields::DetailRowNames1D::T_initial:
+			case ResultFields::DetailRowNames1D::H_initial:
+			case ResultFields::DetailRowNames1D::H_equilibrium:
+			case ResultFields::DetailRowNames1D::c_equilibrium:
+			case ResultFields::DetailRowNames1D::Sum_value:
+				return ResultFields::detail_row_names_1d.at(section);
+			}
+			if(section >= ResultFields::detail_row_names_1d_size) {
+				auto i = section - ResultFields::detail_row_names_1d_size;
+				return items->cbegin()->weights.at(i).formula;
+			}
+			break;
+		case ParametersNS::Workmode::TemperatureCompositionRange:
+			break;
+		}
+	}
+	if(role == Qt::BackgroundRole) {
+		return QBrush{QColor{Qt::green}};
+	}
+	return QVariant{};
+}

@@ -51,7 +51,7 @@ ResultView::ResultView(QWidget *parent)
 	table_check->verticalHeader()->setVisible(false);
 
 	table_detail->setSelectionBehavior(QAbstractItemView::SelectItems);
-	table_detail->verticalHeader()->setVisible(false);
+	table_detail->verticalHeader()->setVisible(true);
 	table_detail->horizontalHeader()->setVisible(false);
 
 }
@@ -74,4 +74,5 @@ void ResultView::SetDetailModel(QAbstractItemModel* model)
 void ResultView::Initialize()
 {
 	//table->setColumnHidden(0, true);
+//	table_detail->setColumnHidden(0, true);
 }
