@@ -255,7 +255,7 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 	case ParametersNS::Workmode::TemperatureRange:
 	case ParametersNS::Workmode::CompositionRange:
 		row_count += ResultFields::detail_row_names_1d_size;
-		col_count += 2; // Names, Units
+		col_count += 1; // Units
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
 		row_count = y_size + 1;
@@ -353,29 +353,20 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 		switch (static_cast<ResultFields::DetailRowNamesSingle>(row)) {
 		case ResultFields::DetailRowNamesSingle::T_units:
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return tr("K");
-			case 2: return tr("C");
-			case 3: return tr("F");
+			case 0: return tr("K");
+			case 1: return tr("C");
+			case 2: return tr("F");
 			default: break;
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::T_result:
 			switch (col) {
 			case 0:
-				switch (parameters.target) {
-				case ParametersNS::Target::Equilibrium:
-					return ResultFields::detail_row_names_single.at(row).arg(tr("equilibrium"));
-				case ParametersNS::Target::AdiabaticTemperature:
-					return ResultFields::detail_row_names_single.at(row).arg(tr("adiabatic"));
-				}
-				break;
-			case 1:
 				return items->cbegin()->temperature_K_current;
-			case 2:
+			case 1:
 				return Thermodynamics::FromKelvin(items->cbegin()->temperature_K_current,
 												  ParametersNS::TemperatureUnit::Celsius);
-			case 3:
+			case 2:
 				return Thermodynamics::FromKelvin(items->cbegin()->temperature_K_current,
 												  ParametersNS::TemperatureUnit::Fahrenheit);
 			}
@@ -383,45 +374,39 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 		case ResultFields::DetailRowNamesSingle::T_initial:
 			switch (col) {
 			case 0:
-				return ResultFields::detail_row_names_single.at(row);
-			case 1:
 				return items->cbegin()->temperature_K_initial;
-			case 2:
+			case 1:
 				return Thermodynamics::FromKelvin(items->cbegin()->temperature_K_initial,
 												  ParametersNS::TemperatureUnit::Celsius);
-			case 3:
+			case 2:
 				return Thermodynamics::FromKelvin(items->cbegin()->temperature_K_initial,
 												  ParametersNS::TemperatureUnit::Fahrenheit);
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::H_initial:
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return items->cbegin()->H_initial;
-			case 2: return tr("[kJ/mol]");
+			case 0: return items->cbegin()->H_initial;
+			case 1: return tr("[kJ/mol]");
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::H_equilibrium:
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return items->cbegin()->H_current;
-			case 2: return tr("[kJ/mol]");
+			case 0: return items->cbegin()->H_current;
+			case 1: return tr("[kJ/mol]");
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::c_equilibrium:
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return items->cbegin()->result_of_optimization;
-			case 2: return tr("[G/RT]");
+			case 0: return items->cbegin()->result_of_optimization;
+			case 1: return tr("[G/RT]");
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::Sum_units:
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return tr("mol");
-			case 2: return tr("gram");
-			case 3: return tr("at.%");
-			case 4: return tr("wt.%");
+			case 0: return tr("mol");
+			case 1: return tr("gram");
+			case 2: return tr("at.%");
+			case 3: return tr("wt.%");
 			default: break;
 			}
 			break;
@@ -430,11 +415,10 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 					? items->cbegin()->sum_of_initial
 					: items->cbegin()->sum_of_equilibrium;
 			switch (col) {
-			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return sum.sum_mol;
-			case 2: return sum.sum_gram;
-			case 3: return sum.sum_atpct;
-			case 4: return sum.sum_wtpct;
+			case 0: return sum.sum_mol;
+			case 1: return sum.sum_gram;
+			case 2: return sum.sum_atpct;
+			case 3: return sum.sum_wtpct;
 			}
 			break;
 		}
@@ -446,11 +430,10 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 					? first->amounts.at(id)
 					: first->amounts_of_equilibrium.at(id);
 			switch (col) {
-			case 0: return first->weights.at(i).formula;
-			case 1: return val.sum_mol;
-			case 2: return val.sum_gram;
-			case 3: return val.sum_atpct;
-			case 4: return val.sum_wtpct;
+			case 0: return val.sum_mol;
+			case 1: return val.sum_gram;
+			case 2: return val.sum_atpct;
+			case 3: return val.sum_wtpct;
 			}
 		}
 	}
@@ -482,18 +465,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 	if(role == Qt::DisplayRole) {
 		switch (static_cast<ResultFields::DetailRowNames1D>(row)) {
 		case ResultFields::DetailRowNames1D::X_Axis_values:
-			switch (col) {
-			case 0:
-				switch (parameters.workmode) {
-				case ParametersNS::Workmode::TemperatureRange:
-					return ResultFields::detail_row_names_1d.at(row).arg(tr("T initial"));
-				case ParametersNS::Workmode::CompositionRange:
-					return ResultFields::detail_row_names_1d.at(row).arg(tr("Composition"));
-				default:
-					break;
-				}
-				break;
-			case 1:
+			if(col == 0) {
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
 					return ParametersNS::temperature_units.at(
@@ -504,10 +476,9 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 				default:
 					break;
 				}
-				break;
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
 					return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
@@ -520,78 +491,61 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			}
 			break;
 		case ResultFields::DetailRowNames1D::T_result:
-			switch (col) {
-			case 0:
-				switch (parameters.target) {
-				case ParametersNS::Target::Equilibrium:
-					return ResultFields::detail_row_names_1d.at(row).arg(tr("equilibrium"));
-				case ParametersNS::Target::AdiabaticTemperature:
-					return ResultFields::detail_row_names_1d.at(row).arg(tr("adiabatic"));
-				}
-				break;
-			case 1:
+			if(col == 0) {
 				return ParametersNS::temperature_units.at(
 							static_cast<int>(parameters.temperature_result_unit));
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
 												  parameters.temperature_result_unit);
 			}
 			break;
 		case ResultFields::DetailRowNames1D::T_initial:
-			switch (col) {
-			case 0:
-				return ResultFields::detail_row_names_1d.at(row);
-			case 1:
+			if(col == 0) {
 				return ParametersNS::temperature_units.at(
 							static_cast<int>(parameters.temperature_result_unit));
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
 												  parameters.temperature_result_unit);
 			}
 			break;
 		case ResultFields::DetailRowNames1D::H_initial:
-			switch (col) {
-			case 0: return ResultFields::detail_row_names_1d.at(row);
-			case 1: return tr("[kJ/mol]");
+			if(col == 0) {
+				return tr("[kJ/mol]");
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				return items->at(i).H_initial;
 			}
 			break;
 		case ResultFields::DetailRowNames1D::H_equilibrium:
-			switch (col) {
-			case 0: return ResultFields::detail_row_names_1d.at(row);
-			case 1: return tr("[kJ/mol]");
+			if(col == 0) {
+				return tr("[kJ/mol]");
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				return items->at(i).H_current;
 			}
 			break;
 		case ResultFields::DetailRowNames1D::c_equilibrium:
-			switch (col) {
-			case 0: return ResultFields::detail_row_names_1d.at(row);
-			case 1: return tr("[G/RT]");
+			if(col == 0) {
+				return tr("[G/RT]");
 			}
-			if(col >= 2) {
-				auto i = col - 2;
+			if(col >= 1) {
+				auto i = col - 1;
 				return items->at(i).result_of_optimization;
 			}
 			break;
 		case ResultFields::DetailRowNames1D::Sum_value:
-			switch (col) {
-			case 0: return ResultFields::detail_row_names_1d.at(row);
-			case 1:
+			if(col == 0) {
 				return ParametersNS::composition_units.at(
 							static_cast<int>(parameters.composition_result_unit));
 			}
-			if(col >= 2) {
-				auto j = col - 2;
+			if(col >= 1) {
+				auto j = col - 1;
 				const auto& sum = parameters.show_initial_in_result
 						? items->at(j).sum_of_initial
 						: items->at(j).sum_of_equilibrium;
@@ -611,15 +565,12 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 		if(row >= ResultFields::detail_row_names_1d_size) {
 			auto i = row - ResultFields::detail_row_names_1d_size;
 			auto first = items->cbegin();
-			switch (col) {
-			case 0:
-				return first->weights.at(i).formula;
-			case 1:
+			if(col == 0) {
 				return ParametersNS::composition_units.at(
 							static_cast<int>(parameters.composition_result_unit));
 			}
-			if(col >= 2) {
-				auto j = col - 2;
+			if(col >= 1) {
+				auto j = col - 1;
 				auto id = first->weights.at(i).id;
 				const auto& val = parameters.show_initial_in_result
 						? items->at(j).amounts.at(id)
@@ -643,7 +594,6 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 									   int role) const
 {
-#if 1
 	if(section >= row_count || items == nullptr) {
 		return QVariant{};
 	}
@@ -709,6 +659,5 @@ QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 			break;
 		}
 	}
-#endif
 	return QVariant{};
 }

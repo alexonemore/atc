@@ -156,7 +156,6 @@ void MainWindow::Initialize()
 	ui->plot_tf_view->Initialize();
 	ui->result_view->Initialize();
 	ui->amounts_view->setColumnHidden(static_cast<int>(AmountsModelFields::Names::ID), true);
-	ui->result_table_view->setColumnHidden(0, true);
 }
 
 void MainWindow::SetSubstancesTableModel(QAbstractItemModel* model)
