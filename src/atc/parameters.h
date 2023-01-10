@@ -144,6 +144,7 @@ struct Parameters
 	QStringList		checked_elements;
 	TemperatureUnit	temperature_result_unit {TemperatureUnit::Kelvin};
 	CompositionUnit	composition_result_unit {CompositionUnit::Mol};
+	bool			show_initial_in_result	{false};
 
 	Parameters();
 	void FixInputParameters();

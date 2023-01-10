@@ -57,6 +57,7 @@ struct OptimizationItem final
 	SubstanceWeights weights;
 	Composition amounts;
 	Composition amounts_of_equilibrium;
+	Amounts sum_of_initial;
 	Amounts sum_of_equilibrium;
 
 	std::vector<double> n, c;				// size = N, number_of_substances

@@ -106,6 +106,7 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 
 	p.temperature_result_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_result_units->currentIndex());
 	p.composition_result_unit = static_cast<ParametersNS::CompositionUnit>(ui->composition_result_units->currentIndex());
+	p.show_initial_in_result = ui->show_initial_in_result->isChecked();
 
 	p.FixInputParameters();
 	SetupParameters(p);
@@ -158,6 +159,7 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 
 	ui->temperature_result_units->setCurrentIndex(static_cast<int>(p.temperature_result_unit));
 	ui->composition_result_units->setCurrentIndex(static_cast<int>(p.composition_result_unit));
+	ui->show_initial_in_result->setChecked(p.show_initial_in_result);
 }
 
 void CalculationParameters::UpdateSelectedElements()

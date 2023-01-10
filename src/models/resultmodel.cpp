@@ -271,6 +271,7 @@ void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
 	beginResetModel();
 	parameters.temperature_result_unit = params.temperature_result_unit;
 	parameters.composition_result_unit = params.composition_result_unit;
+	parameters.show_initial_in_result = params.show_initial_in_result;
 	endResetModel();
 }
 
@@ -425,33 +426,31 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 			}
 			break;
 		case ResultFields::DetailRowNamesSingle::Sum_value:
+			const auto& sum = parameters.show_initial_in_result
+					? items->cbegin()->sum_of_initial
+					: items->cbegin()->sum_of_equilibrium;
 			switch (col) {
 			case 0: return ResultFields::detail_row_names_single.at(row);
-			case 1: return items->cbegin()->sum_of_equilibrium.sum_mol;
-			case 2: return items->cbegin()->sum_of_equilibrium.sum_gram;
-			case 3: return items->cbegin()->sum_of_equilibrium.sum_atpct;
-			case 4: return items->cbegin()->sum_of_equilibrium.sum_wtpct;
+			case 1: return sum.sum_mol;
+			case 2: return sum.sum_gram;
+			case 3: return sum.sum_atpct;
+			case 4: return sum.sum_wtpct;
 			}
 			break;
 		}
 		if(row >= ResultFields::detail_row_names_single_size) {
 			auto i = row - ResultFields::detail_row_names_single_size;
 			auto first = items->cbegin();
+			auto id = first->weights.at(i).id;
+			const auto& val = parameters.show_initial_in_result
+					? first->amounts.at(id)
+					: first->amounts_of_equilibrium.at(id);
 			switch (col) {
-			case 0:
-				return first->weights.at(i).formula;
-			case 1:
-				return first->amounts_of_equilibrium.at(
-							first->weights.at(i).id).sum_mol;
-			case 2:
-				return first->amounts_of_equilibrium.at(
-							first->weights.at(i).id).sum_gram;
-			case 3:
-				return first->amounts_of_equilibrium.at(
-							first->weights.at(i).id).sum_atpct;
-			case 4:
-				return first->amounts_of_equilibrium.at(
-							first->weights.at(i).id).sum_wtpct;
+			case 0: return first->weights.at(i).formula;
+			case 1: return val.sum_mol;
+			case 2: return val.sum_gram;
+			case 3: return val.sum_atpct;
+			case 4: return val.sum_wtpct;
 			}
 		}
 	}
@@ -593,15 +592,18 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			}
 			if(col >= 2) {
 				auto j = col - 2;
+				const auto& sum = parameters.show_initial_in_result
+						? items->at(j).sum_of_initial
+						: items->at(j).sum_of_equilibrium;
 				switch (parameters.composition_result_unit) {
 				case ParametersNS::CompositionUnit::AtomicPercent:
-					return items->at(j).sum_of_equilibrium.sum_atpct;
+					return sum.sum_atpct;
 				case ParametersNS::CompositionUnit::WeightPercent:
-					return items->at(j).sum_of_equilibrium.sum_wtpct;
+					return sum.sum_wtpct;
 				case ParametersNS::CompositionUnit::Mol:
-					return items->at(j).sum_of_equilibrium.sum_mol;
+					return sum.sum_mol;
 				case ParametersNS::CompositionUnit::Gram:
-					return items->at(j).sum_of_equilibrium.sum_gram;
+					return sum.sum_gram;
 				}
 			}
 			break;
@@ -618,7 +620,10 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			}
 			if(col >= 2) {
 				auto j = col - 2;
-				const auto& val = items->at(j).amounts_of_equilibrium.at(first->weights.at(i).id);
+				auto id = first->weights.at(i).id;
+				const auto& val = parameters.show_initial_in_result
+						? items->at(j).amounts.at(id)
+						: items->at(j).amounts_of_equilibrium.at(id);
 				switch (parameters.composition_result_unit) {
 				case ParametersNS::CompositionUnit::AtomicPercent:
 					return val.sum_atpct;

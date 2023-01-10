@@ -300,6 +300,7 @@ void OptimizationItem::Calculate()
 	}
 
 	MakeAmountsOfEquilibrium();
+	sum_of_initial = GetSumAndRecalculate(amounts);
 }
 
 void OptimizationItem::DefineOrderOfSubstances()

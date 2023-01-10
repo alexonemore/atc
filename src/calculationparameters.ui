@@ -553,7 +553,7 @@
         <item row="0" column="0" rowspan="2">
          <widget class="QCheckBox" name="show_initial_in_result">
           <property name="text">
-           <string>Show Initial Compositionin the Result Table</string>
+           <string>Show Initial Composition in the Result Table</string>
           </property>
          </widget>
         </item>
