@@ -74,6 +74,18 @@ enum class DetailRowNames1D {
 extern const QStringList detail_row_names_1d;
 extern const int detail_row_names_1d_size;
 
+enum class DetailRowNames2D {
+	X_Axis_values_T_initial, // temperature initial
+	Y_Axis_values_Composition, // composition
+	T_result,
+	H_initial,
+	H_equilibrium,
+	c_equilibrium,
+	Sum_value
+};
+extern const QStringList detail_row_names_2d;
+extern const int detail_row_names_2d_size;
+
 } // namespace ResultFields
 
 class ResultModel : public QAbstractTableModel
@@ -137,6 +149,7 @@ private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
 	QVariant DataSingle(const QModelIndex& index, int role) const;
 	QVariant Data1D(const QModelIndex& index, int role) const;
+	QVariant Data2D(const QModelIndex& index, int role) const;
 
 	// QAbstractItemModel interface
 public:

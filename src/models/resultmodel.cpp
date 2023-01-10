@@ -66,8 +66,20 @@ const QStringList detail_row_names_1d{
 };
 const int detail_row_names_1d_size = static_cast<int>(detail_row_names_1d.size());
 
+const QStringList detail_row_names_2d{
+	QT_TR_NOOP("T initial"),
+	QT_TR_NOOP("Composition"),
+	QT_TR_NOOP("T %1"),
+	QT_TR_NOOP("H initial"),
+	QT_TR_NOOP("H equilibrium"),
+	QT_TR_NOOP("c equilibrium"),
+	QT_TR_NOOP("Sum")
+};
+const int detail_row_names_2d_size = static_cast<int>(detail_row_names_2d.size());
+
 const QColor green{109, 255, 109};
 const QColor red{255, 109, 109};
+const QColor red2{230, 186, 192};
 } // namespace ResultFields
 
 ResultModel::ResultModel(QObject *parent)
@@ -241,25 +253,28 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 								   const ParametersNS::Parameters params,
 								   const int x_size, const int y_size)
 {
-	LOG("row_count:", row_count)
+	LOG()
 	beginResetModel();
 	items = vec;
 	parameters = params;
 	row_count = items->cbegin()->number.substances;
-	col_count = x_size;
 	switch (parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
+		assert(vec->size() == x_size);
+		assert(vec->size() == 1);
 		row_count += ResultFields::detail_row_names_single_size;
-		col_count += ParametersNS::composition_units.size();
+		col_count = ParametersNS::composition_units.size();
 		break;
 	case ParametersNS::Workmode::TemperatureRange:
 	case ParametersNS::Workmode::CompositionRange:
+		assert(vec->size() == x_size);
 		row_count += ResultFields::detail_row_names_1d_size;
-		col_count += 1; // Units
+		col_count = 1 + x_size; // +1 for Units
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
-		row_count = y_size + 1;
-		col_count += 1;
+		assert(vec->size() == x_size * y_size);
+		row_count += ResultFields::detail_row_names_2d_size;
+		col_count = x_size * y_size + 1; // +1 for Units
 		break;
 	}
 	endResetModel();
@@ -267,7 +282,7 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 
 void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
 {
-	LOG("row_count:", row_count)
+	LOG()
 	beginResetModel();
 	parameters.temperature_result_unit = params.temperature_result_unit;
 	parameters.composition_result_unit = params.composition_result_unit;
@@ -277,7 +292,7 @@ void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
 
 void ResultDetailModel::Clear()
 {
-	LOG("row_count:", row_count)
+	LOG()
 	beginResetModel();
 	row_count = 0;
 	col_count = 0;
@@ -321,7 +336,7 @@ QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
 	case ParametersNS::Workmode::CompositionRange:
 		return Data1D(index, role);
 	case ParametersNS::Workmode::TemperatureCompositionRange:
-		break;
+		return Data2D(index, role);
 	}
 	return QVariant{};
 }
@@ -591,6 +606,142 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
+QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
+{
+	auto col = index.column();
+	auto row = index.row();
+	if(role == Qt::BackgroundRole) {
+		switch (static_cast<ResultFields::DetailRowNames2D>(row)) {
+		case ResultFields::DetailRowNames2D::X_Axis_values_T_initial:
+			return QBrush{ResultFields::red};
+		case ResultFields::DetailRowNames2D::Y_Axis_values_Composition:
+			return QBrush{ResultFields::red2};
+		case ResultFields::DetailRowNames2D::T_result:
+			return QBrush{ResultFields::green};
+		case ResultFields::DetailRowNames2D::H_initial:
+		case ResultFields::DetailRowNames2D::H_equilibrium:
+		case ResultFields::DetailRowNames2D::c_equilibrium:
+			break;
+		case ResultFields::DetailRowNames2D::Sum_value:
+			return QBrush{Qt::lightGray};
+		default:
+			break;
+		}
+		return QBrush{Qt::white};
+	}
+	if(role == Qt::DisplayRole) {
+		switch (static_cast<ResultFields::DetailRowNames2D>(row)) {
+		case ResultFields::DetailRowNames2D::X_Axis_values_T_initial:
+			if(col == 0) {
+				return ParametersNS::temperature_units.at(
+							static_cast<int>(parameters.temperature_result_unit));
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return Thermodynamics::FromKelvin(items->at(i).temperature_K_initial,
+												  parameters.temperature_result_unit);
+			}
+			break;
+		case ResultFields::DetailRowNames2D::Y_Axis_values_Composition:
+			if(col == 0) {
+				return ParametersNS::composition_units.at(
+							static_cast<int>(parameters.composition_range_unit));
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return items->at(i).composition_variable;
+			}
+			break;
+		case ResultFields::DetailRowNames2D::T_result:
+			if(col == 0) {
+				return ParametersNS::temperature_units.at(
+							static_cast<int>(parameters.temperature_result_unit));
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return Thermodynamics::FromKelvin(items->at(i).temperature_K_current,
+												  parameters.temperature_result_unit);
+			}
+			break;
+		case ResultFields::DetailRowNames2D::H_initial:
+			if(col == 0) {
+				return tr("[kJ/mol]");
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return items->at(i).H_initial;
+			}
+			break;
+		case ResultFields::DetailRowNames2D::H_equilibrium:
+			if(col == 0) {
+				return tr("[kJ/mol]");
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return items->at(i).H_current;
+			}
+			break;
+		case ResultFields::DetailRowNames2D::c_equilibrium:
+			if(col == 0) {
+				return tr("[G/RT]");
+			}
+			if(col >= 1) {
+				auto i = col - 1;
+				return items->at(i).result_of_optimization;
+			}
+			break;
+		case ResultFields::DetailRowNames2D::Sum_value:
+			if(col == 0) {
+				return ParametersNS::composition_units.at(
+							static_cast<int>(parameters.composition_result_unit));
+			}
+			if(col >= 1) {
+				auto j = col - 1;
+				const auto& sum = parameters.show_initial_in_result
+						? items->at(j).sum_of_initial
+						: items->at(j).sum_of_equilibrium;
+				switch (parameters.composition_result_unit) {
+				case ParametersNS::CompositionUnit::AtomicPercent:
+					return sum.sum_atpct;
+				case ParametersNS::CompositionUnit::WeightPercent:
+					return sum.sum_wtpct;
+				case ParametersNS::CompositionUnit::Mol:
+					return sum.sum_mol;
+				case ParametersNS::CompositionUnit::Gram:
+					return sum.sum_gram;
+				}
+			}
+			break;
+		}
+		if(row >= ResultFields::detail_row_names_2d_size) {
+			auto i = row - ResultFields::detail_row_names_2d_size;
+			auto first = items->cbegin();
+			if(col == 0) {
+				return ParametersNS::composition_units.at(
+							static_cast<int>(parameters.composition_result_unit));
+			}
+			if(col >= 1) {
+				auto j = col - 1;
+				auto id = first->weights.at(i).id;
+				const auto& val = parameters.show_initial_in_result
+						? items->at(j).amounts.at(id)
+						: items->at(j).amounts_of_equilibrium.at(id);
+				switch (parameters.composition_result_unit) {
+				case ParametersNS::CompositionUnit::AtomicPercent:
+					return val.sum_atpct;
+				case ParametersNS::CompositionUnit::WeightPercent:
+					return val.sum_wtpct;
+				case ParametersNS::CompositionUnit::Mol:
+					return val.sum_mol;
+				case ParametersNS::CompositionUnit::Gram:
+					return val.sum_gram;
+				}
+			}
+		}
+	}
+	return QVariant{};
+}
+
 QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 									   int role) const
 {
@@ -656,6 +807,27 @@ QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,
 			}
 			break;
 		case ParametersNS::Workmode::TemperatureCompositionRange:
+			switch (static_cast<ResultFields::DetailRowNames2D>(section)) {
+			case ResultFields::DetailRowNames2D::T_result:
+				switch (parameters.target) {
+				case ParametersNS::Target::Equilibrium:
+					return ResultFields::detail_row_names_2d.at(section).arg(tr("equilibrium"));
+				case ParametersNS::Target::AdiabaticTemperature:
+					return ResultFields::detail_row_names_2d.at(section).arg(tr("adiabatic"));
+				}
+				break;
+			case ResultFields::DetailRowNames2D::X_Axis_values_T_initial:
+			case ResultFields::DetailRowNames2D::Y_Axis_values_Composition:
+			case ResultFields::DetailRowNames2D::H_initial:
+			case ResultFields::DetailRowNames2D::H_equilibrium:
+			case ResultFields::DetailRowNames2D::c_equilibrium:
+			case ResultFields::DetailRowNames2D::Sum_value:
+				return ResultFields::detail_row_names_2d.at(section);
+			}
+			if(section >= ResultFields::detail_row_names_2d_size) {
+				auto i = section - ResultFields::detail_row_names_2d_size;
+				return items->cbegin()->weights.at(i).formula;
+			}
 			break;
 		}
 	}
