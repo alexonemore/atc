@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>451</height>
+    <height>479</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -523,6 +523,13 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="show_initial_in_result">
+     <property name="text">
+      <string>Show Initial Composition in the Result Table</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
