@@ -68,7 +68,7 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 	p.workmode = static_cast<ParametersNS::Workmode>(ui->workmode->currentIndex());
 	p.target = static_cast<ParametersNS::Target>(ui->target->currentIndex());
 	p.liquid_solution = static_cast<ParametersNS::LiquidSolution>(ui->liquid_solution->currentIndex());
-	p.choose_substances = static_cast<ParametersNS::ChooseSubstances>(ui->choose_substances->currentIndex());
+	p.H_initial_by = static_cast<ParametersNS::H_Initial_By>(ui->choose_substances->currentIndex());
 	p.database = static_cast<ParametersNS::Database>(ui->database->currentIndex());
 	p.minimization_function = static_cast<ParametersNS::MinimizationFunction>(ui->minimization_function->currentIndex());
 	p.extrapolation = static_cast<ParametersNS::Extrapolation>(ui->extrapolation->currentIndex());
@@ -123,7 +123,7 @@ void CalculationParameters::SetupParameters(const ParametersNS::Parameters p)
 	ui->workmode->setCurrentIndex(static_cast<int>(p.workmode));
 	ui->target->setCurrentIndex(static_cast<int>(p.target));
 	ui->liquid_solution->setCurrentIndex(static_cast<int>(p.liquid_solution));
-	ui->choose_substances->setCurrentIndex(static_cast<int>(p.choose_substances));
+	ui->choose_substances->setCurrentIndex(static_cast<int>(p.H_initial_by));
 	ui->database->setCurrentIndex(static_cast<int>(p.database));
 	ui->minimization_function->setCurrentIndex(static_cast<int>(p.minimization_function));
 	ui->extrapolation->setCurrentIndex(static_cast<int>(p.extrapolation));

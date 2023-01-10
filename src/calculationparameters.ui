@@ -49,7 +49,7 @@
         <item row="4" column="0">
          <widget class="QLabel" name="label_28">
           <property name="text">
-           <string>Choose substances</string>
+           <string>H initial by</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

@@ -86,7 +86,7 @@ enum class Database {
 extern const QStringList databases;
 extern const QStringList database_filenames;
 
-enum class ChooseSubstances {
+enum class H_Initial_By {
 	AsChecked,
 	ByMinimumGibbsEnergy
 };
@@ -124,7 +124,7 @@ struct Parameters
 	Workmode		workmode			{Workmode::SinglePoint};
 	Target			target				{Target::AdiabaticTemperature};
 	LiquidSolution	liquid_solution		{LiquidSolution::One};
-	ChooseSubstances choose_substances	{ChooseSubstances::AsChecked};
+	H_Initial_By	H_initial_by		{H_Initial_By::AsChecked};
 	Database		database			{Database::Thermo};
 	MinimizationFunction minimization_function {MinimizationFunction::GibbsEnergy};
 	Extrapolation	extrapolation		{Extrapolation::Enable};

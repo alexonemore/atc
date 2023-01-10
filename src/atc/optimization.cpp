@@ -523,8 +523,8 @@ void OptimizationItem::H_kJ_Initial()
 		}
 	};
 
-	switch(parameters.choose_substances) {
-	case ParametersNS::ChooseSubstances::AsChecked:
+	switch(parameters.H_initial_by) {
+	case ParametersNS::H_Initial_By::AsChecked:
 		H_initial = std::accumulate(amounts.cbegin(), amounts.cend(), double{0.0},
 									[&H](double sum, decltype(amounts)::const_reference amount){
 			if(amount.second.sum_mol > 0.0) {
@@ -534,7 +534,7 @@ void OptimizationItem::H_kJ_Initial()
 			}
 		});
 		break;
-	case ParametersNS::ChooseSubstances::ByMinimumGibbsEnergy: {
+	case ParametersNS::H_Initial_By::ByMinimumGibbsEnergy: {
 		auto G = [this](const int id){
 			switch(parameters.database) {
 			case ParametersNS::Database::Thermo:
