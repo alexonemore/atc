@@ -25,6 +25,7 @@
 #include "database.h"
 #include "parameters.h"
 #include "optimization.h"
+#include "plots.h"
 
 namespace ResultFields {
 enum class ColNames {
@@ -97,14 +98,13 @@ private:
 private:
 	const SubstanceWeights* items{nullptr};
 	ParametersNS::Parameters parameters{};
-	std::unordered_map<int, Cell> checked; // int = just row
+	std::unordered_map<int, Cell> checked; // int = row
 	int row_count{0};
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
 	void SetNewData(const SubstanceWeights* vec,
 					const ParametersNS::Parameters& params);
-	void UpdateParameters(const ParametersNS::Parameters& params);
 	void Clear();
 
 signals:
@@ -123,7 +123,8 @@ public:
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-
+	int GraphIdToRow(const GraphId& id) const;
+	GraphId RowToGraphId(const int row) const;
 };
 
 class ResultDetailModel : public QAbstractTableModel

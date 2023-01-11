@@ -101,16 +101,6 @@ void ResultModel::SetNewData(const SubstanceWeights* vec,
 	endResetModel();
 }
 
-void ResultModel::UpdateParameters(const ParametersNS::Parameters& params)
-{
-	LOG()
-	beginResetModel();
-	parameters.temperature_result_unit = params.temperature_result_unit;
-	parameters.composition_result_unit = params.composition_result_unit;
-	parameters.show_initial_in_result = params.show_initial_in_result;
-	endResetModel();
-}
-
 void ResultModel::Clear()
 {
 	beginResetModel();
@@ -248,6 +238,38 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
 
+int ResultModel::GraphIdToRow(const GraphId& id) const
+{
+	if(id.substance_id > 0) {
+		assert(id.option == -1);
+		auto find = std::find_if(items->cbegin(), items->cend(),
+								 [id = id.substance_id](SubstanceWeights::const_reference sub){
+			return sub.id == id;
+		});
+		assert(find != items->cend());
+		return std::distance(items->cbegin(), find) + ResultFields::row_names_size;
+	} else {
+		assert(id.option >= 0);
+		return id.option;
+	}
+}
+
+GraphId ResultModel::RowToGraphId(const int row) const
+{
+	assert(row < row_count);
+	GraphId graphid;
+	if(row < ResultFields::row_names_size) {
+		graphid.substance_id = -1;
+		graphid.option = row;
+		graphid.database = static_cast<int>(parameters.database);
+	} else {
+		graphid.substance_id = items->at(row - ResultFields::row_names_size).id;
+		graphid.option = -1;
+		graphid.database = static_cast<int>(parameters.database);
+	}
+	return graphid;
+}
+
 ResultDetailModel::ResultDetailModel(QObject* parent)
 	: QAbstractTableModel{parent}
 	, col_count{ResultFields::detail_row_names_single_size}
@@ -288,16 +310,6 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 		col_count = x_size * y_size + 1; // +1 for Units
 		break;
 	}
-	endResetModel();
-}
-
-void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
-{
-	LOG()
-	beginResetModel();
-	parameters.temperature_result_unit = params.temperature_result_unit;
-	parameters.composition_result_unit = params.composition_result_unit;
-	parameters.show_initial_in_result = params.show_initial_in_result;
 	endResetModel();
 }
 
