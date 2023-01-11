@@ -355,6 +355,16 @@ void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
 	endResetModel();
 }
 
+void ResultDetailModel::UpdateParameters(const ParametersNS::Parameters& params)
+{
+	LOG()
+	beginResetModel();
+	parameters.temperature_result_unit = params.temperature_result_unit;
+	parameters.composition_result_unit = params.composition_result_unit;
+	parameters.show_initial_in_result = params.show_initial_in_result;
+	endResetModel();
+}
+
 void ResultDetailModel::Clear()
 {
 	LOG()
