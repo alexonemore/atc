@@ -197,8 +197,11 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 {
 	LOG()
 	if(!CheckIndexValidParent(index)) return false;
+	if(workmode == ParametersNS::Workmode::SinglePoint) {
+		return false;
+	}
+	auto row = index.row();
 
-	// TODO
 
 	return false;
 }
@@ -222,7 +225,7 @@ Qt::ItemFlags ResultModel::flags(const QModelIndex& index) const
 	Qt::ItemFlags flags = QAbstractTableModel::flags(index);
 	auto col = static_cast<ResultFields::ColNames>(index.column());
 	switch(col) {
-	case ResultFields::ColNames::Name:
+	case ResultFields::ColNames::Show:
 		flags |= Qt::ItemIsUserCheckable;
 		flags |= Qt::ItemIsEditable;
 		flags ^= Qt::ItemIsSelectable;

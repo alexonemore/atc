@@ -499,7 +499,7 @@ void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 	result_data = std::move(vec);
 
 	model_result->SetNewData(&(result_data.cbegin()->weights),
-							 parameters_.target);
+							 parameters_);
 	model_detail_result->SetNewData(&result_data, parameters_, x_size, y_size);
 
 }
