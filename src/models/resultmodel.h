@@ -124,8 +124,7 @@ private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
 	int GraphIdToRow(const GraphId& graph_id) const;
 	GraphId RowToGraphId(const int row) const;
-	QString MakeGraphName(const QString& formula,
-						  const PlotTFModelFields::TF tf) const;
+	QString MakeGraphName(const int row) const;
 };
 
 class ResultDetailModel : public QAbstractTableModel

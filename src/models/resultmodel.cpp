@@ -205,8 +205,8 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 		}
 		cell.checked = value.value<Qt::CheckState>();
 		if(cell.checked == Qt::CheckState::Checked) {
-			auto name = MakeGraphName(substance.formula, tf);
-			LOG(name)
+			auto name = MakeGraphName(row);
+			LOG(name, cell.checked, cell.color)
 			emit AddGraph(graph_id, name, cell.color);
 		} else {
 			cell.color = Qt::white;
@@ -288,6 +288,28 @@ GraphId ResultModel::RowToGraphId(const int row) const
 		graph_id.database = static_cast<int>(parameters.database);
 	}
 	return graph_id;
+}
+
+QString ResultModel::MakeGraphName(const int row) const
+{
+	auto res = QStringLiteral("%1 {%2}");
+	if(row < ResultFields::row_names_size) {
+		QString s1;
+		if(row == 0) {
+			switch(parameters.target) {
+			case ParametersNS::Target::Equilibrium:
+				s1 = ResultFields::row_names.at(row).arg(tr("equilibrium"));
+			case ParametersNS::Target::AdiabaticTemperature:
+				s1 = ResultFields::row_names.at(row).arg(tr("adiabatic"));
+			}
+		} else {
+			s1 = ResultFields::row_names.at(row);
+		}
+		return res.arg(s1, ParametersNS::databases.at(static_cast<int>(parameters.database)));
+	} else {
+		return res.arg(items->at(row - ResultFields::row_names_size).formula,
+					   ParametersNS::databases.at(static_cast<int>(parameters.database)));
+	}
 }
 
 ResultDetailModel::ResultDetailModel(QObject* parent)
