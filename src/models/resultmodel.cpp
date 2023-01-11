@@ -93,12 +93,14 @@ ResultModel::~ResultModel()
 
 }
 
-void ResultModel::SetNewData(const SubstanceWeights* vec, ParametersNS::Target tar)
+void ResultModel::SetNewData(const SubstanceWeights* vec,
+							 const ParametersNS::Parameters& params)
 {
 	beginResetModel();
 	items = vec;
 	row_count = items->size() + ResultFields::row_names_size;
-	target = tar;
+	target = params.target;
+	workmode = params.workmode;
 	checked.clear();
 	endResetModel();
 }
@@ -250,7 +252,7 @@ ResultDetailModel::~ResultDetailModel()
 }
 
 void ResultDetailModel::SetNewData(const Optimization::OptimizationVector* vec,
-								   const ParametersNS::Parameters params,
+								   const ParametersNS::Parameters& params,
 								   const int x_size, const int y_size)
 {
 	LOG()

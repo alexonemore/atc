@@ -100,12 +100,14 @@ private:
 private:
 	const SubstanceWeights* items{nullptr};
 	ParametersNS::Target target{ParametersNS::Target::AdiabaticTemperature};
+	ParametersNS::Workmode workmode{ParametersNS::Workmode::SinglePoint};
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
 public:
 	explicit ResultModel(QObject *parent = nullptr);
 	~ResultModel() override;
-	void SetNewData(const SubstanceWeights* vec, ParametersNS::Target tar);
+	void SetNewData(const SubstanceWeights* vec,
+					const ParametersNS::Parameters& params);
 	void Clear();
 
 signals:
@@ -140,7 +142,7 @@ public:
 	explicit ResultDetailModel(QObject *parent = nullptr);
 	~ResultDetailModel() override;
 	void SetNewData(const Optimization::OptimizationVector* vec,
-					const ParametersNS::Parameters params,
+					const ParametersNS::Parameters& params,
 					const int x_size, const int y_size);
 	void UpdateParameters(const ParametersNS::Parameters& params);
 	void Clear();
