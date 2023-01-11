@@ -108,10 +108,9 @@ public:
 	void Clear();
 
 signals:
-	void AddGraph();
-	void AddGraphSubstance(const int id, const QColor& color);
-	void AddGraphResult(const ResultFields::RowNames row_name,
-						const QColor& color);
+	void AddGraph(const GraphId id, const QString& name, const QColor& color);
+	void RemoveGraph(const GraphId id);
+	void ChangeColorGraph(const GraphId id, const QColor& color);
 
 	// QAbstractItemModel interface
 public:
@@ -123,8 +122,10 @@ public:
 	Qt::ItemFlags flags(const QModelIndex& index) const override;
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-	int GraphIdToRow(const GraphId& id) const;
+	int GraphIdToRow(const GraphId& graph_id) const;
 	GraphId RowToGraphId(const int row) const;
+	QString MakeGraphName(const QString& formula,
+						  const PlotTFModelFields::TF tf) const;
 };
 
 class ResultDetailModel : public QAbstractTableModel

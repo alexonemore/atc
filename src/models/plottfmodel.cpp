@@ -280,11 +280,10 @@ GraphId PlotTFModel::MakeGraphId(const int id,
 QString PlotTFModel::MakeGraphName(const QString& formula,
 								   const PlotTFModelFields::TF tf) const
 {
-	return (formula + QStringLiteral(" <") +
-			ParametersNS::thermodynamic_function.at(static_cast<int>(tf)) +
-			QStringLiteral("> {") +
-			ParametersNS::databases.at(static_cast<int>(database)) +
-			QStringLiteral("}"));
+	return QStringLiteral("%1 <%2> {%3}")
+			.arg(formula,
+				 ParametersNS::thermodynamic_function.at(static_cast<int>(tf)),
+				 ParametersNS::databases.at(static_cast<int>(database)));
 }
 
 QModelIndex PlotTFModel::GetIndex(const GraphId& id) const

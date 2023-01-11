@@ -197,9 +197,29 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 		return false;
 	}
 	auto row = index.row();
-
-
-	return false;
+	auto&& cell = checked[row];
+	auto graph_id = RowToGraphId(row);
+	if(role == Qt::CheckStateRole) {
+		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
+			cell.color = GetRandomColor();
+		}
+		cell.checked = value.value<Qt::CheckState>();
+		if(cell.checked == Qt::CheckState::Checked) {
+			auto name = MakeGraphName(substance.formula, tf);
+			LOG(name)
+			emit AddGraph(graph_id, name, cell.color);
+		} else {
+			cell.color = Qt::white;
+			emit RemoveGraph(graph_id);
+		}
+	} else if(role == Qt::EditRole) {
+		cell.color = value.value<QColor>();
+		emit ChangeColorGraph(graph_id, cell.color);
+	} else {
+		return false;
+	}
+	emit dataChanged(index, index);
+	return true;
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -238,36 +258,36 @@ bool ResultModel::CheckIndexValidParent(const QModelIndex& index) const
 					  QAbstractItemModel::CheckIndexOption::ParentIsInvalid);
 }
 
-int ResultModel::GraphIdToRow(const GraphId& id) const
+int ResultModel::GraphIdToRow(const GraphId& graph_id) const
 {
-	if(id.substance_id > 0) {
-		assert(id.option == -1);
+	if(graph_id.substance_id > 0) {
+		assert(graph_id.option == -1);
 		auto find = std::find_if(items->cbegin(), items->cend(),
-								 [id = id.substance_id](SubstanceWeights::const_reference sub){
+								 [id = graph_id.substance_id](SubstanceWeights::const_reference sub){
 			return sub.id == id;
 		});
 		assert(find != items->cend());
 		return std::distance(items->cbegin(), find) + ResultFields::row_names_size;
 	} else {
-		assert(id.option >= 0);
-		return id.option;
+		assert(graph_id.option >= 0);
+		return graph_id.option;
 	}
 }
 
 GraphId ResultModel::RowToGraphId(const int row) const
 {
 	assert(row < row_count);
-	GraphId graphid;
+	GraphId graph_id;
 	if(row < ResultFields::row_names_size) {
-		graphid.substance_id = -1;
-		graphid.option = row;
-		graphid.database = static_cast<int>(parameters.database);
+		graph_id.substance_id = -1;
+		graph_id.option = row;
+		graph_id.database = static_cast<int>(parameters.database);
 	} else {
-		graphid.substance_id = items->at(row - ResultFields::row_names_size).id;
-		graphid.option = -1;
-		graphid.database = static_cast<int>(parameters.database);
+		graph_id.substance_id = items->at(row - ResultFields::row_names_size).id;
+		graph_id.option = -1;
+		graph_id.database = static_cast<int>(parameters.database);
 	}
-	return graphid;
+	return graph_id;
 }
 
 ResultDetailModel::ResultDetailModel(QObject* parent)
