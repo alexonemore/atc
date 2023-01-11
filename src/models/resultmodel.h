@@ -99,8 +99,7 @@ private:
 	};
 private:
 	const SubstanceWeights* items{nullptr};
-	ParametersNS::Target target{ParametersNS::Target::AdiabaticTemperature};
-	ParametersNS::Workmode workmode{ParametersNS::Workmode::SinglePoint};
+	ParametersNS::Parameters parameters{};
 	std::unordered_map<int, Cell> checked; // int = just row
 	int row_count{0};
 public:

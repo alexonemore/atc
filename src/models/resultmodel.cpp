@@ -99,8 +99,7 @@ void ResultModel::SetNewData(const SubstanceWeights* vec,
 	beginResetModel();
 	items = vec;
 	row_count = items->size() + ResultFields::row_names_size;
-	target = params.target;
-	workmode = params.workmode;
+	parameters = params;
 	checked.clear();
 	endResetModel();
 }
@@ -164,7 +163,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 		if(role == Qt::DisplayRole) {
 			if(row < ResultFields::row_names_size) {
 				if(row == 0) {
-					switch(target) {
+					switch(parameters.target) {
 					case ParametersNS::Target::Equilibrium:
 						return ResultFields::row_names.at(row).arg(tr("equilibrium"));
 					case ParametersNS::Target::AdiabaticTemperature:
@@ -197,7 +196,7 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 {
 	LOG()
 	if(!CheckIndexValidParent(index)) return false;
-	if(workmode == ParametersNS::Workmode::SinglePoint) {
+	if(parameters.workmode == ParametersNS::Workmode::SinglePoint) {
 		return false;
 	}
 	auto row = index.row();
