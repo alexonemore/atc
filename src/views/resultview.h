@@ -24,6 +24,7 @@
 #include "plot2dgraph.h"
 #include "plot2dheatmap.h"
 #include "plot3dsurface.h"
+#include "specialdelegates.h"
 
 class ResultView : public QWidget
 {
@@ -34,6 +35,7 @@ private:
 	Plot2DGraph* plot2d_graph;
 	Plot2DHeatMap* plot2d_heatmap;
 	Plot3DSurface* plot3d;
+	ColorPickerDelegate* color_delegate;
 public:
 	explicit ResultView(QWidget *parent = nullptr);
 	~ResultView() override;

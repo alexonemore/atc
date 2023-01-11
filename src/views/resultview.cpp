@@ -62,8 +62,10 @@ ResultView::ResultView(QWidget *parent)
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.arg(tr("K")));
 	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.arg(tr("mol")));
 
-
-
+	color_delegate = new ColorPickerDelegate(this);
+	table_check->setItemDelegateForColumn(
+				static_cast<int>(ResultFields::ColNames::Show),
+				color_delegate);
 }
 
 ResultView::~ResultView()
