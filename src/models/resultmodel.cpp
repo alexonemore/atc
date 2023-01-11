@@ -98,6 +98,9 @@ void ResultModel::SetNewData(const SubstanceWeights* vec,
 	row_count = items->size() + ResultFields::row_names_size;
 	parameters = params;
 	checked.clear();
+	for(int i = 0; i != row_count; ++i) {
+		checked.emplace(i, Cell{});
+	}
 	endResetModel();
 }
 
@@ -134,13 +137,10 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 	auto col = static_cast<ResultFields::ColNames>(index.column());
 	auto row = index.row();
 
-	if(role == Qt::BackgroundRole) {
+	if(role == Qt::BackgroundRole || role == Qt::EditRole) {
 		switch(col) {
 		case ResultFields::ColNames::Show: {
-			auto find = checked.find(row);
-			if(find != checked.cend()) {
-				return find->second.color;
-			}
+			return checked.at(row).color;
 		}
 		default:
 			break;
@@ -176,12 +176,7 @@ QVariant ResultModel::data(const QModelIndex& index, int role) const
 		break;
 	case ResultFields::ColNames::Show:
 		if(role == Qt::CheckStateRole) {
-			auto find = checked.find(row);
-			if(find != checked.cend()) {
-				return find->second.checked;
-			} else {
-				return Qt::CheckState::Unchecked;
-			}
+			return checked.at(row).checked;
 		}
 		break;
 	}
@@ -197,7 +192,7 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 		return false;
 	}
 	auto row = index.row();
-	auto&& cell = checked[row];
+	auto&& cell = checked.at(row);
 	auto graph_id = RowToGraphId(row);
 	if(role == Qt::CheckStateRole) {
 		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
