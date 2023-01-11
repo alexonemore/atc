@@ -36,10 +36,7 @@ const QStringList row_names{
 	QT_TR_NOOP("H initial"),
 	QT_TR_NOOP("H equilibrium"),
 	QT_TR_NOOP("c equilibrium"),
-	QT_TR_NOOP("Sum mol"),
-	QT_TR_NOOP("Sum gram"),
-	QT_TR_NOOP("Sum at.%"),
-	QT_TR_NOOP("Sum wt.%")
+	QT_TR_NOOP("Sum")
 };
 const int row_names_size = static_cast<int>(row_names.size());
 
@@ -101,6 +98,16 @@ void ResultModel::SetNewData(const SubstanceWeights* vec,
 	row_count = items->size() + ResultFields::row_names_size;
 	parameters = params;
 	checked.clear();
+	endResetModel();
+}
+
+void ResultModel::UpdateParameters(const ParametersNS::Parameters& params)
+{
+	LOG()
+	beginResetModel();
+	parameters.temperature_result_unit = params.temperature_result_unit;
+	parameters.composition_result_unit = params.composition_result_unit;
+	parameters.show_initial_in_result = params.show_initial_in_result;
 	endResetModel();
 }
 

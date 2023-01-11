@@ -41,10 +41,7 @@ enum class RowNames {
 	H_initial,
 	H_equilibrium,
 	c_equilibrium,
-	Sum_mol,
-	Sum_gram,
-	Sum_atpct,
-	Sum_wtpct
+	Sum
 };
 extern const QStringList row_names;
 extern const int row_names_size;
@@ -107,6 +104,7 @@ public:
 	~ResultModel() override;
 	void SetNewData(const SubstanceWeights* vec,
 					const ParametersNS::Parameters& params);
+	void UpdateParameters(const ParametersNS::Parameters& params);
 	void Clear();
 
 signals:
