@@ -22,6 +22,15 @@
 #include <QTabWidget>
 #include "parameters.h"
 #include "resultmodel.h"
+#include "utilities.h"
+
+namespace ResultViewGraph {
+constexpr auto ttt = MakeQLatin1String("asdf");
+constexpr auto x_axis_name_temperature = MakeQLatin1String("Tamperature, %1");
+constexpr auto x_axis_name_composition = MakeQLatin1String("Composition, %1");
+constexpr auto y1_axis_name = MakeQLatin1String("T [%1], H [kJ/mol], c");
+constexpr auto y2_axis_name = MakeQLatin1String("Composition, %1");
+}
 
 ResultView::ResultView(QWidget *parent)
 	: QWidget{parent}
@@ -49,6 +58,12 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setSelectionMode(QAbstractItemView::SingleSelection);
 	table_check->setSelectionBehavior(QAbstractItemView::SelectItems);
 	table_check->verticalHeader()->setVisible(false);
+
+	plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_temperature.arg("K"));
+	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.arg(tr("K")));
+	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.arg(tr("mol")));
+
+
 
 }
 
