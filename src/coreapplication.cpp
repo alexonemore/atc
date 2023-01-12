@@ -414,22 +414,22 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	case ParametersNS::Workmode::TemperatureRange: {
 		graphs_result_view[id].color = color;
 		graphs_result_view[id].name = name;
-		QVector<double> x(result_data.size()), y(result_data.size());
+		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
 			return i.temperature_K_initial;});
-
+		auto y{MakeYVector(id)};
 		emit SignalAddGraphPlotResult(id, name, color, x, y);
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
 		graphs_result_view[id].color = color;
 		graphs_result_view[id].name = name;
-		QVector<double> x(result_data.size()), y(result_data.size());
+		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
 			return i.composition_variable;});
-
+		auto y{MakeYVector(id)};
 		emit SignalAddGraphPlotResult(id, name, color, x, y);
 	}
 		break;
