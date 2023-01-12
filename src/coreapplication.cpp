@@ -146,6 +146,15 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
 			this, &CoreApplication::SlotGraphsRemovedPlotTFVtM);
 
+	// result
+	connect(model_result, &ResultModel::AddGraph,
+			this, &CoreApplication::SlotAddGraphPlotResult);
+	connect(model_result, &ResultModel::RemoveGraph,
+			this, &CoreApplication::SlotRemoveGraphPlotResult);
+	connect(model_result, &ResultModel::ChangeColorGraph,
+			this, &CoreApplication::SlotChangeColorGraphPlotResult);
+
+
 	// amounts
 	connect(gui, &MainWindow::SignalAmountsTableDelete,
 			model_amounts, &AmountsModel::Delete);
@@ -394,6 +403,58 @@ void CoreApplication::SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids)
 		graphs_tf_view.erase(id);
 	}
 	model_plot_tf->SlotRemoveGraphs(ids);
+}
+
+void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color)
+{
+	graphs_result_view[id].color = color;
+	graphs_result_view[id].name = name;
+	QVector<double> x, y;
+	switch (parameters_.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+
+		break;
+	case ParametersNS::Workmode::CompositionRange:
+
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+
+		break;
+	}
+
+	emit SignalAddGraphPlotResult(id, name, color, x, y);
+}
+
+void CoreApplication::SlotRemoveGraphPlotResult(const GraphId id)
+{
+
+}
+
+void CoreApplication::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
+{
+
+}
+
+void CoreApplication::SlotAllGraphsRemovedPlotResultVtM()
+{
+
+}
+
+void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id, const QColor& color)
+{
+
+}
+
+void CoreApplication::SlotGraphRemovedPlotResultVtM(const GraphId id)
+{
+
+}
+
+void CoreApplication::SlotGraphsRemovedPlotResultVtM(const QVector<GraphId>& ids)
+{
+
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()

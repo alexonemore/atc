@@ -67,6 +67,7 @@ private:
 		QString name;
 	};
 	std::unordered_map<GraphId, GraphParams> graphs_tf_view;
+	std::unordered_map<GraphId, GraphParams> graphs_result_view;
 
 	// demo
 	QAbstractItemModel* table_1;
@@ -117,6 +118,23 @@ private slots:
 	void SlotGraphColorChangedPlotTFVtM(const GraphId id, const QColor& color);
 	void SlotGraphRemovedPlotTFVtM(const GraphId id);
 	void SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids);
+
+	// result plot
+private slots:
+	void SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color);
+	void SlotRemoveGraphPlotResult(const GraphId id);
+	void SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color);
+signals:
+	void SignalAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void SignalRemoveGraphPlotResult(const GraphId id);
+	void SignalChangeColorGraphPlotResult(const GraphId id, const QColor& color);
+private slots: // result plots: view to model
+	void SlotAllGraphsRemovedPlotResultVtM();
+	void SlotGraphColorChangedPlotResultVtM(const GraphId id, const QColor& color);
+	void SlotGraphRemovedPlotResultVtM(const GraphId id);
+	void SlotGraphsRemovedPlotResultVtM(const QVector<GraphId>& ids);
+
 
 public slots:
 	void Initialize();
