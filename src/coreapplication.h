@@ -151,9 +151,7 @@ private:
 	auto CurrentDatabase();
 	auto Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();
-
-private: // show result
-
+	QVector<double> MakeYVector(const GraphId id) const;
 
 
 };

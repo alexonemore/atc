@@ -405,26 +405,98 @@ void CoreApplication::SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids)
 	model_plot_tf->SlotRemoveGraphs(ids);
 }
 
-void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color)
+void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& name,
+											 const QColor& color)
 {
-	graphs_result_view[id].color = color;
-	graphs_result_view[id].name = name;
-	QVector<double> x, y;
 	switch (parameters_.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
-	case ParametersNS::Workmode::TemperatureRange:
+	case ParametersNS::Workmode::TemperatureRange: {
+		graphs_result_view[id].color = color;
+		graphs_result_view[id].name = name;
+		QVector<double> x(result_data.size()), y(result_data.size());
+		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
+					   [](Optimization::OptimizationVector::const_reference i){
+			return i.temperature_K_initial;});
 
+		emit SignalAddGraphPlotResult(id, name, color, x, y);
+	}
 		break;
-	case ParametersNS::Workmode::CompositionRange:
+	case ParametersNS::Workmode::CompositionRange: {
+		graphs_result_view[id].color = color;
+		graphs_result_view[id].name = name;
+		QVector<double> x(result_data.size()), y(result_data.size());
+		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
+					   [](Optimization::OptimizationVector::const_reference i){
+			return i.composition_variable;});
 
+		emit SignalAddGraphPlotResult(id, name, color, x, y);
+	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
-
+		// 3d plot and heatmap
 		break;
 	}
+}
 
-	emit SignalAddGraphPlotResult(id, name, color, x, y);
+QVector<double> CoreApplication::MakeYVector(const GraphId id) const
+{
+	QVector<double> y(result_data.size());
+	for(int i = 0, max = result_data.size(); i != max; ++i) {
+		if(id.substance_id > 0) {
+			assert(id.option == -1);
+			const auto& val = parameters_.show_initial_in_result
+					? result_data.at(i).amounts.at(id.substance_id)
+					: result_data.at(i).amounts_of_equilibrium.at(id.substance_id);
+			switch (parameters_.composition_result_unit) {
+			case ParametersNS::CompositionUnit::AtomicPercent:
+				y[i] = val.sum_atpct; break;
+			case ParametersNS::CompositionUnit::WeightPercent:
+				y[i] = val.sum_wtpct; break;
+			case ParametersNS::CompositionUnit::Mol:
+				y[i] = val.sum_mol; break;
+			case ParametersNS::CompositionUnit::Gram:
+				y[i] = val.sum_gram; break;
+			}
+		} else {
+			assert(id.option >= 0);
+			switch (static_cast<ResultFields::RowNames>(id.option)) {
+			case ResultFields::RowNames::T_result:
+				y[i] = Thermodynamics::FromKelvin(result_data.at(i).temperature_K_current,
+												  parameters_.temperature_result_unit);
+				break;
+			case ResultFields::RowNames::T_initial:
+				y[i] = Thermodynamics::FromKelvin(result_data.at(i).temperature_K_initial,
+												  parameters_.temperature_result_unit);
+				break;
+			case ResultFields::RowNames::H_initial:
+				y[i] = result_data.at(i).H_initial;
+				break;
+			case ResultFields::RowNames::H_equilibrium:
+				y[i] = result_data.at(i).H_current;
+				break;
+			case ResultFields::RowNames::c_equilibrium:
+				y[i] = result_data.at(i).result_of_optimization;
+				break;
+			case ResultFields::RowNames::Sum:
+				const auto& sum = parameters_.show_initial_in_result
+						? result_data.at(i).sum_of_initial
+						: result_data.at(i).sum_of_equilibrium;
+				switch (parameters_.composition_result_unit) {
+				case ParametersNS::CompositionUnit::AtomicPercent:
+					y[i] = sum.sum_atpct; break;
+				case ParametersNS::CompositionUnit::WeightPercent:
+					y[i] = sum.sum_wtpct; break;
+				case ParametersNS::CompositionUnit::Mol:
+					y[i] = sum.sum_mol; break;
+				case ParametersNS::CompositionUnit::Gram:
+					y[i] = sum.sum_gram; break;
+				}
+				break;
+			}
+		}
+	}
+	return y;
 }
 
 void CoreApplication::SlotRemoveGraphPlotResult(const GraphId id)
