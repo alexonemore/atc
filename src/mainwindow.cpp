@@ -244,12 +244,12 @@ void MainWindow::SlotAddGraphPlotResult(const GraphId id, const QString& name,
 
 void MainWindow::SlotRemoveGraphPlotResult(const GraphId id)
 {
-
+	ui->result_view->RemoveGraph(id);
 }
 
 void MainWindow::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
 {
-
+	ui->result_view->ChangeColorGraph(id, color);
 }
 
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,

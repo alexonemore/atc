@@ -155,6 +155,21 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotChangeColorGraphPlotResult);
 	connect(this, &CoreApplication::SignalAddGraphPlotResult,
 			gui, &MainWindow::SlotAddGraphPlotResult);
+	connect(this, &CoreApplication::SignalRemoveGraphPlotResult,
+			gui, &MainWindow::SlotRemoveGraphPlotResult);
+	connect(this, &CoreApplication::SignalChangeColorGraphPlotResult,
+			gui, &MainWindow::SlotChangeColorGraphPlotResult);
+
+	connect(gui, &MainWindow::SignalAllGraphsRemovedPlotResult,
+			this, &CoreApplication::SlotAllGraphsRemovedPlotResultVtM);
+	connect(gui, &MainWindow::SignalGraphColorChangedPlotResult,
+			this, &CoreApplication::SlotGraphColorChangedPlotResultVtM);
+	connect(gui, &MainWindow::SignalGraphRemovedPlotResult,
+			this, &CoreApplication::SlotGraphRemovedPlotResultVtM);
+	connect(gui, &MainWindow::SignalGraphsRemovedPlotResult,
+			this, &CoreApplication::SlotGraphsRemovedPlotResultVtM);
+
+
 
 	// amounts
 	connect(gui, &MainWindow::SignalAmountsTableDelete,

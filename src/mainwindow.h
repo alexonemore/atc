@@ -93,8 +93,8 @@ public slots:
 	void SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color);
 signals:
 	void SignalAllGraphsRemovedPlotResult();
-	void SignalGraphColorChangedPlotResultTF(const GraphId, const QColor&);
-	void SignalGraphRemovedPlotResultTF(const GraphId);
+	void SignalGraphColorChangedPlotResult(const GraphId, const QColor&);
+	void SignalGraphRemovedPlotResult(const GraphId);
 	void SignalGraphsRemovedPlotResult(const QVector<GraphId>&);
 
 public slots:
