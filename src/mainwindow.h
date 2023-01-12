@@ -85,6 +85,17 @@ signals:
 	void SignalGraphRemovedPlotTF(const GraphId);
 	void SignalGraphsRemovedPlotTF(const QVector<GraphId>&);
 
+	// plot Result
+public slots:
+	void SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void SlotRemoveGraphPlotResult(const GraphId id);
+	void SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color);
+signals:
+	void SignalAllGraphsRemovedPlotResult();
+	void SignalGraphColorChangedPlotResultTF(const GraphId, const QColor&);
+	void SignalGraphRemovedPlotResultTF(const GraphId);
+	void SignalGraphsRemovedPlotResult(const QVector<GraphId>&);
 
 public slots:
 	void SlotStartCalculations(Optimization::OptimizationVector& vec, int threads);

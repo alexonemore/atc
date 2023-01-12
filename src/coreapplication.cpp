@@ -433,8 +433,10 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 		emit SignalAddGraphPlotResult(id, name, color, x, y);
 	}
 		break;
-	case ParametersNS::Workmode::TemperatureCompositionRange:
+	case ParametersNS::Workmode::TemperatureCompositionRange: {
+
 		// 3d plot and heatmap
+	}
 		break;
 	}
 }

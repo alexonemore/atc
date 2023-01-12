@@ -233,7 +233,22 @@ void MainWindow::SlotRemoveGraphPlotTF(const GraphId id)
 void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& color)
 {
 	LOG(color)
-	ui->plot_tf_view->ChangeColorGraph(id, color);
+			ui->plot_tf_view->ChangeColorGraph(id, color);
+}
+
+void MainWindow::SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color, QVector<double>& x, QVector<double>& y)
+{
+
+}
+
+void MainWindow::SlotRemoveGraphPlotResult(const GraphId id)
+{
+
+}
+
+void MainWindow::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
+{
+
 }
 
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
