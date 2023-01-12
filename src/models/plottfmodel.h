@@ -79,7 +79,7 @@ public slots:
 	void SlotRemoveAllGraphs();
 	void SlotRemoveOneGraph(const GraphId id);
 	void SlotRemoveGraphs(const QVector<GraphId>& ids);
-	void SlotChangeColotGraph(const GraphId id, const QColor& color);
+	void SlotChangeColorGraph(const GraphId id, const QColor& color);
 
 signals:
 	void AddGraph(const GraphId id, const QString& name, const QColor& color);

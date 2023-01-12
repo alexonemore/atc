@@ -388,7 +388,7 @@ void CoreApplication::SlotGraphColorChangedPlotTFVtM(const GraphId id,
 	auto it = graphs_tf_view.find(id);
 	if(it != graphs_tf_view.end()) {
 		it->second.color = color;
-		model_plot_tf->SlotChangeColotGraph(id, color);
+		model_plot_tf->SlotChangeColorGraph(id, color);
 	}
 }
 
@@ -521,22 +521,31 @@ void CoreApplication::SlotChangeColorGraphPlotResult(const GraphId id, const QCo
 void CoreApplication::SlotAllGraphsRemovedPlotResultVtM()
 {
 	graphs_result_view.clear();
-	model_result->Slot
+	model_result->SlotRemoveAllGraphs();
 }
 
-void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id, const QColor& color)
+void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id,
+														 const QColor& color)
 {
-
+	auto it = graphs_result_view.find(id);
+	if(it != graphs_result_view.end()) {
+		it->second.color = color;
+		model_result->SlotChangeColorGraph(id, color);
+	}
 }
 
 void CoreApplication::SlotGraphRemovedPlotResultVtM(const GraphId id)
 {
-
+	graphs_result_view.erase(id);
+	model_result->SlotRemoveOneGraph(id);
 }
 
 void CoreApplication::SlotGraphsRemovedPlotResultVtM(const QVector<GraphId>& ids)
 {
-
+	for(auto&& id : ids) {
+		graphs_result_view.erase(id);
+	}
+	model_result->SlotRemoveGraphs(ids);
 }
 
 void CoreApplication::UpdateRangeTabulatedModels()

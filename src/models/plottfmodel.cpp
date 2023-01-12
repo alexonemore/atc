@@ -230,7 +230,7 @@ void PlotTFModel::SlotRemoveGraphs(const QVector<GraphId>& ids)
 	}
 }
 
-void PlotTFModel::SlotChangeColotGraph(const GraphId id, const QColor& color)
+void PlotTFModel::SlotChangeColorGraph(const GraphId id, const QColor& color)
 {
 	if(static_cast<ParametersNS::Database>(id.database) != database) return;
 	auto row = data_tf.find(id.substance_id);

@@ -326,12 +326,17 @@ void ResultModel::SlotRemoveOneGraph(const GraphId id)
 
 void ResultModel::SlotRemoveGraphs(const QVector<GraphId>& ids)
 {
-
+	for(auto&& id : ids) {
+		SlotRemoveOneGraph(id);
+	}
 }
 
-void ResultModel::SlotChangeColotGraph(const GraphId id, const QColor& color)
+void ResultModel::SlotChangeColorGraph(const GraphId id, const QColor& color)
 {
-
+	auto row = GraphIdToRow(id);
+	checked.at(row).color = color;
+	auto ind = index(row, static_cast<int>(ResultFields::ColNames::Show));
+	emit dataChanged(ind, ind);
 }
 
 ResultDetailModel::ResultDetailModel(QObject* parent)
