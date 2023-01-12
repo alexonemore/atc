@@ -125,6 +125,11 @@ private:
 	int GraphIdToRow(const GraphId& graph_id) const;
 	GraphId RowToGraphId(const int row) const;
 	QString MakeGraphName(const int row) const;
+public slots:
+	void SlotRemoveAllGraphs();
+	void SlotRemoveOneGraph(const GraphId id);
+	void SlotRemoveGraphs(const QVector<GraphId>& ids);
+	void SlotChangeColotGraph(const GraphId id, const QColor& color);
 };
 
 class ResultDetailModel : public QAbstractTableModel

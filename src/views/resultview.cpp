@@ -84,3 +84,46 @@ void ResultView::Initialize()
 	table_check->setColumnWidth(static_cast<int>(ResultFields::ColNames::Show),
 								ParametersNS::GUISize::table_column_width);
 }
+
+void ResultView::AddGraph(const GraphId id, const QString& name,
+						  const QColor& color, QVector<double>& x,
+						  QVector<double>& y)
+{
+	if(id.substance_id > 0) {
+		assert(id.option == -1);
+		plot2d_graph->AddGraphY2(id, name, std::move(x), std::move(y), color);
+	} else {
+		assert(id.option >= 0);
+		plot2d_graph->AddGraphY1(id, name, std::move(x), std::move(y), color);
+	}
+}
+
+void ResultView::AddHeatMap()
+{
+
+}
+
+void ResultView::Add3DGraph()
+{
+
+}
+
+void ResultView::RemoveGraph(const GraphId id)
+{
+
+}
+
+void ResultView::ChangeColorGraph(const GraphId id, const QColor& color)
+{
+
+}
+
+void ResultView::SetXAxisUnit(const ParametersNS::Parameters params)
+{
+
+}
+
+void ResultView::SetYAxisUnit(const ParametersNS::Parameters params)
+{
+
+}

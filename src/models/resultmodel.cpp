@@ -307,6 +307,33 @@ QString ResultModel::MakeGraphName(const int row) const
 	}
 }
 
+void ResultModel::SlotRemoveAllGraphs()
+{
+	beginResetModel();
+	for(auto&& i : checked) {
+		i.second = Cell{};
+	}
+	endResetModel();
+}
+
+void ResultModel::SlotRemoveOneGraph(const GraphId id)
+{
+	auto row = GraphIdToRow(id);
+	checked.at(row).checked = Qt::Unchecked;
+	auto ind = index(row, static_cast<int>(ResultFields::ColNames::Show));
+	emit dataChanged(ind, ind);
+}
+
+void ResultModel::SlotRemoveGraphs(const QVector<GraphId>& ids)
+{
+
+}
+
+void ResultModel::SlotChangeColotGraph(const GraphId id, const QColor& color)
+{
+
+}
+
 ResultDetailModel::ResultDetailModel(QObject* parent)
 	: QAbstractTableModel{parent}
 	, col_count{ResultFields::detail_row_names_single_size}

@@ -153,7 +153,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotRemoveGraphPlotResult);
 	connect(model_result, &ResultModel::ChangeColorGraph,
 			this, &CoreApplication::SlotChangeColorGraphPlotResult);
-
+	connect(this, &CoreApplication::SignalAddGraphPlotResult,
+			gui, &MainWindow::SlotAddGraphPlotResult);
 
 	// amounts
 	connect(gui, &MainWindow::SignalAmountsTableDelete,
@@ -408,6 +409,7 @@ void CoreApplication::SlotGraphsRemovedPlotTFVtM(const QVector<GraphId>& ids)
 void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& name,
 											 const QColor& color)
 {
+	LOG()
 	switch (parameters_.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
@@ -503,17 +505,23 @@ QVector<double> CoreApplication::MakeYVector(const GraphId id) const
 
 void CoreApplication::SlotRemoveGraphPlotResult(const GraphId id)
 {
-
+	graphs_result_view.erase(id);
+	emit SignalRemoveGraphPlotResult(id);
 }
 
 void CoreApplication::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
 {
-
+	auto it = graphs_result_view.find(id);
+	if(it != graphs_result_view.end()) {
+		it->second.color = color;
+		emit SignalChangeColorGraphPlotResult(id, color);
+	}
 }
 
 void CoreApplication::SlotAllGraphsRemovedPlotResultVtM()
 {
-
+	graphs_result_view.clear();
+	model_result->Slot
 }
 
 void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id, const QColor& color)
