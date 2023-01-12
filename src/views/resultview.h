@@ -25,6 +25,7 @@
 #include "plot2dheatmap.h"
 #include "plot3dsurface.h"
 #include "specialdelegates.h"
+#include "parameters.h"
 
 class ResultView : public QWidget
 {
@@ -41,7 +42,21 @@ public:
 	~ResultView() override;
 	void SetModel(QAbstractItemModel* model);
 	void Initialize();
+
+public slots:
+	void AddGraph(const GraphId id, const QString& name, const QColor& color,
+				  QVector<double>& x, QVector<double>& y);
+	void RemoveGraph(const GraphId id);
+	void ChangeColorGraph(const GraphId id, const QColor& color);
+
+	void SetXAxisUnit(const ParametersNS::Parameters params);
+	void SetYAxisUnit(const ParametersNS::Parameters params);
+
 signals:
+	void SignalAllGraphsRemoved();
+	void SignalGraphColorChanged(const GraphId, const QColor&);
+	void SignalGraphRemoved(const GraphId);
+	void SignalGraphsRemoved(const QVector<GraphId>&);
 
 };
 
