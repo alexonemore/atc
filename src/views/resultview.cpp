@@ -66,6 +66,16 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setItemDelegateForColumn(
 				static_cast<int>(ResultFields::ColNames::Show),
 				color_delegate);
+
+	connect(plot2d_graph, &Plot2DGraph::SignalAllGraphsRemoved,
+			this, &ResultView::SignalAllGraphsRemoved);
+	connect(plot2d_graph, &Plot2DGraph::SignalGraphColorChanged,
+			this, &ResultView::SignalGraphColorChanged);
+	connect(plot2d_graph, &Plot2DGraph::SignalGraphRemoved,
+			this, &ResultView::SignalGraphRemoved);
+	connect(plot2d_graph, &Plot2DGraph::SignalGraphsRemoved,
+			this, &ResultView::SignalGraphsRemoved);
+
 }
 
 ResultView::~ResultView()

@@ -131,6 +131,16 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->plot_tf_view, &PlotTFView::SignalGraphsRemoved,
 			this, &MainWindow::SignalGraphsRemovedPlotTF);
 
+	// plot Result
+	connect(ui->result_view, &ResultView::SignalAllGraphsRemoved,
+			this, &MainWindow::SignalAllGraphsRemovedPlotResult);
+	connect(ui->result_view, &ResultView::SignalGraphColorChanged,
+			this, &MainWindow::SignalGraphColorChangedPlotResult);
+	connect(ui->result_view, &ResultView::SignalGraphRemoved,
+			this, &MainWindow::SignalGraphRemovedPlotResult);
+	connect(ui->result_view, &ResultView::SignalGraphsRemoved,
+			this, &MainWindow::SignalGraphsRemovedPlotResult);
+
 	// amounts
 	auto double_delegate = new DoubleNumberDelegate(this);
 	ui->amounts_view->setItemDelegateForColumn(static_cast<int>(AmountsModelFields::Names::Group_1_mol), double_delegate);
