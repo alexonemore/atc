@@ -106,7 +106,11 @@ void ResultView::AddGraph(const GraphId id, const QString& name,
 		plot2d_graph->AddGraphY2(id, name, std::move(x), std::move(y), color);
 	} else {
 		assert(id.option >= 0);
-		plot2d_graph->AddGraphY1(id, name, std::move(x), std::move(y), color);
+		if(id.option == static_cast<int>(ResultFields::RowNames::Sum)) {
+			plot2d_graph->AddGraphY2(id, name, std::move(x), std::move(y), color);
+		} else {
+			plot2d_graph->AddGraphY1(id, name, std::move(x), std::move(y), color);
+		}
 	}
 }
 
