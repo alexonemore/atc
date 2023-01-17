@@ -158,7 +158,12 @@ private:
 	auto Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();
 	QVector<double> MakeYVector(const GraphId id) const;
-
+	double ChooseValueInResultData(const GraphId id, const int index) const;
+	void MakeHeatmapAnd3DVectors(const GraphId id,
+								 QVector<double>& composition,
+								 QVector<double>& temperatures,
+								 QVector<QVector<double>>& values,
+								 QSurfaceDataArray* data) const;
 
 };
 

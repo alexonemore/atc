@@ -253,21 +253,21 @@ void CoreApplication::SlotMakeHeatMapData()
 {
 	LOG()
 	static int id = 0;
-	const int x_size = 301;
-	const int y_size = 201;
-	QVector<double> x(x_size), y(y_size);
-	QVector<QVector<double>> z(y_size);
+	const int xsize = 301;
+	const int ysize = 201;
+	QVector<double> x(xsize), y(ysize);
+	QVector<QVector<double>> z(ysize);
 	//z.resize(y_size);
 	for(auto&& i : z) {
-		i.resize(x_size);
+		i.resize(xsize);
 	}
 	std::iota(x.begin(), x.end(), 0.0);
 	std::iota(y.begin(), y.end(), 0.0);
 
-	for(int yi = 0; yi != y_size; ++yi) {
-		for(int xi = 0; xi != x_size; ++xi) {
-			z[yi][xi] = std::sin(x.at(xi)*M_PI/x_size) +
-					std::sin(y.at(yi)*M_PI/y_size);
+	for(int yi = 0; yi != ysize; ++yi) {
+		for(int xi = 0; xi != xsize; ++xi) {
+			z[yi][xi] = std::sin(x.at(xi)*M_PI/xsize) +
+					std::sin(y.at(yi)*M_PI/ysize);
 		}
 	}
 	emit SignalShowHeatMapData(QString::number(id++), x, y, z);
@@ -443,6 +443,7 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	case ParametersNS::Workmode::SinglePoint:
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
+		assert(x_size == result_data.size());
 		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
@@ -452,6 +453,7 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
+		assert(x_size == result_data.size());
 		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
@@ -461,13 +463,13 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
-		QVector<double> x;
-		QVector<double> y;
-		QVector<QVector<double>> z;
-		QSurfaceDataArray* data = new QSurfaceDataArray;
-
-
-		emit SignalAddHeatmapPlotResult(id, name, color, x, y, z);
+		assert(x_size * y_size == result_data.size());
+		QVector<double> composition, temperature;
+		QVector<QVector<double>> values;
+		QSurfaceDataArray* data;
+		MakeHeatmapAnd3DVectors(id, composition, temperature, values, data);
+		emit SignalAddHeatmapPlotResult(id, name, color,composition,
+										temperature, values);
 		emit SignalAdd3DGraphPlotResult(id, name, color, data);
 		// 3d plot and heatmap
 	}
@@ -479,60 +481,100 @@ QVector<double> CoreApplication::MakeYVector(const GraphId id) const
 {
 	QVector<double> y(result_data.size());
 	for(int i = 0, max = result_data.size(); i != max; ++i) {
-		if(id.substance_id > 0) {
-			assert(id.option == -1);
-			const auto& val = parameters_.show_initial_in_result
-					? result_data.at(i).amounts.at(id.substance_id)
-					: result_data.at(i).amounts_of_equilibrium.at(id.substance_id);
-			switch (parameters_.composition_result_unit) {
-			case ParametersNS::CompositionUnit::AtomicPercent:
-				y[i] = val.sum_atpct; break;
-			case ParametersNS::CompositionUnit::WeightPercent:
-				y[i] = val.sum_wtpct; break;
-			case ParametersNS::CompositionUnit::Mol:
-				y[i] = val.sum_mol; break;
-			case ParametersNS::CompositionUnit::Gram:
-				y[i] = val.sum_gram; break;
-			}
-		} else {
-			assert(id.option >= 0);
-			switch (static_cast<ResultFields::RowNames>(id.option)) {
-			case ResultFields::RowNames::T_result:
-				y[i] = Thermodynamics::FromKelvin(result_data.at(i).temperature_K_current,
-												  parameters_.temperature_result_unit);
-				break;
-			case ResultFields::RowNames::T_initial:
-				y[i] = Thermodynamics::FromKelvin(result_data.at(i).temperature_K_initial,
-												  parameters_.temperature_result_unit);
-				break;
-			case ResultFields::RowNames::H_initial:
-				y[i] = result_data.at(i).H_initial;
-				break;
-			case ResultFields::RowNames::H_equilibrium:
-				y[i] = result_data.at(i).H_current;
-				break;
-			case ResultFields::RowNames::c_equilibrium:
-				y[i] = result_data.at(i).result_of_optimization;
-				break;
-			case ResultFields::RowNames::Sum:
-				const auto& sum = parameters_.show_initial_in_result
-						? result_data.at(i).sum_of_initial
-						: result_data.at(i).sum_of_equilibrium;
-				switch (parameters_.composition_result_unit) {
-				case ParametersNS::CompositionUnit::AtomicPercent:
-					y[i] = sum.sum_atpct; break;
-				case ParametersNS::CompositionUnit::WeightPercent:
-					y[i] = sum.sum_wtpct; break;
-				case ParametersNS::CompositionUnit::Mol:
-					y[i] = sum.sum_mol; break;
-				case ParametersNS::CompositionUnit::Gram:
-					y[i] = sum.sum_gram; break;
-				}
-				break;
-			}
-		}
+		y[i] = ChooseValueInResultData(id, i);
 	}
 	return y;
+}
+
+double CoreApplication::ChooseValueInResultData(const GraphId id, const int index) const
+{
+	if(id.substance_id > 0) {
+		assert(id.option == -1);
+		const auto& val = parameters_.show_initial_in_result
+				? result_data.at(index).amounts.at(id.substance_id)
+				: result_data.at(index).amounts_of_equilibrium.at(id.substance_id);
+		switch (parameters_.composition_result_unit) {
+		case ParametersNS::CompositionUnit::AtomicPercent:
+			return val.sum_atpct;
+		case ParametersNS::CompositionUnit::WeightPercent:
+			return val.sum_wtpct;
+		case ParametersNS::CompositionUnit::Mol:
+			return val.sum_mol;
+		case ParametersNS::CompositionUnit::Gram:
+			return val.sum_gram;
+		}
+	} else {
+		assert(id.option >= 0);
+		switch (static_cast<ResultFields::RowNames>(id.option)) {
+		case ResultFields::RowNames::T_result:
+			return Thermodynamics::FromKelvin(result_data.at(index).temperature_K_current,
+											  parameters_.temperature_result_unit);
+			break;
+		case ResultFields::RowNames::T_initial:
+			return Thermodynamics::FromKelvin(result_data.at(index).temperature_K_initial,
+											  parameters_.temperature_result_unit);
+			break;
+		case ResultFields::RowNames::H_initial:
+			return result_data.at(index).H_initial;
+			break;
+		case ResultFields::RowNames::H_equilibrium:
+			return result_data.at(index).H_current;
+			break;
+		case ResultFields::RowNames::c_equilibrium:
+			return result_data.at(index).result_of_optimization;
+			break;
+		case ResultFields::RowNames::Sum:
+			const auto& sum = parameters_.show_initial_in_result
+					? result_data.at(index).sum_of_initial
+					: result_data.at(index).sum_of_equilibrium;
+			switch (parameters_.composition_result_unit) {
+			case ParametersNS::CompositionUnit::AtomicPercent:
+				return sum.sum_atpct;
+			case ParametersNS::CompositionUnit::WeightPercent:
+				return sum.sum_wtpct;
+			case ParametersNS::CompositionUnit::Mol:
+				return sum.sum_mol;
+			case ParametersNS::CompositionUnit::Gram:
+				return sum.sum_gram;
+			}
+			break;
+		}
+	}
+	throw std::out_of_range("ChooseValueInResultData has wrong id");
+}
+
+void CoreApplication::MakeHeatmapAnd3DVectors(const GraphId id,
+	QVector<double>& composition, QVector<double>& temperatures,
+	QVector<QVector<double> >& values, QSurfaceDataArray* data) const
+{
+	const int t_size = x_size;
+	const int c_size = y_size;
+	const int full_size = result_data.size();
+	assert(full_size == t_size * c_size);
+	composition.resize(c_size);
+	temperatures.resize(t_size);
+	values.resize(t_size);
+	for(auto&& i : values) {
+		i.resize(c_size);
+	}
+	for(int i = 0; i != c_size; ++i) {
+		composition[i] = result_data.at(i).composition_variable;
+	}
+	data = new QSurfaceDataArray;
+	data->reserve(t_size);
+	int i = 0;
+	for(int ti = 0; ti != t_size; ++ti) {
+		temperatures[ti] = result_data.at(i).temperature_K_initial;
+		auto row = new QSurfaceDataRow(c_size);
+		for(int ci = 0; ci != c_size; ++ci, ++i) {
+			auto v = ChooseValueInResultData(id, i);
+			values[ti][ci] = v;
+			(*row)[ci].setPosition(QVector3D{static_cast<float>(composition.at(ci)),
+											 static_cast<float>(v),
+											 static_cast<float>(temperatures.at(ti))});
+		}
+		data->append(row);
+	}
 }
 
 void CoreApplication::SlotRemoveGraphPlotResult(const GraphId id)
