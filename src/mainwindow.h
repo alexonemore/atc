@@ -88,7 +88,12 @@ signals:
 	// plot Result
 public slots:
 	void SlotAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
-				  QVector<double>& x, QVector<double>& y);
+								QVector<double>& x, QVector<double>& y);
+	void SlotAddHeatmapPlotResult(const GraphId id, const QString& name, const QColor& color,
+								  QVector<double>& x, QVector<double>& y,
+								  QVector<QVector<double>>& z);
+	void SlotAdd3DGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
+								  QSurfaceDataArray* data);
 	void SlotRemoveGraphPlotResult(const GraphId id);
 	void SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color);
 	void SlotSetPlotResultAxisUnit(const ParametersNS::Parameters params);

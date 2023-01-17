@@ -127,6 +127,11 @@ private slots:
 signals:
 	void SignalAddGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
 				  QVector<double>& x, QVector<double>& y);
+	void SignalAddHeatmapPlotResult(const GraphId id, const QString& name, const QColor& color,
+									QVector<double>& x, QVector<double>& y,
+									QVector<QVector<double>>& z);
+	void SignalAdd3DGraphPlotResult(const GraphId id, const QString& name, const QColor& color,
+									QSurfaceDataArray* data);
 	void SignalRemoveGraphPlotResult(const GraphId id);
 	void SignalChangeColorGraphPlotResult(const GraphId id, const QColor& color);
 	void SignalSetPlotResultAxisUnit(const ParametersNS::Parameters params);

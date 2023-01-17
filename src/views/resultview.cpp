@@ -78,6 +78,11 @@ ResultView::ResultView(QWidget *parent)
 	connect(plot2d_graph, &Plot2DGraph::SignalGraphsRemoved,
 			this, &ResultView::SignalGraphsRemoved);
 
+	connect(plot2d_heatmap, &Plot2DHeatMap::SignalGraphRemoved,
+			this, &ResultView::SignalAllGraphsRemoved);
+	connect(plot3d, &Plot3DSurface::SignalGraphRemoved,
+			this, &ResultView::SignalAllGraphsRemoved);
+
 }
 
 ResultView::~ResultView()
@@ -114,14 +119,15 @@ void ResultView::AddGraph(const GraphId id, const QString& name,
 	}
 }
 
-void ResultView::AddHeatMap()
+void ResultView::AddHeatMap(const QString& name, QVector<double>& x, QVector<double>& y,
+							QVector<QVector<double> >& z)
 {
-
+	plot2d_heatmap->AddHeatMap(name, std::move(x), std::move(y), std::move(z));
 }
 
-void ResultView::Add3DGraph()
+void ResultView::Add3DGraph(const QString& name, QSurfaceDataArray* data)
 {
-
+	plot3d->AddGraph(data);
 }
 
 void ResultView::RemoveGraph(const GraphId id)

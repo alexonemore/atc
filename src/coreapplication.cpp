@@ -155,6 +155,11 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotChangeColorGraphPlotResult);
 	connect(this, &CoreApplication::SignalAddGraphPlotResult,
 			gui, &MainWindow::SlotAddGraphPlotResult);
+	connect(this, &CoreApplication::SignalAddHeatmapPlotResult,
+			gui, &MainWindow::SlotAddHeatmapPlotResult);
+	connect(this, &CoreApplication::SignalAdd3DGraphPlotResult,
+			gui, &MainWindow::SlotAdd3DGraphPlotResult);
+
 	connect(this, &CoreApplication::SignalRemoveGraphPlotResult,
 			gui, &MainWindow::SlotRemoveGraphPlotResult);
 	connect(this, &CoreApplication::SignalChangeColorGraphPlotResult,

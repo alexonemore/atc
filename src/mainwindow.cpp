@@ -252,6 +252,20 @@ void MainWindow::SlotAddGraphPlotResult(const GraphId id, const QString& name,
 	ui->result_view->AddGraph(id, name, color, x, y);
 }
 
+void MainWindow::SlotAddHeatmapPlotResult(const GraphId id, const QString& name,
+	const QColor& color, QVector<double>& x, QVector<double>& y, QVector<QVector<double> >& z)
+{
+	LOG()
+	ui->result_view->AddHeatMap(name, x, y, z);
+}
+
+void MainWindow::SlotAdd3DGraphPlotResult(const GraphId id, const QString& name,
+										  const QColor& color, QSurfaceDataArray* data)
+{
+	LOG()
+	ui->result_view->Add3DGraph(name, data);
+}
+
 void MainWindow::SlotRemoveGraphPlotResult(const GraphId id)
 {
 	ui->result_view->RemoveGraph(id);

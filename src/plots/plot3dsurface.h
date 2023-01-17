@@ -76,6 +76,8 @@ private slots:
 private:
 	void PrintGraphsToTextFile(QTextStream& stream, QString delimiter) const;
 
+signals:
+	void SignalGraphRemoved();
 };
 
 #endif // PLOT3DSURFACE_H

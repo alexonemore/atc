@@ -153,6 +153,7 @@ void Plot3DSurface::SetShadowQuality(int index)
 void Plot3DSurface::RemoveGraph()
 {
 	plot->seriesList().at(0)->dataProxy()->resetArray(nullptr);
+	emit SignalGraphRemoved();
 }
 
 QString Plot3DSurface::GetTitle() const
