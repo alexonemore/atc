@@ -120,9 +120,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(this, &CoreApplication::SignalShow3DGraphData,
 			gui, &MainWindow::SlotAdd3DGraph);
 
-	connect(this, &CoreApplication::SignalSetPlotXAxisUnit,
-			gui, &MainWindow::SlotSetPlotXAxisUnit);
-
 	// model plot TF
 	connect(model_plot_tf, &PlotTFModel::AddGraph,
 			this, &CoreApplication::SlotAddGraphPlotTF);
@@ -145,6 +142,9 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotGraphRemovedPlotTFVtM);
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotTF,
 			this, &CoreApplication::SlotGraphsRemovedPlotTFVtM);
+
+	connect(this, &CoreApplication::SignalSetPlotXAxisUnit,
+			gui, &MainWindow::SlotSetPlotXAxisUnit);
 
 	// result
 	connect(model_result, &ResultModel::AddGraph,
@@ -169,7 +169,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	connect(gui, &MainWindow::SignalGraphsRemovedPlotResult,
 			this, &CoreApplication::SlotGraphsRemovedPlotResultVtM);
 
-
+	connect(this, &CoreApplication::SignalSetPlotResultAxisUnit,
+			gui, &MainWindow::SlotSetPlotResultAxisUnit);
 
 	// amounts
 	connect(gui, &MainWindow::SignalAmountsTableDelete,
@@ -336,6 +337,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());
 	emit SignalSetPlotXAxisUnit(parameters_.temperature_range_unit);
+	emit SignalSetPlotResultAxisUnit(parameters_);
 }
 
 void CoreApplication::SlotUpdateButtonHandler(
@@ -347,6 +349,11 @@ void CoreApplication::SlotUpdateButtonHandler(
 	// plots TF update
 	for(auto&& [id, params] : graphs_tf_view) {
 		SlotAddGraphPlotTF(id, params.name, params.color);
+	}
+
+	// plots Result updata
+	for(auto&& [id, params] : graphs_result_view) {
+		SlotAddGraphPlotResult(id, params.name, params.color);
 	}
 }
 
@@ -520,12 +527,14 @@ QVector<double> CoreApplication::MakeYVector(const GraphId id) const
 
 void CoreApplication::SlotRemoveGraphPlotResult(const GraphId id)
 {
+	LOG()
 	graphs_result_view.erase(id);
 	emit SignalRemoveGraphPlotResult(id);
 }
 
 void CoreApplication::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
 {
+	LOG()
 	auto it = graphs_result_view.find(id);
 	if(it != graphs_result_view.end()) {
 		it->second.color = color;
@@ -535,6 +544,7 @@ void CoreApplication::SlotChangeColorGraphPlotResult(const GraphId id, const QCo
 
 void CoreApplication::SlotAllGraphsRemovedPlotResultVtM()
 {
+	LOG()
 	graphs_result_view.clear();
 	model_result->SlotRemoveAllGraphs();
 }
@@ -542,6 +552,7 @@ void CoreApplication::SlotAllGraphsRemovedPlotResultVtM()
 void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id,
 														 const QColor& color)
 {
+	LOG()
 	auto it = graphs_result_view.find(id);
 	if(it != graphs_result_view.end()) {
 		it->second.color = color;
@@ -551,12 +562,14 @@ void CoreApplication::SlotGraphColorChangedPlotResultVtM(const GraphId id,
 
 void CoreApplication::SlotGraphRemovedPlotResultVtM(const GraphId id)
 {
+	LOG()
 	graphs_result_view.erase(id);
 	model_result->SlotRemoveOneGraph(id);
 }
 
 void CoreApplication::SlotGraphsRemovedPlotResultVtM(const QVector<GraphId>& ids)
 {
+	LOG()
 	for(auto&& id : ids) {
 		graphs_result_view.erase(id);
 	}

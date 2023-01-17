@@ -91,6 +91,7 @@ public slots:
 				  QVector<double>& x, QVector<double>& y);
 	void SlotRemoveGraphPlotResult(const GraphId id);
 	void SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color);
+	void SlotSetPlotResultAxisUnit(const ParametersNS::Parameters params);
 signals:
 	void SignalAllGraphsRemovedPlotResult();
 	void SignalGraphColorChangedPlotResult(const GraphId, const QColor&);

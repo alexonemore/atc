@@ -104,12 +104,11 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(fw,	&QFutureWatcher<void>::progressValueChanged,
 			dialog,	&QProgressDialog::setValue);
 
-	//
+	// DEMO
 	connect(ui->plot2d, &Plot2DGraph::SignalPointClick,
 			this, &MainWindow::SlotShowStatusBarText);
 	connect(ui->plotheatmap, &Plot2DHeatMap::SignalPointClick,
 			this, &MainWindow::SlotShowStatusBarText);
-
 	connect(ui->add_2d_graph, &QPushButton::clicked,
 			this, &MainWindow::SignalNeed2DGraphData);
 	connect(ui->add_heat_map, &QPushButton::clicked,
@@ -249,6 +248,7 @@ void MainWindow::SlotChangeColorGraphPlotTF(const GraphId id, const QColor& colo
 void MainWindow::SlotAddGraphPlotResult(const GraphId id, const QString& name,
 	const QColor& color, QVector<double>& x, QVector<double>& y)
 {
+	LOG(name)
 	ui->result_view->AddGraph(id, name, color, x, y);
 }
 
@@ -260,6 +260,11 @@ void MainWindow::SlotRemoveGraphPlotResult(const GraphId id)
 void MainWindow::SlotChangeColorGraphPlotResult(const GraphId id, const QColor& color)
 {
 	ui->result_view->ChangeColorGraph(id, color);
+}
+
+void MainWindow::SlotSetPlotResultAxisUnit(const ParametersNS::Parameters params)
+{
+	ui->result_view->SetAxisUnits(params);
 }
 
 void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,

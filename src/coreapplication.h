@@ -129,6 +129,7 @@ signals:
 				  QVector<double>& x, QVector<double>& y);
 	void SignalRemoveGraphPlotResult(const GraphId id);
 	void SignalChangeColorGraphPlotResult(const GraphId id, const QColor& color);
+	void SignalSetPlotResultAxisUnit(const ParametersNS::Parameters params);
 private slots: // result plots: view to model
 	void SlotAllGraphsRemovedPlotResultVtM();
 	void SlotGraphColorChangedPlotResultVtM(const GraphId id, const QColor& color);

@@ -201,14 +201,16 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 		cell.checked = value.value<Qt::CheckState>();
 		if(cell.checked == Qt::CheckState::Checked) {
 			auto name = MakeGraphName(row);
-			LOG(name, cell.checked, cell.color)
+			LOG("AddGraph", name, cell.checked, cell.color)
 			emit AddGraph(graph_id, name, cell.color);
 		} else {
 			cell.color = Qt::white;
+			LOG("RemoveGraph")
 			emit RemoveGraph(graph_id);
 		}
 	} else if(role == Qt::EditRole) {
 		cell.color = value.value<QColor>();
+		LOG("ChangeColorGraph", cell.color)
 		emit ChangeColorGraph(graph_id, cell.color);
 	} else {
 		return false;
