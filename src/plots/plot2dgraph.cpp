@@ -267,8 +267,6 @@ void Plot2DGraph::SetGraphName(const GraphId id, const QString& name)
 		auto pgraph = it->second;
 		pgraph->setName(name);
 		plot->replot();
-	} else {
-		ErrorInvalidGraphId(id);
 	}
 }
 
@@ -282,8 +280,6 @@ void Plot2DGraph::SetGraphColor(const GraphId id, const QColor& color)
 		pen.setColor(color);
 		pgraph->setPen(pen);
 		plot->replot();
-	} else {
-		ErrorInvalidGraphId(id);
 	}
 }
 
@@ -298,8 +294,6 @@ void Plot2DGraph::RemoveGraph(const GraphId id)
 		else plot->legend->setVisible(false);
 		plot->replot();
 		emit SignalGraphRemoved(id);
-	} else {
-		ErrorInvalidGraphId(id);
 	}
 }
 
@@ -580,8 +574,6 @@ void Plot2DGraph::SetGraphSettings(const GraphId id, const GraphSettings gs)
 	if(it != graph_map.end()) {
 		auto pgraph = it->second;
 		SetGraphSettings(pgraph, gs);
-	} else {
-		ErrorInvalidGraphId(id);
 	}
 }
 
@@ -633,13 +625,3 @@ void Plot2DGraph::ChangeSelectedGraphsSettings()
 		SetGraphSettings(pgraph, settings);
 	}
 }
-
-void Plot2DGraph::ErrorInvalidGraphId(const GraphId id)
-{
-	QMessageBox::critical(this, tr("Error"),
-						  QString{tr("Invalid GraphId: ") +
-								  QString::number(id.substance_id)},
-						  QMessageBox::Ok, QMessageBox::Ok);
-}
-
-

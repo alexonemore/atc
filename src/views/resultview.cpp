@@ -42,12 +42,14 @@ ResultView::ResultView(QWidget *parent)
 	auto splitter = new QSplitter(Qt::Orientation::Horizontal, this);
 	auto tabs = new QTabWidget(this);
 
-	splitter->setChildrenCollapsible(false);
 	splitter->addWidget(table_check);
 	splitter->addWidget(tabs);
 	tabs->addTab(plot2d_graph, tr("Graph"));
 	tabs->addTab(plot2d_heatmap, tr("HeatMap"));
 	tabs->addTab(plot3d, tr("3DView"));
+	splitter->setChildrenCollapsible(false);
+	splitter->setStretchFactor(0, 1);
+	splitter->setStretchFactor(1, 3);
 
 	auto layout = new QHBoxLayout(this);
 	setLayout(layout);
@@ -120,17 +122,30 @@ void ResultView::Add3DGraph()
 
 void ResultView::RemoveGraph(const GraphId id)
 {
-
+	plot2d_graph->RemoveGraph(id);
 }
 
 void ResultView::ChangeColorGraph(const GraphId id, const QColor& color)
 {
-
+	plot2d_graph->SetGraphColor(id, color);
 }
 
 void ResultView::SetXAxisUnit(const ParametersNS::Parameters params)
 {
-
+	switch (params.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+		plot2d_graph->SetAxisXName(tr("Temperature, [%1]").
+		arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+		break;
+	case ParametersNS::Workmode::CompositionRange:
+		plot2d_graph->SetAxisXName(tr("Composition, [%1]").
+		arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		break;
+	}
 }
 
 void ResultView::SetYAxisUnit(const ParametersNS::Parameters params)

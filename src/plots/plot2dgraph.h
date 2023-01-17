@@ -113,7 +113,6 @@ private:
 	const QIcon& GetLegendPositionIcon() const;
 	GraphSettings GetGraphSettings(const GraphPointer pgraph) const;
 	void SetGraphSettings(const GraphPointer pgraph, const GraphSettings gs);
-	void ErrorInvalidGraphId(const GraphId id);
 
 protected: // QWidget interface
 	void keyPressEvent(QKeyEvent* event) override;
