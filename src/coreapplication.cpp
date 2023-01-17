@@ -437,12 +437,12 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 											 const QColor& color)
 {
 	LOG()
+	graphs_result_view[id].color = color;
+	graphs_result_view[id].name = name;
 	switch (parameters_.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
-		graphs_result_view[id].color = color;
-		graphs_result_view[id].name = name;
 		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
@@ -452,8 +452,6 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
-		graphs_result_view[id].color = color;
-		graphs_result_view[id].name = name;
 		QVector<double> x(result_data.size());
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
@@ -463,7 +461,14 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
+		QVector<double> x;
+		QVector<double> y;
+		QVector<QVector<double>> z;
+		QSurfaceDataArray* data = new QSurfaceDataArray;
 
+
+		emit SignalAddHeatmapPlotResult(id, name, color, x, y, z);
+		emit SignalAdd3DGraphPlotResult(id, name, color, data);
 		// 3d plot and heatmap
 	}
 		break;
