@@ -130,25 +130,24 @@ void ResultView::ChangeColorGraph(const GraphId id, const QColor& color)
 	plot2d_graph->SetGraphColor(id, color);
 }
 
-void ResultView::SetXAxisUnit(const ParametersNS::Parameters params)
+void ResultView::SetAxisUnits(const ParametersNS::Parameters params)
 {
 	switch (params.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
 	case ParametersNS::Workmode::TemperatureRange:
-		plot2d_graph->SetAxisXName(tr("Temperature, [%1]").
-		arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+		plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_temperature.
+								   arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
 		break;
 	case ParametersNS::Workmode::CompositionRange:
-		plot2d_graph->SetAxisXName(tr("Composition, [%1]").
-		arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
+		plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_composition.
+								   arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
 		break;
 	}
-}
-
-void ResultView::SetYAxisUnit(const ParametersNS::Parameters params)
-{
-
+	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.
+								arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.
+								arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
 }

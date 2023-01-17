@@ -51,8 +51,8 @@ public slots:
 	void RemoveGraph(const GraphId id);
 	void ChangeColorGraph(const GraphId id, const QColor& color);
 
-	void SetXAxisUnit(const ParametersNS::Parameters params);
-	void SetYAxisUnit(const ParametersNS::Parameters params);
+	void SetAxisUnits(const ParametersNS::Parameters params);
+
 
 signals:
 	void SignalAllGraphsRemoved();
