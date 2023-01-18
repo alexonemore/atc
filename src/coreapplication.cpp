@@ -469,7 +469,7 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 		QVector<QVector<double>> values;
 		QSurfaceDataArray* data = new QSurfaceDataArray;
 		MakeHeatmapAnd3DVectors(id, composition, temperature, values, data);
-		emit SignalAddHeatmapPlotResult(id, name, color,composition, temperature, values);
+		emit SignalAddHeatmapPlotResult(id, name, color, composition, temperature, values);
 		emit SignalAdd3DGraphPlotResult(id, name, color, data);
 	}
 		break;
@@ -552,6 +552,7 @@ void CoreApplication::MakeHeatmapAnd3DVectors(const GraphId id,
 	assert(full_size == t_size * c_size);
 	composition.resize(c_size);
 	temperatures.resize(t_size);
+	data->reserve(t_size);
 	values.resize(t_size);
 	for(auto&& i : values) {
 		i.resize(c_size);
@@ -559,8 +560,6 @@ void CoreApplication::MakeHeatmapAnd3DVectors(const GraphId id,
 	for(int i = 0; i != c_size; ++i) {
 		composition[i] = result_data.at(i).composition_variable;
 	}
-//	data = new QSurfaceDataArray;
-	data->reserve(t_size);
 	int i = 0;
 	for(int ti = 0; ti != t_size; ++ti) {
 		temperatures[ti] = result_data.at(i).temperature_K_initial;
