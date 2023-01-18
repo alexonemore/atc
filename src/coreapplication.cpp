@@ -437,14 +437,13 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 											 const QColor& color)
 {
 	LOG()
-	graphs_result_view[id].color = color;
-	graphs_result_view[id].name = name;
 	switch (parameters_.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
 		assert(x_size == result_data.size());
-		QVector<double> x(result_data.size());
+		graphs_result_view[id] = {color, name};
+		QVector<double> x(x_size);
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
 			return i.temperature_K_initial;});
@@ -454,7 +453,8 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
 		assert(x_size == result_data.size());
-		QVector<double> x(result_data.size());
+		graphs_result_view[id] = {color, name};
+		QVector<double> x(x_size);
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
 			return i.composition_variable;});
@@ -465,6 +465,8 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		// 3d plot and heatmap
 		assert(x_size * y_size == result_data.size());
+		graphs_result_view.clear();
+		graphs_result_view[id] = {color, name};
 		QVector<double> composition, temperature;
 		QVector<QVector<double>> values;
 		QSurfaceDataArray* data = new QSurfaceDataArray;
@@ -539,7 +541,11 @@ double CoreApplication::ChooseValueInResultData(const GraphId id, const int inde
 			break;
 		}
 	}
+#ifndef NDEBUG
 	throw std::out_of_range("ChooseValueInResultData has wrong id");
+#else
+	return 0;
+#endif
 }
 
 void CoreApplication::MakeHeatmapAnd3DVectors(const GraphId id,
