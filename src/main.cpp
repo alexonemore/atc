@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) try
 	QObject::connect(&thread, &QThread::started,
 					 &core_app, &CoreApplication::Initialize);
 
-	main_window.show();
+	main_window.showMaximized();
 	core_app.moveToThread(&thread);
 	thread.start();
 	int result = a.exec();
@@ -50,32 +50,3 @@ int main(int argc, char *argv[]) try
 } catch(...) {
 	qDebug() << "Exception ...";
 }
-
-/* Kinds of signals-slots:
- *
- * 1. Double connected
- *		MainWindow						CoreApplication
- *		SendRequest (signal)	->		GetRequest (slot)
- *		GetResponse (slot)		<-		SendResponse (signal)
- *
- * 2. Single connected
- *
- *		2.1.
- *		MainWindow						CoreApplication
- *		ChangeModel (signal)	->		ChangeModel (slot)
- *
- *		2.2.
- *		MainWindow						CoreApplication
- *		ShowError (slot)		<-		ShowError (signal)
- *
- * 3. QActions and Menu
- *		QAction							MainMenu
- *		triggered (signal)		->		(slot)
- *
- * 4. Pass through (forwarding)
- *		MainWindow (ui)					MainWindow
- *		clicked (signal)		->		(signal)
- *
- *
- */
-
