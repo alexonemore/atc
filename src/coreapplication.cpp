@@ -438,6 +438,7 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 											 const QColor& color)
 {
 	LOG()
+	QString new_name = name.arg(GetUnits(id));
 	switch (parameters_.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
 		break;
@@ -476,6 +477,32 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	}
 		break;
 	}
+}
+
+QString CoreApplication::GetUnits(const GraphId id) const
+{
+	QString unit;
+	if(id.substance_id < ResultFields::row_names_size) {
+		switch (static_cast<ResultFields::RowNames>(id.option)) {
+		case ResultFields::RowNames::T_result:
+		case ResultFields::RowNames::T_initial:
+			unit = parameters_.GetTemperatureResultUnit();
+			break;
+		case ResultFields::RowNames::H_initial:
+		case ResultFields::RowNames::H_equilibrium:
+			unit = tr("kJ/mol");
+			break;
+		case ResultFields::RowNames::c_equilibrium:
+			unit = tr("G/RT");
+			break;
+		case ResultFields::RowNames::Sum:
+			unit = parameters_.GetTemperatureResultUnit();
+			break;
+		}
+	} else {
+		unit = parameters_.GetCompositionResultUnit();
+	}
+	return unit;
 }
 
 QVector<double> CoreApplication::MakeYVector(const GraphId id) const

@@ -300,7 +300,6 @@ GraphId ResultModel::RowToGraphId(const int row) const
 QString ResultModel::MakeGraphName(const int row) const
 {
 	auto res = QStringLiteral("%1, %2");
-	QString units = GetUnits(row);
 	if(row < ResultFields::row_names_size) {
 		QString s1;
 		if(row == 0) {
@@ -315,36 +314,10 @@ QString ResultModel::MakeGraphName(const int row) const
 		} else {
 			s1 = ResultFields::row_names.at(row);
 		}
-		return res.arg(s1, units);
+		return res.arg(s1);
 	} else {
-		return res.arg(items->at(row - ResultFields::row_names_size).formula, units);
+		return res.arg(items->at(row - ResultFields::row_names_size).formula);
 	}
-}
-
-QString ResultModel::GetUnits(const int row) const
-{
-	QString unit;
-	if(row < ResultFields::row_names_size) {
-		switch (static_cast<ResultFields::RowNames>(row)) {
-		case ResultFields::RowNames::T_result:
-		case ResultFields::RowNames::T_initial:
-			unit = ParametersNS::temperature_units.at(static_cast<int>(parameters.temperature_result_unit));
-			break;
-		case ResultFields::RowNames::H_initial:
-		case ResultFields::RowNames::H_equilibrium:
-			unit = tr("kJ/mol");
-			break;
-		case ResultFields::RowNames::c_equilibrium:
-			unit = tr("G/RT");
-			break;
-		case ResultFields::RowNames::Sum:
-			unit = ParametersNS::composition_units.at(static_cast<int>(parameters.composition_result_unit));
-			break;
-		}
-	} else {
-		unit = ParametersNS::composition_units.at(static_cast<int>(parameters.composition_result_unit));
-	}
-	return unit;
 }
 
 void ResultModel::SlotRemoveAllGraphs()
@@ -625,11 +598,9 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			if(col == 0) {
 				switch (parameters.workmode) {
 				case ParametersNS::Workmode::TemperatureRange:
-					return ParametersNS::temperature_units.at(
-								static_cast<int>(parameters.temperature_result_unit));
+					return parameters.GetTemperatureResultUnit();
 				case ParametersNS::Workmode::CompositionRange:
-					return ParametersNS::composition_units.at(
-								static_cast<int>(parameters.composition_range_unit));
+					return parameters.GetCompositionRangeUnit();
 				default:
 					break;
 				}
@@ -649,8 +620,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames1D::T_result:
 			if(col == 0) {
-				return ParametersNS::temperature_units.at(
-							static_cast<int>(parameters.temperature_result_unit));
+				return parameters.GetTemperatureResultUnit();
 			}
 			if(col >= 1) {
 				auto i = col - 1;
@@ -660,8 +630,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames1D::T_initial:
 			if(col == 0) {
-				return ParametersNS::temperature_units.at(
-							static_cast<int>(parameters.temperature_result_unit));
+				return parameters.GetTemperatureResultUnit();
 			}
 			if(col >= 1) {
 				auto i = col - 1;
@@ -698,8 +667,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames1D::Sum_value:
 			if(col == 0) {
-				return ParametersNS::composition_units.at(
-							static_cast<int>(parameters.composition_result_unit));
+				return parameters.GetCompositionResultUnit();
 			}
 			if(col >= 1) {
 				auto j = col - 1;
@@ -723,8 +691,7 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 			auto i = row - ResultFields::detail_row_names_1d_size;
 			auto first = items->cbegin();
 			if(col == 0) {
-				return ParametersNS::composition_units.at(
-							static_cast<int>(parameters.composition_result_unit));
+				return parameters.GetCompositionResultUnit();
 			}
 			if(col >= 1) {
 				auto j = col - 1;
@@ -775,8 +742,7 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 		switch (static_cast<ResultFields::DetailRowNames2D>(row)) {
 		case ResultFields::DetailRowNames2D::X_Axis_values_T_initial:
 			if(col == 0) {
-				return ParametersNS::temperature_units.at(
-							static_cast<int>(parameters.temperature_result_unit));
+				return parameters.GetTemperatureResultUnit();
 			}
 			if(col >= 1) {
 				auto i = col - 1;
@@ -786,8 +752,7 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames2D::Y_Axis_values_Composition:
 			if(col == 0) {
-				return ParametersNS::composition_units.at(
-							static_cast<int>(parameters.composition_range_unit));
+				return parameters.GetCompositionRangeUnit();
 			}
 			if(col >= 1) {
 				auto i = col - 1;
@@ -796,8 +761,7 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames2D::T_result:
 			if(col == 0) {
-				return ParametersNS::temperature_units.at(
-							static_cast<int>(parameters.temperature_result_unit));
+				return parameters.GetTemperatureResultUnit();
 			}
 			if(col >= 1) {
 				auto i = col - 1;
@@ -834,8 +798,7 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 			break;
 		case ResultFields::DetailRowNames2D::Sum_value:
 			if(col == 0) {
-				return ParametersNS::composition_units.at(
-							static_cast<int>(parameters.composition_result_unit));
+				return parameters.GetCompositionResultUnit();
 			}
 			if(col >= 1) {
 				auto j = col - 1;
@@ -859,8 +822,7 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 			auto i = row - ResultFields::detail_row_names_2d_size;
 			auto first = items->cbegin();
 			if(col == 0) {
-				return ParametersNS::composition_units.at(
-							static_cast<int>(parameters.composition_result_unit));
+				return parameters.GetCompositionResultUnit();
 			}
 			if(col >= 1) {
 				auto j = col - 1;

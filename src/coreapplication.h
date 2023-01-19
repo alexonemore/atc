@@ -164,6 +164,7 @@ private:
 								 QVector<double>& temperatures,
 								 QVector<QVector<double>>& values,
 								 QSurfaceDataArray* data) const;
+	QString GetUnits(const GraphId id) const;
 
 };
 

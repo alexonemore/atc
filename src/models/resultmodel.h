@@ -126,7 +126,6 @@ private:
 	int GraphIdToRow(const GraphId& graph_id) const;
 	GraphId RowToGraphId(const int row) const;
 	QString MakeGraphName(const int row) const;
-	QString GetUnits(const int row) const;
 public slots:
 	void SlotRemoveAllGraphs();
 	void SlotRemoveOneGraph(const GraphId id);

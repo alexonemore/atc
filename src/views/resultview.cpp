@@ -158,25 +158,25 @@ void ResultView::SetAxisUnits(const ParametersNS::Parameters params)
 		break;
 	case ParametersNS::Workmode::TemperatureRange:
 		plot2d_graph->SetAxisXName(ResultViewGraph::axis_temperature.
-			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+			arg(params.GetTemperatureResultUnit()));
 		break;
 	case ParametersNS::Workmode::CompositionRange:
 		plot2d_graph->SetAxisXName(ResultViewGraph::axis_composition.
-			arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
+			arg(params.GetCompositionRangeUnit()));
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
 		plot2d_heatmap->SetAxisXName(ResultViewGraph::axis_composition.
-			arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
+			arg(params.GetCompositionRangeUnit()));
 		plot2d_heatmap->SetAxisYName(ResultViewGraph::axis_temperature.
-			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+			arg(params.GetTemperatureResultUnit()));
 		plot3d->SetAxisXName(ResultViewGraph::axis_composition.
-							 arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
+			arg(params.GetCompositionRangeUnit()));
 		plot3d->SetAxisZName(ResultViewGraph::axis_temperature.
-			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+			arg(params.GetTemperatureResultUnit()));
 		break;
 	}
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.
-		arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+		arg(params.GetTemperatureResultUnit()));
 	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.
-		arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
+		arg(params.GetCompositionResultUnit()));
 }

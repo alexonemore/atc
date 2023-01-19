@@ -149,6 +149,18 @@ struct Parameters
 	Parameters();
 	void FixInputParameters();
 	static int MaxThreadsCount() noexcept;
+	QString GetCompositionResultUnit() const {
+		return ParametersNS::composition_units.at(
+					static_cast<int>(composition_result_unit));
+	}
+	QString GetCompositionRangeUnit() const {
+		return ParametersNS::composition_units.at(
+					static_cast<int>(composition_range_unit));
+	}
+	QString GetTemperatureResultUnit() const {
+		return ParametersNS::temperature_units.at(
+					static_cast<int>(temperature_result_unit));
+	}
 };
 
 enum GUISize {
