@@ -444,36 +444,36 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 		break;
 	case ParametersNS::Workmode::TemperatureRange: {
 		assert(x_size == result_data.size());
-		graphs_result_view[id] = {color, name};
+		graphs_result_view[id] = {color, new_name};
 		QVector<double> x(x_size);
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [u = parameters_.temperature_result_unit](Optimization::OptimizationVector::const_reference i){
 			return Thermodynamics::FromKelvin(i.temperature_K_initial, u);});
 		auto y{MakeYVector(id)};
-		emit SignalAddGraphPlotResult(id, name, color, x, y);
+		emit SignalAddGraphPlotResult(id, new_name, color, x, y);
 	}
 		break;
 	case ParametersNS::Workmode::CompositionRange: {
 		assert(x_size == result_data.size());
-		graphs_result_view[id] = {color, name};
+		graphs_result_view[id] = {color, new_name};
 		QVector<double> x(x_size);
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
 					   [](Optimization::OptimizationVector::const_reference i){
 			return i.composition_variable;});
 		auto y{MakeYVector(id)};
-		emit SignalAddGraphPlotResult(id, name, color, x, y);
+		emit SignalAddGraphPlotResult(id, new_name, color, x, y);
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		// 3d plot and heatmap
 		assert(x_size * y_size == result_data.size());
-		graphs_result_view[id] = {color, name};
+		graphs_result_view[id] = {color, new_name};
 		QVector<double> composition, temperature;
 		QVector<QVector<double>> values;
 		QSurfaceDataArray* data = new QSurfaceDataArray;
 		MakeHeatmapAnd3DVectors(id, composition, temperature, values, data);
-		emit SignalAddHeatmapPlotResult(id, name, color, composition, temperature, values);
-		emit SignalAdd3DGraphPlotResult(id, name, color, data);
+		emit SignalAddHeatmapPlotResult(id, new_name, color, composition, temperature, values);
+		emit SignalAdd3DGraphPlotResult(id, new_name, color, data);
 	}
 		break;
 	}
