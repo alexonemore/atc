@@ -139,6 +139,7 @@ void ResultView::Add3DGraph(const QString& name, QSurfaceDataArray* data)
 {
 	plot3d->AddGraph(data);
 	plot3d->SetAxisYName(name);
+	plot3d->SetTitle(name);
 }
 
 void ResultView::RemoveGraph(const GraphId id)
