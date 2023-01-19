@@ -481,28 +481,25 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 
 QString CoreApplication::GetUnits(const GraphId id) const
 {
-	QString unit;
-	if(id.substance_id < ResultFields::row_names_size) {
+	if(id.substance_id > 0) {
+		assert(id.option == -1);
+		return parameters_.GetCompositionResultUnit();
+	} else {
+		assert(id.option >= 0);
 		switch (static_cast<ResultFields::RowNames>(id.option)) {
 		case ResultFields::RowNames::T_result:
 		case ResultFields::RowNames::T_initial:
-			unit = parameters_.GetTemperatureResultUnit();
-			break;
+			return parameters_.GetTemperatureResultUnit();
 		case ResultFields::RowNames::H_initial:
 		case ResultFields::RowNames::H_equilibrium:
-			unit = tr("kJ/mol");
-			break;
+			return tr("kJ/mol");
 		case ResultFields::RowNames::c_equilibrium:
-			unit = tr("G/RT");
-			break;
+			return tr("G/RT");
 		case ResultFields::RowNames::Sum:
-			unit = parameters_.GetTemperatureResultUnit();
-			break;
+			return parameters_.GetCompositionResultUnit();
 		}
-	} else {
-		unit = parameters_.GetCompositionResultUnit();
 	}
-	return unit;
+	return QString{};
 }
 
 QVector<double> CoreApplication::MakeYVector(const GraphId id) const
