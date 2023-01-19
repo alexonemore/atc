@@ -27,7 +27,6 @@
 #include <unordered_map>
 #include <QColor>
 #include "mainwindow.h"
-#include "heavycontainer.h"
 #include "database.h"
 #include "substancestablemodel.h"
 #include "substancestemprangemodel.h"
@@ -69,9 +68,6 @@ private:
 	std::unordered_map<GraphId, GraphParams> graphs_tf_view;
 	std::unordered_map<GraphId, GraphParams> graphs_result_view;
 
-	// demo
-	QAbstractItemModel* table_1;
-
 public:
 	explicit CoreApplication(MainWindow *const mw, QObject *parent = nullptr);
 	virtual ~CoreApplication() override;
@@ -80,16 +76,6 @@ signals:
 	void SignalSetAvailableElements(const QStringList elements);
 	void SignalSetSelectedSubstanceLabel(const QString& name);
 	void SignalSetPlotXAxisUnit(const ParametersNS::TemperatureUnit unit);
-	//demo
-	void SignalShowResponse(const QString&);
-	void SignalShowTime(const QString&);
-	void SignalShowError(const QString&);
-	void SignalShow2DGraphData(const GraphId& id, QVector<double>& x,
-							   QVector<double>& y);
-	void SignalShowHeatMapData(const QString& name, QVector<double>& x,
-							   QVector<double>& y, QVector<QVector<double>>& z);
-	void SignalShow3DGraphData(QSurfaceDataArray* data);
-	void SignalStartHeavyComputations(QVector<HeavyContainer>& ho);
 
 	void SignalStartCalculations(Optimization::OptimizationVector& vec,
 								 int threads);
@@ -141,19 +127,10 @@ private slots: // result plots: view to model
 	void SlotGraphRemovedPlotResultVtM(const GraphId id);
 	void SlotGraphsRemovedPlotResultVtM(const QVector<GraphId>& ids);
 
-
 public slots:
 	void Initialize();
-	//demo
-	void SlotRequestHandler(int i);
-	void SlotPushButtonHandler(const QString& text);
-	void SlotHeavyCalculations();
-	void SlotMake2DGraphData();
-	void SlotMakeHeatMapData();
-	void SlotMake3DGraphData();
 
 private:
-	QVector<HeavyContainer> PrepareHeavyCalculations();
 	auto CurrentDatabase();
 	auto Database(ParametersNS::Database database);
 	void UpdateRangeTabulatedModels();

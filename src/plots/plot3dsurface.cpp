@@ -35,6 +35,7 @@ Plot3DSurface::Plot3DSurface(QWidget *parent) :
 	ui->setupUi(this);
 
 	plot = new Q3DSurface;
+	plot->setShadowQuality(QAbstract3DGraph::ShadowQualityNone);
 	auto plot_container = QWidget::createWindowContainer(plot, this);
 	if(!plot->hasContext()) {
 		QMessageBox::warning(this, tr("Plot3D error"),

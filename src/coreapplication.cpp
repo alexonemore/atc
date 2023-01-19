@@ -39,7 +39,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	qRegisterMetaType<QVector<GraphId>>("QVector<GraphId>&");
 	qRegisterMetaType<QVector<double>>("QVector<double>&");
 	qRegisterMetaType<QVector<QVector<double>>>("QVector<QVector<double>>&");
-	qRegisterMetaType<QVector<HeavyContainer>>("QVector<HeavyContainer>&");
 	qRegisterMetaType<Optimization::OptimizationVector>("Optimization::OptimizationVector&");
 
 	// GUI methods should be called only in this constructor,
@@ -55,9 +54,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	model_amounts = new AmountsModel(this);
 	model_result = new ResultModel(this);
 	model_detail_result = new ResultDetailModel(this);
-	// demo
-	table_1 = new QStringListModel(this);
-
 
 	// set models
 	gui->SetSubstancesTableModel(model_substances);
@@ -68,12 +64,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	gui->SetResultModel(model_result);
 	gui->SetResultDetailModel(model_detail_result);
 	gui->Initialize(); // must be called after set models
-
-	// demo
-	gui->SetModel_1(table_1);
-	gui->SetModel_2(table_1);
-	auto sel = new QItemSelectionModel(table_1);
-	gui->SetSelectonModel(sel);
 
 	// connects
 	connect(gui, &MainWindow::SignalUpdate,
@@ -90,35 +80,6 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotStartCalculations);
 	connect(gui, &MainWindow::SignalSendResult,
 			this, &CoreApplication::SlotResieveResult);
-
-	//demo
-	connect(gui, &MainWindow::SignalSendRequest,
-			this, &CoreApplication::SlotRequestHandler);
-	connect(gui, &MainWindow::SignalPushButtonClicked,
-			this, &CoreApplication::SlotPushButtonHandler);
-	connect(gui, &MainWindow::SignalHeavyCalculationsStart,
-			this, &CoreApplication::SlotHeavyCalculations);
-	connect(this, &CoreApplication::SignalShowError,
-			gui, &MainWindow::SlotShowError);
-	connect(this, &CoreApplication::SignalShowResponse,
-			gui, &MainWindow::SlotShowResponse);
-	connect(this, &CoreApplication::SignalShowTime,
-			gui, &MainWindow::SlotShowStatusBarText);
-
-	// plots
-	connect(gui, &MainWindow::SignalNeed2DGraphData,
-			this, &CoreApplication::SlotMake2DGraphData);
-	connect(gui, &MainWindow::SignalNeedHeatMapData,
-			this, &CoreApplication::SlotMakeHeatMapData);
-	connect(gui, &MainWindow::SignalNeed3DGraphData,
-			this, &CoreApplication::SlotMake3DGraphData);
-
-	connect(this, &CoreApplication::SignalShow2DGraphData,
-			gui, &MainWindow::SlotAdd2DGraph);
-	connect(this, &CoreApplication::SignalShowHeatMapData,
-			gui, &MainWindow::SlotAddHeatMap);
-	connect(this, &CoreApplication::SignalShow3DGraphData,
-			gui, &MainWindow::SlotAdd3DGraph);
 
 	// model plot TF
 	connect(model_plot_tf, &PlotTFModel::AddGraph,
@@ -151,6 +112,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotAddGraphPlotResult);
 	connect(model_result, &ResultModel::RemoveGraph,
 			this, &CoreApplication::SlotRemoveGraphPlotResult);
+	connect(model_result, &ResultModel::RemoveGraphs,
+			this, &CoreApplication::SlotGraphsRemovedPlotResultVtM);
 	connect(model_result, &ResultModel::ChangeColorGraph,
 			this, &CoreApplication::SlotChangeColorGraphPlotResult);
 	connect(this, &CoreApplication::SignalAddGraphPlotResult,
@@ -184,9 +147,7 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 	// calculations
 	connect(this, &CoreApplication::SignalStartCalculations,
 			gui, &MainWindow::SlotStartCalculations);
-	// demo
-	connect(this, &CoreApplication::SignalStartHeavyComputations,
-			gui, &MainWindow::SlotHeavyComputations);
+
 }
 
 CoreApplication::~CoreApplication()
@@ -205,99 +166,6 @@ void CoreApplication::Initialize()
 	// initial parameters
 	auto db = databases.at(static_cast<int>(parameters_.database));
 	emit SignalSetAvailableElements(db->GetAvailableElements());
-}
-
-void CoreApplication::SlotRequestHandler(int i)
-{
-	LOG()
-	QThread::sleep(1);
-	QString text{tr("Result: %1 Thread: %2").arg(i).
-				arg(QThread::currentThread()->objectName())};
-	emit SignalShowResponse(text);
-}
-
-void CoreApplication::SlotPushButtonHandler(const QString& text)
-{
-	LOG()
-	QThread::sleep(1);
-	auto&& list = static_cast<QStringListModel*>(table_1)->stringList();
-	list.append(text);
-	static_cast<QStringListModel*>(table_1)->setStringList(list);
-}
-
-void CoreApplication::SlotHeavyCalculations()
-{
-	// Demo
-	LOG(">> CORE HEAVY START <<")
-	auto vec = PrepareHeavyCalculations();
-	emit SignalStartHeavyComputations(vec);
-	LOG(">> CORE HEAVY END <<")
-}
-
-void CoreApplication::SlotMake2DGraphData()
-{
-	LOG()
-	static GraphId id{};
-	static RandomDouble rd{0.8, 1.2};
-	const int size = 1000;
-	QVector<double> x(size), y(size);
-	std::iota(x.begin(), x.end(), 0);
-	std::transform(x.cbegin(), x.cend(), y.begin(), [](double i){
-		return (std::sin((i+rd())/50)+1)/rd();
-	});
-	id.substance_id++;
-	emit SignalShow2DGraphData(id, x, y);
-}
-
-void CoreApplication::SlotMakeHeatMapData()
-{
-	LOG()
-	static int id = 0;
-	const int xsize = 301;
-	const int ysize = 201;
-	QVector<double> x(xsize), y(ysize);
-	QVector<QVector<double>> z(ysize);
-	//z.resize(y_size);
-	for(auto&& i : z) {
-		i.resize(xsize);
-	}
-	std::iota(x.begin(), x.end(), 0.0);
-	std::iota(y.begin(), y.end(), 0.0);
-
-	for(int yi = 0; yi != ysize; ++yi) {
-		for(int xi = 0; xi != xsize; ++xi) {
-			z[yi][xi] = std::sin(x.at(xi)*M_PI/xsize) +
-					std::sin(y.at(yi)*M_PI/ysize);
-		}
-	}
-	emit SignalShowHeatMapData(QString::number(id++), x, y, z);
-}
-
-void CoreApplication::SlotMake3DGraphData()
-{
-	LOG()
-	int z_rows = 101;
-	int x_cols = 201;
-	auto array = new QSurfaceDataArray;
-	array->reserve(z_rows);
-	for(int zi = 0; zi != z_rows; ++zi) {
-		auto row = new QSurfaceDataRow(x_cols);
-		for(int xi = 0; xi != x_cols; ++xi) {
-			auto value = std::sin(xi*M_PI/x_cols) + std::sin(zi*M_PI/z_rows);
-			(*row)[xi].setPosition(QVector3D{static_cast<float>(xi),
-											 static_cast<float>(value),
-											 static_cast<float>(zi)});
-		}
-		array->append(row);
-	}
-	emit SignalShow3DGraphData(array);
-}
-
-QVector<HeavyContainer> CoreApplication::PrepareHeavyCalculations()
-{
-	LOG()
-	QVector<HeavyContainer> vec(300);
-	return vec;
 }
 
 auto CoreApplication::CurrentDatabase()
@@ -764,4 +632,3 @@ void CoreApplication::SlotResieveResult(Optimization::OptimizationVector& vec)
 	model_detail_result->SetNewData(&result_data, parameters_, x_size, y_size);
 
 }
-

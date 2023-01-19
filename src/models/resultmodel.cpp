@@ -206,7 +206,11 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 	auto graph_id = RowToGraphId(row);
 	if(parameters.workmode == ParametersNS::Workmode::TemperatureCompositionRange) {
 		if(role == Qt::CheckStateRole) {
+			QVector<GraphId> ids;
 			for(auto i = checked.begin(), end = checked.end(); i != end; ++i) {
+				if(i->second.checked == Qt::Checked) {
+					ids.push_back(RowToGraphId(i->first));
+				}
 				i->second = Cell{};
 			}
 			cell.color = GetRandomColor();
@@ -215,8 +219,11 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 				auto name = MakeGraphName(row);
 				LOG("AddGraph", name, cell.checked, cell.color)
 				emit AddGraph(graph_id, name, cell.color);
+				emit RemoveGraphs(ids);
 			} else {
 				cell.color = Qt::white;
+				LOG("RemoveGraph")
+				emit RemoveGraph(graph_id);
 			}
 		} else {
 			return false;
