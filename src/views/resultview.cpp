@@ -25,8 +25,8 @@
 #include "utilities.h"
 
 namespace ResultViewGraph {
-constexpr auto x_axis_name_temperature = MakeQLatin1String("Tamperature, %1");
-constexpr auto x_axis_name_composition = MakeQLatin1String("Composition, %1");
+constexpr auto axis_temperature = MakeQLatin1String("Tamperature, %1");
+constexpr auto axis_composition = MakeQLatin1String("Composition, %1");
 constexpr auto y1_axis_name = MakeQLatin1String("T [%1], H [kJ/mol], c");
 constexpr auto y2_axis_name = MakeQLatin1String("Composition, %1");
 }
@@ -60,9 +60,16 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setSelectionBehavior(QAbstractItemView::SelectItems);
 	table_check->verticalHeader()->setVisible(false);
 
-	plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_temperature.arg("K"));
+	plot2d_graph->SetAxisXName(ResultViewGraph::axis_temperature.arg("K"));
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.arg(tr("K")));
 	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.arg(tr("mol")));
+
+	plot2d_heatmap->SetAxisXName(ResultViewGraph::axis_composition.arg("mol"));
+	plot2d_heatmap->SetAxisYName(ResultViewGraph::axis_temperature.arg("K"));
+
+	plot3d->SetAxisNames(ResultViewGraph::axis_composition.arg("mol"),
+						 ResultViewGraph::axis_temperature.arg("K"),
+						 ResultViewGraph::axis_temperature.arg("K"));
 
 	color_delegate = new ColorPickerDelegate(this);
 	table_check->setItemDelegateForColumn(
@@ -146,18 +153,24 @@ void ResultView::SetAxisUnits(const ParametersNS::Parameters params)
 	case ParametersNS::Workmode::SinglePoint:
 		break;
 	case ParametersNS::Workmode::TemperatureRange:
-		plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_temperature.
-								   arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+		plot2d_graph->SetAxisXName(ResultViewGraph::axis_temperature.
+			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
 		break;
 	case ParametersNS::Workmode::CompositionRange:
-		plot2d_graph->SetAxisXName(ResultViewGraph::x_axis_name_composition.
-								   arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
+		plot2d_graph->SetAxisXName(ResultViewGraph::axis_composition.
+			arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange:
+		plot2d_heatmap->SetAxisXName(ResultViewGraph::axis_composition.
+			arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
+		plot2d_heatmap->SetAxisYName(ResultViewGraph::axis_temperature.
+			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+
+
 		break;
 	}
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.
-								arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
+		arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
 	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.
-								arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
+		arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_result_unit))));
 }

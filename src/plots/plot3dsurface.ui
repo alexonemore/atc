@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>974</width>
-    <height>554</height>
+    <width>638</width>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,64 +46,75 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Theme</string>
-       </property>
-       <property name="buddy">
-        <cstring>theme</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="theme"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Gradient</string>
-       </property>
-       <property name="buddy">
-        <cstring>gradient</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="gradient"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Shadow</string>
-       </property>
-       <property name="buddy">
-        <cstring>shadow</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="shadow"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="wireframe">
-       <property name="text">
-        <string>Show wireframe</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="save_image">
-       <property name="text">
-        <string>Save image</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="save_text">
-       <property name="text">
-        <string>Save text</string>
-       </property>
-      </widget>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="3" rowspan="2">
+        <widget class="QCheckBox" name="wireframe">
+         <property name="text">
+          <string>Show wireframe</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Gradient</string>
+         </property>
+         <property name="buddy">
+          <cstring>gradient</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Shadow</string>
+         </property>
+         <property name="buddy">
+          <cstring>shadow</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QComboBox" name="shadow"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="theme"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Theme</string>
+         </property>
+         <property name="buddy">
+          <cstring>theme</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="save_image">
+         <property name="text">
+          <string>Save image</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="gradient"/>
+       </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="save_text">
+         <property name="text">
+          <string>Save text</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QPushButton" name="clear">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <spacer name="horizontalSpacer">
@@ -117,13 +128,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="clear">
-       <property name="text">
-        <string>Clear</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

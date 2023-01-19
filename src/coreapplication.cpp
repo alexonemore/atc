@@ -445,8 +445,8 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 		graphs_result_view[id] = {color, name};
 		QVector<double> x(x_size);
 		std::transform(result_data.cbegin(), result_data.cend(), x.begin(),
-					   [](Optimization::OptimizationVector::const_reference i){
-			return i.temperature_K_initial;});
+					   [u = parameters_.temperature_result_unit](Optimization::OptimizationVector::const_reference i){
+			return Thermodynamics::FromKelvin(i.temperature_K_initial, u);});
 		auto y{MakeYVector(id)};
 		emit SignalAddGraphPlotResult(id, name, color, x, y);
 	}
@@ -465,7 +465,6 @@ void CoreApplication::SlotAddGraphPlotResult(const GraphId id, const QString& na
 	case ParametersNS::Workmode::TemperatureCompositionRange: {
 		// 3d plot and heatmap
 		assert(x_size * y_size == result_data.size());
-		graphs_result_view.clear();
 		graphs_result_view[id] = {color, name};
 		QVector<double> composition, temperature;
 		QVector<QVector<double>> values;

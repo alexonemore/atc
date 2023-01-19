@@ -295,9 +295,11 @@ QString ResultModel::MakeGraphName(const int row) const
 		if(row == 0) {
 			switch(parameters.target) {
 			case ParametersNS::Target::Equilibrium:
-				s1 = ResultFields::row_names.at(row).arg(tr("equilibrium"));
+				s1 = ResultFields::row_names.at(row).arg(tr("equilibrium!!"));
+				break;
 			case ParametersNS::Target::AdiabaticTemperature:
-				s1 = ResultFields::row_names.at(row).arg(tr("adiabatic"));
+				s1 = ResultFields::row_names.at(row).arg(tr("adiabatic!!!"));
+				break;
 			}
 		} else {
 			s1 = ResultFields::row_names.at(row);
