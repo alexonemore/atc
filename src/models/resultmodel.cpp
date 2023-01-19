@@ -204,28 +204,50 @@ bool ResultModel::setData(const QModelIndex& index, const QVariant& value, int r
 	auto row = index.row();
 	auto&& cell = checked.at(row);
 	auto graph_id = RowToGraphId(row);
-	if(role == Qt::CheckStateRole) {
-		if(cell.color == Qt::white && cell.checked != Qt::Checked) {
+	if(parameters.workmode == ParametersNS::Workmode::TemperatureCompositionRange) {
+		if(role == Qt::CheckStateRole) {
+			for(auto i = checked.begin(), end = checked.end(); i != end; ++i) {
+				i->second = Cell{};
+			}
 			cell.color = GetRandomColor();
-		}
-		cell.checked = value.value<Qt::CheckState>();
-		if(cell.checked == Qt::CheckState::Checked) {
-			auto name = MakeGraphName(row);
-			LOG("AddGraph", name, cell.checked, cell.color)
-			emit AddGraph(graph_id, name, cell.color);
+			cell.checked = value.value<Qt::CheckState>();
+			if(cell.checked == Qt::CheckState::Checked) {
+				auto name = MakeGraphName(row);
+				LOG("AddGraph", name, cell.checked, cell.color)
+				emit AddGraph(graph_id, name, cell.color);
+			} else {
+				cell.color = Qt::white;
+			}
 		} else {
-			cell.color = Qt::white;
-			LOG("RemoveGraph")
-			emit RemoveGraph(graph_id);
+			return false;
 		}
-	} else if(role == Qt::EditRole) {
-		cell.color = value.value<QColor>();
-		LOG("ChangeColorGraph", cell.color)
-		emit ChangeColorGraph(graph_id, cell.color);
 	} else {
-		return false;
+		if(role == Qt::CheckStateRole) {
+			if(cell.color == Qt::white && cell.checked != Qt::Checked) {
+				cell.color = GetRandomColor();
+			}
+			cell.checked = value.value<Qt::CheckState>();
+			if(cell.checked == Qt::CheckState::Checked) {
+				auto name = MakeGraphName(row);
+				LOG("AddGraph", name, cell.checked, cell.color)
+				emit AddGraph(graph_id, name, cell.color);
+			} else {
+				cell.color = Qt::white;
+				LOG("RemoveGraph")
+				emit RemoveGraph(graph_id);
+			}
+		} else if(role == Qt::EditRole) {
+			cell.color = value.value<QColor>();
+			LOG("ChangeColorGraph", cell.color)
+			emit ChangeColorGraph(graph_id, cell.color);
+		} else {
+			return false;
+		}
 	}
-	emit dataChanged(index, index);
+	QModelIndex tl = QAbstractTableModel::index(0, index.column());
+	QModelIndex br = QAbstractTableModel::index(row_count, index.column());
+	emit dataChanged(tl, br);
+//	emit dataChanged(index, index);
 	return true;
 }
 
