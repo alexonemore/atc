@@ -60,28 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->calculation_parameters, &CalculationParameters::StartCalculate,
 			this, &MainWindow::SignalStartCalculate);
 
-	//demo
-	std::vector<QAbstractButton*> check_butons{
-		ui->check_button_1,
-		ui->check_button_2,
-		ui->check_button_3
-	};
-	std::vector<QAbstractButton*> buttons{
-		ui->button_1,
-		ui->button_2
-	};
-	for(auto&& button : check_butons) {
-		connect(button, &QRadioButton::clicked,
-				this, &MainWindow::CheckButtonHandler);
-	}
-	for(auto&& button : buttons) {
-		connect(button, &QPushButton::clicked,
-				this, &MainWindow::PushButtonHandler);
-	}
-	connect(ui->button_heavy, &QPushButton::clicked,
-			this, &MainWindow::PushButtonHeavyHandler);
-
-
 	SetupMenu();
 
 	// setup dialog
@@ -103,18 +81,6 @@ MainWindow::MainWindow(QWidget *parent)
 			dialog,	&QProgressDialog::setRange);
 	connect(fw,	&QFutureWatcher<void>::progressValueChanged,
 			dialog,	&QProgressDialog::setValue);
-
-	// DEMO
-	connect(ui->plot2d, &Plot2DGraph::SignalPointClick,
-			this, &MainWindow::SlotShowStatusBarText);
-	connect(ui->plotheatmap, &Plot2DHeatMap::SignalPointClick,
-			this, &MainWindow::SlotShowStatusBarText);
-	connect(ui->add_2d_graph, &QPushButton::clicked,
-			this, &MainWindow::SignalNeed2DGraphData);
-	connect(ui->add_heat_map, &QPushButton::clicked,
-			this, &MainWindow::SignalNeedHeatMapData);
-	connect(ui->add_3d_graph, &QPushButton::clicked,
-			this, &MainWindow::SignalNeed3DGraphData);
 
 	// internal selections
 	connect(ui->view_substances, &SubstancesTableView::SelectSubstance,
@@ -209,25 +175,6 @@ void MainWindow::SetResultDetailModel(QAbstractItemModel* model)
 	ui->result_table_view->setModel(model);
 }
 
-void MainWindow::SetModel_1(QAbstractItemModel* model)
-{
-	LOG()
-	ui->table_view->setModel(model);
-}
-
-void MainWindow::SetModel_2(QAbstractItemModel* model)
-{
-	LOG()
-	ui->list_view->setModel(model);
-}
-
-void MainWindow::SetSelectonModel(QItemSelectionModel* selection)
-{
-	LOG()
-	ui->table_view->setSelectionModel(selection);
-	ui->list_view->setSelectionModel(selection);
-}
-
 void MainWindow::SlotAddGraphPlotTF(const GraphId id, const QString& name,
 			const QColor& color, QVector<double>& x, QVector<double>& y)
 {
@@ -312,82 +259,12 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 		assert(fw->future().isFinished());
 	}
 	t.stop();
-	QString time{tr("Time: %1 Threads: %2").arg(t.duration()).arg(threads)};
+	QString time{tr("Time: %1 Threads: %2").arg(t.duration(), threads)};
 	LOG(time)
 	SlotShowStatusBarText(time);
 	QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
 	emit SignalSendResult(vec);
 	LOG(">> CALCULATION END <<")
-}
-
-void MainWindow::SlotHeavyComputations(QVector<HeavyContainer>& ho) // demo
-{
-	LOG(">> HEAVY START <<")
-	Timer t; t.start();
-	QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
-	fw->setFuture(QtConcurrent::map(ho, &HeavyContainer::HeavyCalculations));
-	//fw->setFuture(QtConcurrent::map(ho.begin(), ho.end(), &HeavyContainer::HeavyCalculations));
-	dialog->exec();
-	fw->waitForFinished();
-#ifndef NDEBUG
-	qDebug() << "isFinished " << fw->future().isFinished();
-	qDebug() << "isCanceled " << fw->future().isCanceled();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-	qDebug() << "isPaused   " << fw->future().isPaused();
-#else
-	qDebug() << "isSuspended" << fw->future().isSuspended();
-#endif
-	qDebug() << "isRunning  " << fw->future().isRunning();
-	qDebug() << "isStarted  " << fw->future().isStarted();
-#endif
-	assert(fw->future().isFinished());
-	t.stop();
-	QString text{tr("Time: %1 Threads: %2").arg(t.duration()).
-				arg(QThreadPool::globalInstance()->maxThreadCount())};
-	SlotShowStatusBarText(text);
-	LOG(">> HEAVY END <<")
-}
-
-void MainWindow::CheckButtonHandler()
-{
-	int cb{0};
-	if(ui->check_button_1->isChecked()) {
-		cb = 1;
-	} else if (ui->check_button_2->isChecked()) {
-		cb = 2;
-	} else if (ui->check_button_3->isChecked()) {
-		cb = 3;
-	}
-	emit SignalSendRequest(cb);
-	LOG(cb)
-	QString text{tr("Pressed: %1 Thread: %2").arg(cb).
-				arg(QThread::currentThread()->objectName())};
-	SlotShowRequest(text);
-}
-
-void MainWindow::PushButtonHandler()
-{
-	LOG()
-	auto&& text = sender()->objectName();
-	emit SignalPushButtonClicked(text);
-}
-
-void MainWindow::PushButtonHeavyHandler()
-{
-	LOG()
-	emit SignalHeavyCalculationsStart();
-}
-
-void MainWindow::SlotShowResponse(const QString& text)
-{
-	LOG()
-	ui->text_responce->appendPlainText(text);
-}
-
-void MainWindow::SlotShowRequest(const QString& text)
-{
-	LOG()
-	ui->text_request->appendPlainText(text);
 }
 
 void MainWindow::SlotShowError(const QString& text)
@@ -400,27 +277,6 @@ void MainWindow::SlotShowStatusBarText(const QString& text)
 {
 	LOG()
 	statusBar()->showMessage(text);
-}
-
-void MainWindow::SlotAdd2DGraph(const GraphId& id, QVector<double>& x,
-								QVector<double>& y)
-{
-	LOG()
-	ui->plot2d->AddGraphY1(id, QString::number(id.substance_id), std::move(x),
-						   std::move(y), GetRandomColor());
-}
-
-void MainWindow::SlotAddHeatMap(const QString& name, QVector<double>& x,
-								QVector<double>& y, QVector<QVector<double>>& z)
-{
-	LOG()
-	ui->plotheatmap->AddHeatMap(name, std::move(x), std::move(y), std::move(z));
-}
-
-void MainWindow::SlotAdd3DGraph(QSurfaceDataArray* data)
-{
-	LOG()
-	ui->plot3d->AddGraph(data);
 }
 
 void MainWindow::SlotSetAvailableElements(const QStringList& elements)
@@ -436,25 +292,6 @@ void MainWindow::SlotSetSelectedSubstanceLabel(const QString& name)
 void MainWindow::SlotSetPlotXAxisUnit(const ParametersNS::TemperatureUnit unit)
 {
 	ui->plot_tf_view->SetXAxisUnit(unit);
-}
-
-void MainWindow::SlotLoadDatabase()
-{
-	LOG()
-	// save last open path
-
-	QString new_path = QFileDialog::getOpenFileName(this, tr("Open Database"),
-			database_path, QStringLiteral("SQLite3 (*.db);;All Files (*)"));
-
-	if (new_path.isEmpty())
-		return;
-
-	// Database db(new_path);
-	// if(!db.isNull()) {
-	//     loadData(db);
-	//     database_path = new_path;
-	// }
-
 }
 
 void MainWindow::MenuShowAbout()
@@ -491,20 +328,9 @@ void MainWindow::MenuShowAbout()
 	QMessageBox::about(this, tr("About ATC"), text_about);
 }
 
-void MainWindow::MenuOpenDatabase()
-{
-	LOG()
-	// TODO
-}
-
 void MainWindow::SetupMenu()
 {
 	LOG()
-	auto a_opendb = new QAction(tr("&Open database..."), this);
-	a_opendb->setShortcuts(QKeySequence::Open);
-	a_opendb->setStatusTip(tr("Open an existing file"));
-	connect(a_opendb, &QAction::triggered, this, &MainWindow::MenuOpenDatabase);
-
 	auto a_exit = new QAction(tr("E&xit"), this);
 	a_exit->setShortcuts(QKeySequence::Quit);
 	a_exit->setStatusTip(tr("Exit the application"));
@@ -515,20 +341,10 @@ void MainWindow::SetupMenu()
 	connect(a_about, &QAction::triggered, this, &MainWindow::MenuShowAbout);
 
 	auto file_menu = menuBar()->addMenu(tr("&File"));
-	auto edit_menu = menuBar()->addMenu(tr("&Edit"));
-	auto view_menu = menuBar()->addMenu(tr("&View"));
 	auto help_menu = menuBar()->addMenu(tr("&Help"));
 
-	file_menu->addAction(a_opendb);
-	file_menu->addSeparator();
 	file_menu->addAction(a_exit);
-
-	edit_menu->addAction(new QAction("template", this));
-
-	view_menu->addAction(new QAction("template", this));
-
 	help_menu->addAction(a_about);
-
 }
 
 void MainWindow::UpdateParametersHandler(const ParametersNS::Parameters parameters)
@@ -537,6 +353,3 @@ void MainWindow::UpdateParametersHandler(const ParametersNS::Parameters paramete
 	// I don't know what to update in the mainwindow yet.
 	emit SignalUpdate(parameters);
 }
-
-
-

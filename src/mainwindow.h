@@ -26,7 +26,6 @@
 #include <QFuture>
 #include <QtDataVisualization/QSurfaceDataArray>
 #include "plots.h"
-#include "heavycontainer.h"
 #include "parameters.h"
 #include "optimization.h"
 
@@ -68,11 +67,6 @@ public:
 	void SetResultModel(QAbstractItemModel* model);
 	void SetResultDetailModel(QAbstractItemModel* model);
 
-	// demo
-	void SetModel_1(QAbstractItemModel* model);
-	void SetModel_2(QAbstractItemModel* model);
-	void SetSelectonModel(QItemSelectionModel* selection);
-
 	// plot TF
 public slots:
 	void SlotAddGraphPlotTF(const GraphId id, const QString& name, const QColor& color,
@@ -105,29 +99,15 @@ signals:
 
 public slots:
 	void SlotStartCalculations(Optimization::OptimizationVector& vec, int threads);
-	// demo
-	void SlotHeavyComputations(QVector<HeavyContainer>& ho);
-
-public slots:
-	void SlotAdd2DGraph(const GraphId& id, QVector<double>& x,
-						QVector<double>& y);
-	void SlotAddHeatMap(const QString& name, QVector<double>& x,
-						QVector<double>& y, QVector<QVector<double>>& z);
-	void SlotAdd3DGraph(QSurfaceDataArray* data);
 
 public slots:
 	void SlotSetAvailableElements(const QStringList& elements);
 	void SlotSetSelectedSubstanceLabel(const QString& name);
 	void SlotSetPlotXAxisUnit(const ParametersNS::TemperatureUnit unit);
-	// demo
-	void SlotShowResponse(const QString& text);
-	void SlotShowRequest(const QString& text);
-	void SlotShowError(const QString& text);
 	void SlotShowStatusBarText(const QString& text);
-	void SlotLoadDatabase();
+	void SlotShowError(const QString& text);
 
 private slots:
-	void MenuOpenDatabase();
 	void MenuShowAbout();
 
 signals:
@@ -141,17 +121,10 @@ signals:
 	void SignalSendRequest(int);
 	void SignalPushButtonClicked(QString);
 	void SignalHeavyCalculationsStart();
-	void SignalNeed2DGraphData();
-	void SignalNeedHeatMapData();
-	void SignalNeed3DGraphData();
 
 private:
 	void SetupMenu();
 	void UpdateParametersHandler(const ParametersNS::Parameters parameters);
-	//demo
-	void CheckButtonHandler();
-	void PushButtonHandler();
-	void PushButtonHeavyHandler();
 
 };
 #endif // MAINWINDOW_H

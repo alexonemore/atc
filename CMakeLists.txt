@@ -52,10 +52,6 @@ set(PROJECT_SOURCES
 	src/periodictable.cpp
 	src/periodictable.ui
 
-	# tmp
-	src/heavycontainer.h
-	src/heavycontainer.cpp
-
 	# atc
 	src/atc/thermodynamics.h
 	src/atc/thermodynamics.cpp
