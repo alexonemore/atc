@@ -88,6 +88,8 @@ Plot3DSurface::Plot3DSurface(QWidget *parent) :
 	plot->axisY()->setTitleVisible(true);
 	plot->axisZ()->setTitleVisible(true);
 	plot->activeTheme()->setLabelBackgroundEnabled(false);
+	plot->setHorizontalAspectRatio(1.0);
+//	plot->setAspectRatio(1.0);
 
 	QSurface3DSeries *series = new QSurface3DSeries;
 	series->setDrawMode(QSurface3DSeries::DrawFlag::DrawSurface);
