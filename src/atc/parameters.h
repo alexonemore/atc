@@ -143,7 +143,7 @@ struct Parameters
 	ShowPhases		show_phases			{};
 	QStringList		checked_elements;
 	TemperatureUnit	temperature_result_unit {TemperatureUnit::Kelvin};
-	CompositionUnit	composition_result_unit {CompositionUnit::Mol};
+	CompositionUnit	composition_result_unit {CompositionUnit::AtomicPercent};
 	bool			show_initial_in_result	{false};
 
 	Parameters();
