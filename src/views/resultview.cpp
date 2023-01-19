@@ -138,6 +138,7 @@ void ResultView::AddHeatMap(const QString& name, QVector<double>& x, QVector<dou
 void ResultView::Add3DGraph(const QString& name, QSurfaceDataArray* data)
 {
 	plot3d->AddGraph(data);
+	plot3d->SetAxisYName(name);
 }
 
 void ResultView::RemoveGraph(const GraphId id)
@@ -168,8 +169,10 @@ void ResultView::SetAxisUnits(const ParametersNS::Parameters params)
 			arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
 		plot2d_heatmap->SetAxisYName(ResultViewGraph::axis_temperature.
 			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
-
-
+		plot3d->SetAxisXName(ResultViewGraph::axis_composition.
+							 arg(ParametersNS::composition_units.at(static_cast<int>(params.composition_range_unit))));
+		plot3d->SetAxisZName(ResultViewGraph::axis_temperature.
+			arg(ParametersNS::temperature_units.at(static_cast<int>(params.temperature_result_unit))));
 		break;
 	}
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.

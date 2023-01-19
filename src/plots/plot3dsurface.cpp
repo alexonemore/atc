@@ -115,6 +115,21 @@ void Plot3DSurface::SetAxisNames(const QString& x_name, const QString& y_name,
 	plot->axisZ()->setTitle(z_name);
 }
 
+void Plot3DSurface::SetAxisXName(const QString& x_name)
+{
+	plot->axisX()->setTitle(x_name);
+}
+
+void Plot3DSurface::SetAxisYName(const QString& y_name)
+{
+	plot->axisY()->setTitle(y_name);
+}
+
+void Plot3DSurface::SetAxisZName(const QString& z_name)
+{
+	plot->axisZ()->setTitle(z_name);
+}
+
 void Plot3DSurface::AddGraph(QSurfaceDataArray* data)
 {
 	plot->seriesList().at(0)->dataProxy()->resetArray(data);

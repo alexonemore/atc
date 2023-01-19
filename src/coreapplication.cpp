@@ -338,6 +338,7 @@ void CoreApplication::SlotUpdate(const ParametersNS::Parameters parameters)
 	model_plot_tf->SetDatabase(parameters_.database);
 	model_plot_tf->SetNewData(std::move(names));
 	model_amounts->SetNewData(std::move(weights));
+	model_result->UpdateParameters(parameters_);
 	model_detail_result->UpdateParameters(parameters_);
 	UpdateRangeTabulatedModels();
 	emit SignalSetAvailableElements(db->GetAvailableElements());

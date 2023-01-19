@@ -59,6 +59,9 @@ public:
 	void SetTitle(const QString& title);
 	void SetAxisNames(const QString& x_name, const QString& y_name,
 					  const QString& z_name);
+	void SetAxisXName(const QString& x_name);
+	void SetAxisYName(const QString& y_name);
+	void SetAxisZName(const QString& z_name);
 	void AddGraph(QSurfaceDataArray* data);
 	void RemoveGraph();
 	QString GetTitle() const;

@@ -330,9 +330,9 @@ QString Plot2DHeatMap::MakeTextForTracer(const QPoint& cursor_px) const
 	double x, y;
 	heat_map->pixelsToCoords(cursor_px, x, y);
 	double z = heat_map->data()->data(x, y);
-	return QString{"%1: %2\n%3: %4\nz: %5"}.arg(
+	return QString{"%1: %2\n%3: %4\n%5: %6"}.arg(
 		GetAxisXName(), QString::number(x), GetAxisYName(),
-		QString::number(y), QString::number(z));
+		QString::number(y), GetTitle(), QString::number(z));
 }
 
 void Plot2DHeatMap::MousePressHandler(QMouseEvent* event)

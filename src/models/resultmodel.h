@@ -106,6 +106,7 @@ public:
 	void SetNewData(const SubstanceWeights* vec,
 					const ParametersNS::Parameters& params);
 	void Clear();
+	void UpdateParameters(const ParametersNS::Parameters& params);
 
 signals:
 	void AddGraph(const GraphId id, const QString& name, const QColor& color);
@@ -125,6 +126,7 @@ private:
 	int GraphIdToRow(const GraphId& graph_id) const;
 	GraphId RowToGraphId(const int row) const;
 	QString MakeGraphName(const int row) const;
+	QString GetUnits(const int row) const;
 public slots:
 	void SlotRemoveAllGraphs();
 	void SlotRemoveOneGraph(const GraphId id);

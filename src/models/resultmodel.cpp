@@ -113,6 +113,16 @@ void ResultModel::Clear()
 	endResetModel();
 }
 
+void ResultModel::UpdateParameters(const ParametersNS::Parameters& params)
+{
+	LOG()
+	beginResetModel();
+	parameters.temperature_result_unit = params.temperature_result_unit;
+	parameters.composition_result_unit = params.composition_result_unit;
+	parameters.show_initial_in_result = params.show_initial_in_result;
+	endResetModel();
+}
+
 int ResultModel::rowCount(const QModelIndex& parent) const
 {
 	if(parent.isValid()) {
@@ -289,7 +299,8 @@ GraphId ResultModel::RowToGraphId(const int row) const
 
 QString ResultModel::MakeGraphName(const int row) const
 {
-	auto res = QStringLiteral("%1 {%2}");
+	auto res = QStringLiteral("%1, %2");
+	QString units = GetUnits(row);
 	if(row < ResultFields::row_names_size) {
 		QString s1;
 		if(row == 0) {
@@ -304,11 +315,36 @@ QString ResultModel::MakeGraphName(const int row) const
 		} else {
 			s1 = ResultFields::row_names.at(row);
 		}
-		return res.arg(s1, ParametersNS::databases.at(static_cast<int>(parameters.database)));
+		return res.arg(s1, units);
 	} else {
-		return res.arg(items->at(row - ResultFields::row_names_size).formula,
-					   ParametersNS::databases.at(static_cast<int>(parameters.database)));
+		return res.arg(items->at(row - ResultFields::row_names_size).formula, units);
 	}
+}
+
+QString ResultModel::GetUnits(const int row) const
+{
+	QString unit;
+	if(row < ResultFields::row_names_size) {
+		switch (static_cast<ResultFields::RowNames>(row)) {
+		case ResultFields::RowNames::T_result:
+		case ResultFields::RowNames::T_initial:
+			unit = ParametersNS::temperature_units.at(static_cast<int>(parameters.temperature_result_unit));
+			break;
+		case ResultFields::RowNames::H_initial:
+		case ResultFields::RowNames::H_equilibrium:
+			unit = tr("kJ/mol");
+			break;
+		case ResultFields::RowNames::c_equilibrium:
+			unit = tr("G/RT");
+			break;
+		case ResultFields::RowNames::Sum:
+			unit = ParametersNS::composition_units.at(static_cast<int>(parameters.composition_result_unit));
+			break;
+		}
+	} else {
+		unit = ParametersNS::composition_units.at(static_cast<int>(parameters.composition_result_unit));
+	}
+	return unit;
 }
 
 void ResultModel::SlotRemoveAllGraphs()
