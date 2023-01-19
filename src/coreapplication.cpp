@@ -567,7 +567,8 @@ void CoreApplication::MakeHeatmapAnd3DVectors(const GraphId id,
 	}
 	int i = 0;
 	for(int ti = 0; ti != t_size; ++ti) {
-		temperatures[ti] = result_data.at(i).temperature_K_initial;
+		temperatures[ti] = Thermodynamics::FromKelvin(result_data.at(i).temperature_K_initial,
+													  parameters_.temperature_result_unit);
 		auto row = new QSurfaceDataRow(c_size);
 		for(int ci = 0; ci != c_size; ++ci, ++i) {
 			auto v = ChooseValueInResultData(id, i);

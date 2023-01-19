@@ -60,13 +60,16 @@ ResultView::ResultView(QWidget *parent)
 	table_check->setSelectionBehavior(QAbstractItemView::SelectItems);
 	table_check->verticalHeader()->setVisible(false);
 
+	plot2d_graph->SetTitle(tr(""));
 	plot2d_graph->SetAxisXName(ResultViewGraph::axis_temperature.arg("K"));
 	plot2d_graph->SetAxisY1Name(ResultViewGraph::y1_axis_name.arg(tr("K")));
 	plot2d_graph->SetAxisY2Name(ResultViewGraph::y2_axis_name.arg(tr("mol")));
 
+	plot2d_heatmap->SetTitle(tr("Heatmap"));
 	plot2d_heatmap->SetAxisXName(ResultViewGraph::axis_composition.arg("mol"));
 	plot2d_heatmap->SetAxisYName(ResultViewGraph::axis_temperature.arg("K"));
 
+	plot3d->SetTitle(tr(""));
 	plot3d->SetAxisNames(ResultViewGraph::axis_composition.arg("mol"),
 						 ResultViewGraph::axis_temperature.arg("K"),
 						 ResultViewGraph::axis_temperature.arg("K"));
