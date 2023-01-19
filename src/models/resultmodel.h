@@ -111,6 +111,7 @@ public:
 signals:
 	void AddGraph(const GraphId id, const QString& name, const QColor& color);
 	void RemoveGraph(const GraphId id);
+	void RemoveGraphs(const QVector<GraphId>& ids);
 	void ChangeColorGraph(const GraphId id, const QColor& color);
 
 	// QAbstractItemModel interface

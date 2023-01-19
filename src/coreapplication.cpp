@@ -112,6 +112,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotAddGraphPlotResult);
 	connect(model_result, &ResultModel::RemoveGraph,
 			this, &CoreApplication::SlotRemoveGraphPlotResult);
+	connect(model_result, &ResultModel::RemoveGraphs,
+			this, &CoreApplication::SlotGraphsRemovedPlotResultVtM);
 	connect(model_result, &ResultModel::ChangeColorGraph,
 			this, &CoreApplication::SlotChangeColorGraphPlotResult);
 	connect(this, &CoreApplication::SignalAddGraphPlotResult,
