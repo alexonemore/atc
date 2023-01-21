@@ -1,12 +1,24 @@
-# ![atc logo](images/logo_atc.svg) ATC - Adiabatic Temperature Calculator
+# ![atc logo](images/logo_atc.ico) __ATC - Adiabatic Temperature Calculator__
 
-## Description
+## __Description__
 
 ATC is a high quality, visual, open source tool for thermodynamic calculations.
 
-## Features
+## __Features and detailed description__
 
-* Tabulate thermodynamic functions for substances from the database
+### __Tabulate the thermodynamic functions for substances from two different databases__
+ATC can tabulate the following thermodynamic functions:
+* $G$ - Gibbs energy $\left[\frac{kJ}{mol}\right]$
+* $H$ - Enthalpy $\left[\frac{kJ}{mol}\right]$
+* $F$ - Free Enthalpy Function (FEF) $\left[\frac{J}{mol \thinspace K}\right]$
+* $S$ - Entropy $\left[\frac{J}{mol \thinspace K}\right]$
+* $C_p$ - Heat capacity at constant pressure $\left[\frac{J}{mol \thinspace K}\right]$
+* $c$ - reduced Gibbs energy $\left[\frac{G}{RT}\right]$
+
+The left table shows the substances present in the selected database. The database can be selected in the _Database_ field. The range, step and units of temperature (Kelvin, Celsius and Fahrenheit) can be set in the _Ranges Temperature_ field. Extrapolation can be enabled or disabled in _Extrapolation_ field. After setting the values, click _Update_ button. More detailed information about databases can be found at the [Databases](docs/databases.md)
+
+[![screenshot](images/screenshots/substances_1.png "Thermodynamic information")](images/screenshots/substances_1.png)
+
 * Plot thermodynamic functions for substances from the database
 * Calculate thermodynamic equilibrium for any composition and any temperature at standard pressure
 * Calculate adiabatic temperature for any composition at standard pressure
