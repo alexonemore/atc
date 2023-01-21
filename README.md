@@ -1,4 +1,4 @@
-# ![atc logo](images/logo_atc.ico) __ATC - Adiabatic Temperature Calculator__
+# ![atc logo](images/logo_atc.svg) __ATC - Adiabatic Temperature Calculator__
 
 ## __Description__
 
@@ -15,7 +15,7 @@ ATC can tabulate the following thermodynamic functions:
 * $C_p$ - Heat capacity at constant pressure $\left[\frac{J}{mol \thinspace K}\right]$
 * $c$ - reduced Gibbs energy $\left[\frac{G}{RT}\right]$
 
-The left table shows the substances present in the selected database. The database can be selected in the _Database_ field. The range, step and units of temperature (Kelvin, Celsius and Fahrenheit) can be set in the _Ranges Temperature_ field. Extrapolation can be enabled or disabled in _Extrapolation_ field. After setting the values, click _Update_ button. More detailed information about databases can be found at the [Databases](docs/databases.md)
+The left table shows the substances present in the selected database. The upper right table shows the temperature ranges of the coefficients of the thermodynamic function. The tabulated values of thermodynamic functions are presented in the lower right table. The database can be selected in the _Database_ field. The range, step and units of temperature (Kelvin, Celsius and Fahrenheit) can be set in the _Ranges Temperature_ field. Extrapolation can be enabled or disabled in _Extrapolation_ field. After setting the values, click _Update_ button. More detailed information about databases can be found at the [Databases](docs/databases.md)
 
 [![screenshot](images/screenshots/substances_1.png "Thermodynamic information")](images/screenshots/substances_1.png)
 
