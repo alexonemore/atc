@@ -16,7 +16,7 @@ ATC has 2 calculation target: Adiabatic temperature and Equilibrium.
 __Equilibrium composition__ of the system at a given temperature. The problem of determining the equilibrium composition of the system at the temperature $T$ is reduced to minimizing the following function
 
 $$
-G=\sum\limits_{i}^{N}n_i\left( G_i + RT\ln{\frac{n_i}{\sum_{i}^{N}n_i}} \right) + \sum\limits_{i}^{L}n_i\left( G_i + RT\ln{\frac{n_i}{\sum_{i}^{L}n_i}} \right) + \sum\limits_{i}^{K}n_iG_i
+G=\sum\limits_{i}^{N}n_i\left( G_i + RT\ln{\frac{n_i}{\sum\limits_{i}^{N}n_i}} \right) + \sum\limits_{i}^{L}n_i\left( G_i + RT\ln{\frac{n_i}{\sum\limits_{i}^{L}n_i}} \right) + \sum\limits_{i}^{K}n_iG_i
 $$
 with $J$ constraints
 $$
