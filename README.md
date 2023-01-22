@@ -18,7 +18,9 @@ __Equilibrium composition__ of the system at a given temperature. The problem of
 $$
 G=\sum\limits_{i}^{N}n_i\left( G_i + RT\ln{\frac{n_i}{\sum\limits_{i}^{N}n_i}} \right) + \sum\limits_{i}^{L}n_i\left( G_i + RT\ln{\frac{n_i}{\sum\limits_{i}^{L}n_i}} \right) + \sum\limits_{i}^{K}n_iG_i
 $$
+
 with $J$ constraints
+
 $$
 \sum\limits_{i}^{N}a_{ji}n_i + \sum\limits_{i}^{L}a_{ji}n_i + \sum\limits_{i}^{K}a_{ji}n_i = b_j
 $$
