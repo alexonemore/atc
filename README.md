@@ -10,9 +10,47 @@ Windows 10 and above or Linux.
 
 ## __Features and detailed description__
 
-ATC has 2 calculation target:
-1. Adiabatic temperature of the system with given initial temperature. In this case, a search is performed for the temperature at which the enthalpy of the equilibrium system is equal to the enthalpy of the initial given system in temperature diapason from 298.15 to 10000 K. The initial enthalpy of the system is calculated either in accordance with a given composition (as checked), or with a choice of substances having a lower Gibbs energy value with the same composition (by minimum Gibbs energy). This is set in the H field. For example, if the initial temperature of the system is 500 K and 1 mol of H2O(l) is set, then _"as checked"_ literaly means 1 mol of liquid water at 500 K, and _"by minimum Gibbs energy"_ means that H2O(g) will be automatically selected instead of H2O(l). As a result of the calculation, you will also get the composition of the equilibrium system at adiabatic temperature. More detailed information about thermodynamics and calculations can be found at [docs/thermodynamics.md](docs/thermodynamics.md)
-2. Equilibrium composition of the system at a given temperature.
+## Target
+ATC has 2 calculation target: Adiabatic temperature and Equilibrium.
+
+__Equilibrium composition__ of the system at a given temperature. The problem of determining the equilibrium composition of the system at the temperature $T$ is reduced to minimizing the following function
+
+$$
+G=\sum\limits_{i}^{N}n_i\left( G_i + RT\ln{\frac{n_i}{\sum_{i}^{N}n_i}} \right) + \sum\limits_{i}^{L}n_i\left( G_i + RT\ln{\frac{n_i}{\sum_{i}^{L}n_i}} \right) + \sum\limits_{i}^{K}n_iG_i
+$$
+with $J$ constraints
+$$
+\sum\limits_{i}^{N}a_{ji}n_i + \sum\limits_{i}^{L}a_{ji}n_i + \sum\limits_{i}^{K}a_{ji}n_i = b_j
+$$
+
+where
+
+$b_j$ - amount of element $j$ in the system,
+
+$J$ - number of elements in the system,
+
+$N$ - number of gases in the system,
+
+$L$ - number of liquids in the system,
+
+$K$ - number of individual condensed substances in the system,
+
+$n_i$ - amount of the substance $i$ in the system,
+
+$G_i$ - Gibbs energy of the substance $i$ in the system,
+
+$a_{ji}$ - amount of element $j$ in the substance $i$.
+
+To minimize the Gibbs energy function, the following methods are used:
+
+* Augmented Lagrangian method
+* Sequential Quadratic Programming
+
+Optimization of the objective function is performed using the [NLopt](http://github.com/stevengj/nlopt) library.
+
+__Adiabatic temperature__ of the system with given initial temperature. In this case, a search is performed for the temperature at which the enthalpy of the equilibrium system is equal to the enthalpy of the initial given system in temperature diapason from 298.15 to 10000 K. The initial enthalpy of the system is calculated either in accordance with a given composition (as checked), or with a choice of substances having a lower Gibbs energy value with the same composition (by minimum Gibbs energy). This is set in the H field. For example, if the initial temperature of the system is 500 K and 1 mol of H2O(l) is set, then _"as checked"_ literaly means 1 mol of liquid water at 500 K, and _"by minimum Gibbs energy"_ means that H2O(g) will be automatically selected instead of H2O(l). As a result of the calculation, you will also get the composition of the equilibrium system at adiabatic temperature.
+
+## Workmodes
 
 ATC has 4 calculation workmodes:
 1. Single point
