@@ -4,6 +4,10 @@
 
 ATC is a high quality, visual, open source tool for thermodynamic calculations.
 
+## __Requirements__
+
+Windows 10 and above or Linux.
+
 ## __Features and detailed description__
 
 ATC has 2 calculation target:
@@ -44,88 +48,32 @@ The system consists of two parts: the main (green column) and variable (red colu
 
 [![screenshot](images/screenshots/amounts_1.png "Composition of the system")](images/screenshots/amounts_1.png?raw=true)
 
-* Calculate thermodynamic equilibrium for any composition and any temperature at standard pressure
-* Calculate adiabatic temperature for any composition at standard pressure
-* Calculate and plot thermodynamic equilibrium or adiabatic temperature for a range of compositions
-	* Plot 2D graph
-	* Plot 2D heat map
-	* Plot 3D graph
-* Temperature dependencies in the database can be presented in two different ways
-	* By the Free Enthalpy Function FEF
-	* By the Heat Capacity Cp
+### __Result of calculation__
 
-## Optimization algorithm
+When the initial composition of the system is set, click the "Calculate" button. The calculation results will appear on the _Result table_ tab. For the _range_ workmodes you can plot graphs on the _Result_ tab.
 
-To minimize the Gibbs energy function, the following methods are used:
+__Table__
 
-* Augmented Lagrangian method
-* Sequential Quadratic Programming
+[![screenshot](images/screenshots/result_1.png "Calculation result table")](images/screenshots/result_1.png?raw=true)
 
-Optimization of the objective function is performed using the [NLopt](http://github.com/stevengj/nlopt) library.
+__Plot__
+
+[![screenshot](images/screenshots/result_2.png "Calculation result plot")](images/screenshots/result_2.png?raw=true)
+
+__Heatmap__
+
+[![screenshot](images/screenshots/result_3.png "Calculation result heatmap")](images/screenshots/result_3.png?raw=true)
+
+__3D plot__
+
+[![screenshot](images/screenshots/result_4.png "Calculation result 3D plot")](images/screenshots/result_4.png?raw=true)
+
+
 
 ## Plotting
 
-Plotting is provided by the [QCustomPlot](https://www.qcustomplot.com/) library.
 
-## Database structure
 
-All data is stored in the sqlite3 database, which has the following structure:
-
-### Structre of Free Enthalpy Function database
-
-1. Element compositions of substances
-
-	|composition_id |sub_id |element_id |amount |
-	|---------------|-------|-----------|-------|
-	|1              |1      |47         |1.0    |
-	|2              |2      |47         |1.0    |
-	|3              |3      |47         |1.0    |
-	|...            |...    |...        |...    |
-
-2. Coefficients of thermodynamic functions of substances
-
-	|coef_id |sub_id |T_min  |T_max   |f1      |f2      |f3          |f4           |f5        |f6        |f7       |
-	|--------|-------|-------|--------|--------|--------|------------|-------------|----------|----------|---------|
-	|1       |1      |298.15 |1235.08 |97.8052 |22.693  |0.000264    |0.115144     |34.605    |0.0       |0.0      |
-	|2       |2      |298.15 |4000.0  |126.928 |33.4    |0.0         |-0.186133    |0.0       |0.0       |0.0      |
-	|3       |3      |298.15 |3000.0  |225.102 |20.7809 |1.15504e-06 |-0.000189049 |0.0561557 |-0.126879 |0.131983 |
-	|...     |...    |...    |...     |...     |...     |...         |...          |...       |...       |...      |
-
-3. Substances
-
-	|sub_id |state_id |name |alt_name |number_of_elements |H0      |T_min  |T_max   |ranges |weight  |source |
-	|-------|---------|-----|---------|-------------------|--------|-------|--------|-------|--------|-------|
-	|1      |3        |Ag1  |         |1                  |-5.745  |298.15 |1235.08 |1      |107.868 |2349   |
-	|2      |2        |Ag1  |         |1                  |-5.745  |298.15 |4000.0  |1      |107.868 |2349   |
-	|3      |1        |Ag1  |         |1                  |278.703 |298.15 |10000.0 |2      |107.868 |2350   |
-	|...    |...      |...  |...      |...                |...     |...    |...     |...    |...     |...    |
-
-4. Elements
-
-	|element_id |symbol |name     |weight   |density |
-	|-----------|-------|---------|---------|--------|
-	|1          |H      |Hydrogen |1.00794  |0.0     |
-	|2          |He     |Helium   |4.002602 |0.0     |
-	|3          |Li     |Lithium  |6.941    |0.53    |
-	|...        |...    |...      |...      |...     |
-
-5. State
-
-	|state_id |symbol |name   |
-	|---------|-------|-------|
-	|1        |G      |gas    |
-	|2        |L      |liquid |
-	|3        |S      |solid  |
-
-Thermodynamic data are taken from the old program [Thermo](http://www.ism.ac.ru/). Atomic weight and density are taken from [Wikipedia 1](https://en.wikipedia.org/wiki/List_of_chemical_elements) and [Wikipedia 2](https://en.wikipedia.org/wiki/Standard_atomic_weight).
-
-### Structre of Heat Capacity database
-
-1. TODO
-
-## Adiabatic temperature
-
-TODO
 
 ## Compiling
 
@@ -139,20 +87,12 @@ TODO
 	```
 
 + Compiling on Windows by MSVC
-	+ Install Visual Studio that contains MSVC compiler
-	+ Install Qt 5.15.2 msvc2019_x library (or later Qt5 LTS version)
-	+ Run the appropriate script from the build directory
-
-+ Compiling on Windows by MINGW
-	+ Install Qt MinGW 8.1.0 compiler
-	+ Install Qt 5.15.2 mingw81_x library
-	+ Run the appropriate script from the build directory
+	+ Install Visual Studio that contains latest MSVC compiler
+	+ Install Qt 6.4.2 msvc2019_x library (or later Qt6 version)
+	+ Run the appropriate release script from the build directory
 
 + Compiling on Linux
-	+ Install qt5 libraries and gcc compiler
-		```shell
-		apt install qtbase5-dev qtbase5-dev-tools gcc g++ cmake make
-		```
+	+ Install qt6 libraries, gcc compiler, cmake
 	+ Run the appropriate script from the build directory
 
 ## License
@@ -172,6 +112,7 @@ Modification or redistribution is permitted under the conditions of these licens
 
 2. Fix qcustomplot for qt6:
 	https://www.qcustomplot.com/index.php/support/forum/2380
+	Plotting is provided by the [QCustomPlot](https://www.qcustomplot.com/) library.
 
 3. Form for logo
 	https://squircley.app/
