@@ -70,6 +70,7 @@ $$ \text{where} \space x = T[K] \cdot 10^{-4}. $$
 HSC database are made by program [HSCtoSQL (HSC to SQLite database converter)](https://github.com/alexonemore/hsctosql). The HSC database may not be supplied with ATC program to avoid licensing problems. HSC database consists of the same tables as Thermo database. Temperature dependencies in HSC database presented by the Heat capacity function $C_p$. Thermodynamic functions can be calculated using the following formulas. At standard state, the superscript ° is omitted.
 
 The extended Kelley equation
+
 $$
 C_p(T)=A+BT\cdot 10^{-3}+CT^{-2}\cdot 10^{5} + DT^2 \cdot 10^{-6} +ET^{-3} \cdot 10^8 + FT^3 \cdot 10^{-9}
 $$
