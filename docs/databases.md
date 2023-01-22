@@ -1,14 +1,10 @@
 # Information about Databases
 
-* Temperature dependencies in the database can be presented in two different ways
-	* By the Free Enthalpy Function FEF
-	* By the Heat Capacity Cp
+[ATC](../README.md) program is equipped with two databases __Thermo__ and __HSC__. Both are in sqlite3 format, which are located in the databases directory.
 
-## Database structure
+## Thermo database
 
-All data is stored in the sqlite3 database, which has the following structure:
-
-### Structre of Free Enthalpy Function database
+Thermodynamic data are taken from the old program [Thermo](http://www.ism.ac.ru/). Most of the data in this database is taken from [Glu]. Temperature dependencies in Thermo database presented by the Free Enthalpy Function FEF. The database consists of the following tables:
 
 1. Element compositions of substances
 
@@ -54,9 +50,40 @@ All data is stored in the sqlite3 database, which has the following structure:
 	|2        |L      |liquid |
 	|3        |S      |solid  |
 
-Thermodynamic data are taken from the old program [Thermo](http://www.ism.ac.ru/). Atomic weight and density are taken from [Wikipedia 1](https://en.wikipedia.org/wiki/List_of_chemical_elements) and [Wikipedia 2](https://en.wikipedia.org/wiki/Standard_atomic_weight).
+Thermodynamic functions can be calculated using the following formulas.
 
-### Structre of Heat Capacity database
+$$ \begin{aligned}
+& F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 \ln x + \varphi_3 x^{-2} + \varphi_4 x^{-1} + \varphi_5 x + \varphi_6 x^2 + \varphi_7 x^3 \\\\
+& S^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 (1+\ln x) - \varphi_3 x^{-2} + 2 \varphi_5 x + 3 \varphi_6 x^2 + 4 \varphi_7 x^3 \\\\
+& H^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) + 10(\varphi_2 x -2 \varphi_3 x^{-1} - \varphi_4 + \varphi_5 x^2 + 2 \varphi_6 x^3 + 3 \varphi_7 x^4) \\\\
+& C_p(T)\left[\frac{J}{mol \thinspace K}\right]= \varphi_2 +2 \varphi_3 x^{-2} + 2 \varphi_5 x + 6 \varphi_6 x^2 + 12 \varphi_7 x^3 \\\\
+& G^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) -T \cdot F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right] \cdot 10^{-3} \\\\
+& \text{where} \space x = T[K] \cdot 10^{-4}.
 
-1. TODO
+\end{aligned}$$
+
+
+
+
+## HSC database
+
+Thermodynamic functions can be calculated using the following formulas. At standard state, the superscript ° is omitted.
+
+__Enthalpy__
+
+$$
+H(T)=H(0)+ \int\limits_0^{T^{(1)}}C_p^{(1)}(T)\thinspace dT + \Delta_{tr}H^{(1)}\left( T_{tr}^{(1)} \right) + \int\limits_{T^{(1)}}^{T^{(2)}}C_p^{(2)}(T)\thinspace dT + \cdots + \Delta_{tr}H^{(i)}\left( T_{tr}^{(i)} \right) + \int\limits_{T^{(i)}}^{T}C_p^{(i+1)}(T)\thinspace dT
+$$
+
+__Entropy__
+
+$$
+S(T)=S(0)+\int\limits_0^{T^{(1)}}\frac{C_p^{(1)}(T)}{T}\thinspace dT + \frac{\Delta_{tr}H^{(1)}\left( T_{tr}^{(1)} \right)}{T_{tr}^{(1)}} + \int\limits_{T^{(1)}}^{T^{(2)}}\frac{C_p^{(2)}(T)}{T}\thinspace dT + \cdots + \frac{\Delta_{tr}H^{(i)}\left( T_{tr}^{(i)} \right)}{T_{tr}^{(i)}} + \int\limits_{T^{(i)}}^{T}\frac{C_p^{(i+1)}(T)}{T}\thinspace dT
+$$
+
+Where $C_p^{(1)},C_p^{(2)},\ldots,C_p^{(i+1)}$ - Heat capacity at constant pressure
+
+## Litetarure
+[Glu]: Glusko, V. P.; Gurvich, L. V.; Bergman, G. A.; Veitz, I. V.; Medvedev, V. A.; Khachkuruzov, G. A.; Jungman, V. S. Thermodynamic Properties of Pure Substances, Vols. I-IV, 3rd ed.; Nauka: Moscow, 1982; in Russian. Gurvich, L. V.; Veyts, I. V.; Alcock, C. B. Thermodynamic Properties of Individual Substances, Vols. I and II, 4th ed.; Hemisphere: New York, 1989. Gurvich, L. V.; Veyts, I. V.; Alcock, C. B. Thermodynamic Properties of Individual Substances, Vol. III, 4th ed.; Begell House: New York, 1989. Gurvich, L. V.; Veyts, I. V.; Alcock, C. B. Thermodynamic Properties of Individual Substances, Vol. IV, 4th ed.; Begell House: New York, in press. Gurvich, L. V.; Iorish, V. S.; Chekhovskoi, D. V.; Yungman, V. S. IVTANTHERMO-A Thermodynamic Database and Software System for the Personal Computer; NIST Special Database 5; National Institutes of Standards and Technology: Gaithersburg, MD, 1993. These tables are also carefully assessed data. A detailed text describes the sources of the data and a level of accuracy is given to each substance. Listed above are the Russian version, the English translation of Vols. I-III (Vol. IV is expected out soon), and the electronic version, which has the option of selecting the format of the output: JANAF form, TPIS form, or functional form of Cp°, FEF(0), FEF(298), H°(T) - H°(0), H°(T) - H°(298), and S°(T).
+
 
