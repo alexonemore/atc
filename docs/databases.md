@@ -52,15 +52,17 @@ Thermodynamic data are taken from the old program [Thermo](http://www.ism.ac.ru/
 
 Thermodynamic functions can be calculated using the following formulas.
 
-$$ \begin{aligned}
-& F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 \ln x + \varphi_3 x^{-2} + \varphi_4 x^{-1} + \varphi_5 x + \varphi_6 x^2 + \varphi_7 x^3 \\\\
-& S^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 (1+\ln x) - \varphi_3 x^{-2} + 2 \varphi_5 x + 3 \varphi_6 x^2 + 4 \varphi_7 x^3 \\\\
-& H^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) + 10(\varphi_2 x -2 \varphi_3 x^{-1} - \varphi_4 + \varphi_5 x^2 + 2 \varphi_6 x^3 + 3 \varphi_7 x^4) \\\\
-& C_p(T)\left[\frac{J}{mol \thinspace K}\right]= \varphi_2 +2 \varphi_3 x^{-2} + 2 \varphi_5 x + 6 \varphi_6 x^2 + 12 \varphi_7 x^3 \\\\
-& G^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) -T \cdot F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right] \cdot 10^{-3} \\\\
-& \text{where} \space x = T[K] \cdot 10^{-4}.
+$ F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 \ln x + \varphi_3 x^{-2} + \varphi_4 x^{-1} + \varphi_5 x + \varphi_6 x^2 + \varphi_7 x^3 $
 
-\end{aligned}$$
+$ S^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right]=\varphi_1 + \varphi_2 (1+\ln x) - \varphi_3 x^{-2} + 2 \varphi_5 x + 3 \varphi_6 x^2 + 4 \varphi_7 x^3 $
+
+$ H^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) + 10(\varphi_2 x -2 \varphi_3 x^{-1} - \varphi_4 + \varphi_5 x^2 + 2 \varphi_6 x^3 + 3 \varphi_7 x^4) $
+
+$ C_p(T)\left[\frac{J}{mol \thinspace K}\right]= \varphi_2 +2 \varphi_3 x^{-2} + 2 \varphi_5 x + 6 \varphi_6 x^2 + 12 \varphi_7 x^3 $
+
+$ G^{\circ}(T)\left[\frac{kJ}{mol}\right]=H^{\circ}(0) -T \cdot F^{\circ}(T)\left[\frac{J}{mol \thinspace K}\right] \cdot 10^{-3} $
+
+$ \text{where} \space x = T[K] \cdot 10^{-4}. $
 
 
 
