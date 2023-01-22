@@ -96,6 +96,7 @@ S(T) = S(298.15K)+\int\limits_{298.15K}^{T_1}\frac{C_{p1}(T)}{T}\thinspace dT + 
 $$
 
 $$G^{\circ}(T)=H^{\circ}(T)-TS^{\circ}(T)$$
+
 $$G^{\circ}(T)=H^{\circ}(0)-TF^{\circ}(T)$$
 
 ## Litetarure
