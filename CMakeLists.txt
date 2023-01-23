@@ -143,8 +143,8 @@ set(ICON_FILES
 )
 
 set(DATABASE_FILES
-	databases/hsc_database.db
-	databases/thermo_database.db
+	databases/database_hsc.db
+	databases/database_thermo.db
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -198,6 +198,8 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_SOURCE_DIR}/databases
 )
 
+qt_add_resources(${PROJECT_NAME} "images" PREFIX "/" FILES ${ICON_FILES})
+
 # libs
 if(STATIC_BUILD)
 	set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
@@ -222,8 +224,7 @@ add_subdirectory(libs/nlopt)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
 # install
-install(FILES ${ICON_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/images)
-install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/databases)
+install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
@@ -233,8 +234,7 @@ install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 # copy files while building by QtCreator
 if(DEFINED QT_QMAKE_EXECUTABLE)
 	message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
-	file(COPY ${ICON_FILES} DESTINATION ${CMAKE_BINARY_DIR}/images)
-	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR}/databases)
+	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
 # no cmd window

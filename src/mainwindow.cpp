@@ -33,7 +33,7 @@ using namespace QtDataVisualization;
 #endif
 
 namespace win {
-const QString win_logo = QStringLiteral("images/logo_atc.svg");
+const QString win_logo = QStringLiteral(":/images/logo_atc.svg");
 const QString win_title =
 #ifndef NDEBUG
 			QStringLiteral("Adiabatic Temperature Calculator (DEBUG)");

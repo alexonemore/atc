@@ -81,8 +81,8 @@ const QStringList databases{
 	QStringLiteral("HSC")
 };
 const QStringList database_filenames{
-	QStringLiteral("databases/thermo_database.db"),
-	QStringLiteral("databases/hsc_database.db")
+	QStringLiteral("database_thermo.db"),
+	QStringLiteral("database_hsc.db")
 };
 const QStringList choose_substances{
 	QT_TR_NOOP("As checked"),

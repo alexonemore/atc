@@ -32,9 +32,9 @@ Table::Table(QWidget* parent)
 	: QTableView(parent)
 {
 	context_menu = new QMenu(this);
-	auto copy_action = new QAction(QIcon("images/copy.svg"),
+	auto copy_action = new QAction(QIcon(":/images/copy.svg"),
 								   tr("Copy"), context_menu);
-	auto copy_with_headers_action = new QAction(QIcon("images/copy.svg"),
+	auto copy_with_headers_action = new QAction(QIcon(":/images/copy.svg"),
 									tr("Copy with Headers"), context_menu);
 
 	context_menu->addAction(copy_action);
