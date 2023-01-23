@@ -35,6 +35,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DataVisualization)
 
 message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 
+set(STATIC_BUILD ON)
+
+if(STATIC_BUILD)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 set(PROJECT_SOURCES
 	# core
 	src/main.cpp
@@ -193,13 +199,13 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # libs
-if(WIN32)
+if(STATIC_BUILD)
+	set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+	set(QCUSTOMPLOT_BUILD_TYPE STATIC)
+else()
 	set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 	set(QCUSTOMPLOT_BUILD_TYPE SHARED)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE QCUSTOMPLOT_USE_LIBRARY)
-else()
-	set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-	set(QCUSTOMPLOT_BUILD_TYPE STATIC)
 endif()
 message(STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
