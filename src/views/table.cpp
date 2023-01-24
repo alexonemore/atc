@@ -27,6 +27,7 @@
 #include <QKeyEvent>
 #include <set>
 #include "utilities.h"
+#include "resultmodel.h"
 
 Table::Table(QWidget* parent)
 	: QTableView(parent)
@@ -34,17 +35,14 @@ Table::Table(QWidget* parent)
 	context_menu = new QMenu(this);
 	auto copy_action = new QAction(QIcon(":/images/copy.svg"),
 								   tr("Copy"), context_menu);
-	auto copy_with_headers_action = new QAction(QIcon(":/images/copy.svg"),
-									tr("Copy with Headers"), context_menu);
-
 	context_menu->addAction(copy_action);
-	context_menu->addAction(copy_with_headers_action);
+
 	setContextMenuPolicy(Qt::CustomContextMenu);
 
 	// This is only for displaying the shortcut in the context menu.
 	// An entry in keyPressEvent is still needed.
 	copy_action->setShortcut(QKeySequence::Copy);
-	copy_with_headers_action->setShortcut(QKeySequence(tr("Ctrl+Shift+C")));
+	copy_action->setShortcut(QKeySequence(tr("Ctrl+C")));
 
 	// Set up context menu actions
 	connect(this, &QTableView::customContextMenuRequested,
@@ -52,13 +50,7 @@ Table::Table(QWidget* parent)
 		context_menu->popup(viewport()->mapToGlobal(pos));
 	});
 
-	connect(copy_action, &QAction::triggered, this, [this]() {
-		Copy(false);
-	});
-	connect(copy_with_headers_action, &QAction::triggered, this, [this]() {
-		Copy(true);
-	});
-
+	connect(copy_action, &QAction::triggered, this, [this]() { Copy(); });
 }
 
 Table::~Table()
@@ -66,11 +58,15 @@ Table::~Table()
 
 }
 
-void Table::Copy(const bool with_headers)
+void Table::Copy()
 {
-	LOG(with_headers)
 	QMimeData *mime_data = new QMimeData;
-	CopyMimeData(selectionModel()->selectedIndexes(), mime_data, with_headers);
+	if(auto mod = dynamic_cast<ResultDetailModel*>(model()); mod != nullptr) {
+		LOG("Dynamic cast successful")
+		mime_data->setText(mod->MakeTable());
+	} else {
+		CopyMimeData(selectionModel()->selectedIndexes(), mime_data, true);
+	}
 	qApp->clipboard()->setMimeData(mime_data);
 }
 
@@ -78,6 +74,8 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 						 QMimeData* mime_data, const bool with_headers)
 {
 	// A slightly simplified version of same function from sqlitebrowser
+	// This function is extreamly slow for big tables
+	// TODO fix
 
 	QModelIndexList indices = from_indices;
 
@@ -269,28 +267,12 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			}
 		}
 	}
-
 	mime_data->setHtml(html_result + "</td></tr></table></body></html>");
 	mime_data->setText(result);
-
-	LOG(result)
-	LOG(html_result)
 }
 
 void Table::keyPressEvent(QKeyEvent* event)
 {
-#if 0
-	if(event->matches(QKeySequence::Copy))
-	{
-		Copy(false);
-	} else if(event->modifiers().testFlag(Qt::ControlModifier) &&
-			  event->modifiers().testFlag(Qt::ShiftModifier) &&
-			  (event->key() == Qt::Key_C))
-	{
-		// Call copy with headers when Ctrl-Shift-C is pressed
-		Copy(true);
-	}
-#endif
 	switch(event->key()) {
 	case Qt::Key_Delete:
 	case Qt::Key_Backspace:
@@ -301,13 +283,7 @@ void Table::keyPressEvent(QKeyEvent* event)
 		break;
 	case Qt::Key_C:
 		if(event->modifiers().testFlag(Qt::ControlModifier)) {
-			if(event->modifiers().testFlag(Qt::ShiftModifier)) {
-				// Call copy with headers when Ctrl-Shift-C is pressed
-				Copy(true);
-			} else {
-				// Call copy without headers when Ctrl-C is pressed
-				Copy(false);
-			}
+			Copy();
 		}
 		break;
 	default:

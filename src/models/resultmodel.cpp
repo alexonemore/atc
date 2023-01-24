@@ -473,22 +473,22 @@ QVariant ResultDetailModel::data(const QModelIndex& index, int role) const
 {
 	if(!CheckIndexValidParent(index)) return QVariant{};
 	if(items == nullptr) return QVariant{};
+	auto col = index.column();
+	auto row = index.row();
 	switch (parameters.workmode) {
 	case ParametersNS::Workmode::SinglePoint:
-		return DataSingle(index, role);
+		return DataSingle(row, col, role);
 	case ParametersNS::Workmode::TemperatureRange:
 	case ParametersNS::Workmode::CompositionRange:
-		return Data1D(index, role);
+		return Data1D(row, col, role);
 	case ParametersNS::Workmode::TemperatureCompositionRange:
-		return Data2D(index, role);
+		return Data2D(row, col, role);
 	}
 	return QVariant{};
 }
 
-QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
+QVariant ResultDetailModel::DataSingle(const int row, const int col, int role) const
 {
-	auto col = index.column();
-	auto row = index.row();
 	if(role == Qt::BackgroundRole) {
 		switch (static_cast<ResultFields::DetailRowNamesSingle>(row)) {
 		case ResultFields::DetailRowNamesSingle::T_units:
@@ -599,10 +599,8 @@ QVariant ResultDetailModel::DataSingle(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
-QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
+QVariant ResultDetailModel::Data1D(const int row, const int col, int role) const
 {
-	auto col = index.column();
-	auto row = index.row();
 	if(role == Qt::BackgroundRole) {
 		switch (static_cast<ResultFields::DetailRowNames1D>(row)) {
 		case ResultFields::DetailRowNames1D::X_Axis_values:
@@ -744,10 +742,8 @@ QVariant ResultDetailModel::Data1D(const QModelIndex& index, int role) const
 	return QVariant{};
 }
 
-QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
+QVariant ResultDetailModel::Data2D(const int row, const int col, int role) const
 {
-	auto col = index.column();
-	auto row = index.row();
 	if(role == Qt::BackgroundRole) {
 		switch (static_cast<ResultFields::DetailRowNames2D>(row)) {
 		case ResultFields::DetailRowNames2D::X_Axis_values_T_initial:
@@ -873,6 +869,40 @@ QVariant ResultDetailModel::Data2D(const QModelIndex& index, int role) const
 		}
 	}
 	return QVariant{};
+}
+
+QString ResultDetailModel::MakeTable() const
+{
+	QString text;
+	text.reserve((col_count+1) * row_count * 100 * sizeof(QString::value_type));
+	auto del = QStringLiteral("\t");
+	auto strdel = QStringLiteral("\n");
+	auto workmode = parameters.workmode;
+
+	for(int i = 0; i != row_count; ++i) {
+		text += headerData(i, Qt::Orientation::Vertical, Qt::DisplayRole).toString();
+		text += del;
+	}
+	text += strdel;
+	for(int i = 0; i != col_count; ++i) {
+		for(int j = 0; j != row_count; ++j) {
+			switch (workmode) {
+			case ParametersNS::Workmode::SinglePoint:
+				text += DataSingle(j, i, Qt::DisplayRole).toString();
+				break;
+			case ParametersNS::Workmode::TemperatureRange:
+			case ParametersNS::Workmode::CompositionRange:
+				text += Data1D(j, i, Qt::DisplayRole).toString();
+				break;
+			case ParametersNS::Workmode::TemperatureCompositionRange:
+				text += Data2D(j, i, Qt::DisplayRole).toString();
+				break;
+			}
+			text += del;
+		}
+		text += strdel;
+	}
+	return text;
 }
 
 QVariant ResultDetailModel::headerData(int section, Qt::Orientation orientation,

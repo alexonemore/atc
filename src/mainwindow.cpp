@@ -259,7 +259,7 @@ void MainWindow::SlotStartCalculations(Optimization::OptimizationVector& vec,
 		assert(fw->future().isFinished());
 	}
 	t.stop();
-	QString time{tr("Time: %1 Threads: %2").arg(t.duration(), threads)};
+	QString time{tr("Time: %1 Threads: %2").arg(t.duration(), QString::number(threads))};
 	LOG(time)
 	SlotShowStatusBarText(time);
 	QGuiApplication::setOverrideCursor(Qt::ArrowCursor);

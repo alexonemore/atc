@@ -151,12 +151,13 @@ public:
 					const int x_size, const int y_size);
 	void UpdateParameters(const ParametersNS::Parameters& params);
 	void Clear();
+	QString MakeTable() const;
 
 private:
 	bool CheckIndexValidParent(const QModelIndex& index) const;
-	QVariant DataSingle(const QModelIndex& index, int role) const;
-	QVariant Data1D(const QModelIndex& index, int role) const;
-	QVariant Data2D(const QModelIndex& index, int role) const;
+	QVariant DataSingle(const int row, const int col, int role) const;
+	QVariant Data1D(const int row, const int col, int role) const;
+	QVariant Data2D(const int row, const int col, int role) const;
 
 	// QAbstractItemModel interface
 public:
@@ -164,7 +165,6 @@ public:
 	int columnCount(const QModelIndex& parent) const override;
 	QVariant data(const QModelIndex& index, int role) const override;
 	QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
 };
 
 #endif // RESULTMODEL_H

@@ -34,7 +34,7 @@ public:
 signals:
 	void Delete(const QModelIndexList& selected);
 private:
-	void Copy(const bool with_headers);
+	void Copy();
 	void CopyMimeData(const QModelIndexList& from_indices, QMimeData* mime_data,
 					  const bool with_headers);
 	// QWidget interface
