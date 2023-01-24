@@ -33,6 +33,7 @@ using namespace QtDataVisualization;
 #endif
 
 namespace win {
+const QString atc_version = QStringLiteral("1.1");
 const QString win_logo = QStringLiteral(":/images/logo_atc.svg");
 const QString win_title =
 #ifndef NDEBUG
@@ -302,23 +303,24 @@ void MainWindow::MenuShowAbout()
 	const QString nlopt_version = tr("%1.%2.%3").arg(major).arg(minor).arg(bugfix);
 #endif
 	const QString text_about = tr(
-				"<h3>ATC Adiabatic Temperature Calculator</h3>"
+				"<h3>ATC Adiabatic Temperature Calculator v%1</h3>"
 				"<p>ATC is a high quality, visual, open source tool "
-				"for thermodynamic calculations. "
-				"See <a href=\"https://%4/\">%4</a> for more information.</p>"
+				"for thermodynamic calculations and visualization of phase diagrams. "
+				"See <a href=\"https://%2/\">%2</a> for more information.</p>"
 				"<p>ATC is licensed under the GNU General Public License Version 3.</p>"
-				"<p>Copyright (c) %1 %2</p>"
-				"<p>Corresponding email: <a href=\"mailto:%3\">%3</a></p>"
+				"<p>Copyright (c) %3 %4</p>"
+				"<p>Corresponding email: <a href=\"mailto:%5\">%5</a></p>"
 #ifndef NDEBUG
 				"<p>This program uses:</p>"
-				"<ul><li>Qt version %5</li>"
-				"<li>NLopt version %6</li>"
-				"<li>QCustomPlot version %7</li></ul>"
+				"<ul><li>Qt version %6</li>"
+				"<li>NLopt version %7</li>"
+				"<li>QCustomPlot version %8</li></ul>"
 #endif
-				).arg(QStringLiteral("2023")
+				).arg(win::atc_version
+					  , QStringLiteral("github.com/alexonemore/atc")
+					  , QStringLiteral("2022-2023")
 					  , QStringLiteral("Alexandr Shchukin")
 					  , QStringLiteral("alexonemoreemail@gmail.com")
-					  , QStringLiteral("github.com/alexonemore/atc")
 #ifndef NDEBUG
 					  , QLatin1String(QT_VERSION_STR)
 					  , nlopt_version

@@ -38,6 +38,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 namespace win {
+extern const QString atc_version;
 extern const QString win_title;
 extern const QString win_title_short;
 extern const QString win_logo;
