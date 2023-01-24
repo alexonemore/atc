@@ -35,10 +35,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DataVisualization)
 
 message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 
-set(STATIC_BUILD ON)
+set(STATIC_BUILD OFF)
 
 if(STATIC_BUILD)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
 set(PROJECT_SOURCES
@@ -224,7 +226,7 @@ add_subdirectory(libs/nlopt)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
 # install
-install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/databases)
 install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
@@ -234,7 +236,7 @@ install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
 # copy files while building by QtCreator
 if(DEFINED QT_QMAKE_EXECUTABLE)
 	message(STATUS "QT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}")
-	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR})
+	file(COPY ${DATABASE_FILES} DESTINATION ${CMAKE_BINARY_DIR}/databases)
 endif()
 
 # no cmd window
