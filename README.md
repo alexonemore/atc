@@ -2,7 +2,7 @@
 
 ## __Description__
 
-ATC is a high quality, visual, open source tool for thermodynamic calculations.
+ATC is a high quality, visual, open source tool for thermodynamic calculations and visualization of phase diagrams.
 
 ## __Requirements__
 
@@ -131,4 +131,8 @@ __3D plot example__
 
 ATC is licensed under the GNU General Public License Version 3.
 Modification or redistribution is permitted under the conditions of these license.
+
+Copyright © 2022-2023 Alexandr Shchukin
+
+See the subdirectories for the authors of the original libraries utilized by ATC.
 
