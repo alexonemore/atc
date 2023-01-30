@@ -149,6 +149,19 @@ set(DATABASE_FILES
 	databases/database_thermo.db
 )
 
+# add images to binary file for qt5
+if(${QT_VERSION_MAJOR} LESS 6)
+	set(IMAGES_QRC ${CMAKE_BINARY_DIR}/images.qrc)
+	message(STATUS "images.qrc is ${IMAGES_QRC}")
+	file(WRITE ${IMAGES_QRC} "<!DOCTYPE RCC><RCC version=\"1.0\">\n<qresource>\n")
+	foreach(ICON_FILE ${ICON_FILES})
+	  file(APPEND ${IMAGES_QRC} "    <file alias=\"${ICON_FILE}\">${CMAKE_SOURCE_DIR}/${ICON_FILE}</file>\n")
+	endforeach()
+	file(APPEND ${IMAGES_QRC} "</qresource>\n</RCC>\n")
+	qt5_add_resources(PROJECT_SOURCES ${IMAGES_QRC})
+endif()
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 	qt_add_executable(${PROJECT_NAME}
 		MANUAL_FINALIZATION
@@ -200,7 +213,10 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_SOURCE_DIR}/databases
 )
 
-qt_add_resources(${PROJECT_NAME} "images" PREFIX "/" FILES ${ICON_FILES})
+# add images to binary file for qt6
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+	qt_add_resources(${PROJECT_NAME} "images" PREFIX "/" FILES ${ICON_FILES})
+endif()
 
 # libs
 if(STATIC_BUILD)

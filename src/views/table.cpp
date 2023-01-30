@@ -185,9 +185,9 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 			if (ff++) {
 				// if row is not first
 				result.append(rowSepText);
-				html_result.append(QString{"</td></tr><tr><td>%1</td>"}.arg(headerText));
+				html_result.append(QString{"</td></tr><tr><td>%1</td>"}.arg(QString{headerText}));
 			} else {
-				html_result.append(QString{"<tr><td>%1</td>"}.arg(headerText));
+				html_result.append(QString{"<tr><td>%1</td>"}.arg(QString{headerText}));
 			}
 			result.append(headerText);
 			result.append(fieldSepText);
