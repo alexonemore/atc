@@ -90,7 +90,12 @@ CompositionData AmountsModel::GetCompositionData() const
 	Composition new_amounts;
 	for(const auto& sub : weights) {
 		auto id = sub.id;
-		if(!excluded.contains(id)) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		if(excluded.find(id) == excluded.end())
+#else
+		if(!excluded.contains(id))
+#endif
+		{
 			new_weights.push_back(sub);
 			new_amounts[id] = amounts.at(id);
 		}
@@ -242,9 +247,17 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 			break;
 		case AmountsModelFields::Names::Included:
 			if(role == Qt::CheckStateRole)
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				return excluded.find(weight.id) != excluded.end() ? Qt::Unchecked : Qt::Checked;
+#else
 				return excluded.contains(weight.id) ? Qt::Unchecked : Qt::Checked;
+#endif
 			else if(role == Qt::DisplayRole)
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				return excluded.find(weight.id) != excluded.end() ? "-" : "+";
+#else
 				return excluded.contains(weight.id) ? "-" : "+";
+#endif
 			else if(role == Qt::BackgroundRole)
 				return QBrush{Qt::white};
 			break;
@@ -389,7 +402,11 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 	} else {
 		auto&& substance_weight = weights.at(row-1); // -1 for Sum row
 		auto&& amount = amounts.at(substance_weight.id);
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		if(excluded.find(substance_weight.id) != excluded.end() && role == Qt::EditRole) {
+#else
 		if(excluded.contains(substance_weight.id) && role == Qt::EditRole) {
+#endif
 			amount = Amounts{};
 			RecalculateAndUpdate();
 			return false;
@@ -401,6 +418,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			break;
 		case AmountsModelFields::Names::Group_1_mol:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				auto weight = substance_weight.weight;
 				amount.group_1_mol = std::abs(value.toDouble());
 				amount.group_1_gram = amount.group_1_mol * weight;
@@ -411,6 +432,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			} break;
 		case AmountsModelFields::Names::Group_1_gram:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				auto weight = substance_weight.weight;
 				amount.group_1_gram = std::abs(value.toDouble());
 				amount.group_1_mol = amount.group_1_gram / weight;
@@ -421,6 +446,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			} break;
 		case AmountsModelFields::Names::Group_2_mol:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				auto weight = substance_weight.weight;
 				amount.group_2_mol = std::abs(value.toDouble());
 				amount.group_2_gram = amount.group_2_mol * weight;
@@ -431,6 +460,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			} break;
 		case AmountsModelFields::Names::Group_2_gram:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				auto weight = substance_weight.weight;
 				amount.group_2_gram = std::abs(value.toDouble());
 				amount.group_2_mol = amount.group_2_gram / weight;
@@ -441,6 +474,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			} break;
 		case AmountsModelFields::Names::Sum_mol:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				if(amount.sum_mol > 0.0) {
 					auto weight = substance_weight.weight;
 					auto val = std::abs(value.toDouble());
@@ -457,6 +494,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			} break;
 		case AmountsModelFields::Names::Sum_gram:
 			if(role == Qt::EditRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				if(amount.sum_gram > 0.0) {
 					auto weight = substance_weight.weight;
 					auto val = std::abs(value.toDouble());
@@ -476,6 +517,10 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 			break;
 		case AmountsModelFields::Names::Included:
 			if(role == Qt::CheckStateRole) {
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+				auto&& substance_weight = weights.at(row-1); // -1 for Sum row
+				auto&& amount = amounts.at(substance_weight.id);
+#endif
 				auto id = substance_weight.id;
 				auto check = value.value<Qt::CheckState>();
 				if(check == Qt::Unchecked) {

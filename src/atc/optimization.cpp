@@ -25,6 +25,10 @@ std::atomic_int32_t i_maker{0};
 std::atomic_int32_t i_items{0};
 #endif
 
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#define transform_reduce inner_product
+#endif
+
 namespace Optimization {
 constexpr static double epsilon_log = 1E-9;
 constexpr static double epsilon_accuracy = 1E-6;
@@ -181,7 +185,8 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		y_size = 1;
 		items.reserve(x_size);
 		// std::transform makes copy, emplace_back doesn't
-		for(size_t i = 0; const auto& new_amount : new_amounts) {
+		size_t i = 0;
+		for(const auto& new_amount : new_amounts) {
 			items.emplace_back(parameters, elements,
 							   temp_ranges, subs_element_composition,
 							   weights, new_amount, temperature,
@@ -197,7 +202,8 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 		y_size = new_amounts.size();
 		items.reserve(x_size * y_size);
 		for(const auto& temperature : temperatures) {
-			for(size_t i = 0; const auto& new_amount : new_amounts) {
+			size_t i = 0;
+			for(const auto& new_amount : new_amounts) {
 				items.emplace_back(parameters, elements,
 								   temp_ranges, subs_element_composition,
 								   weights, new_amount, temperature,
@@ -339,9 +345,11 @@ void OptimizationItem::MakeConstraintsMatrixA()
 {
 	// It depends on order of substances
 	// size = N * M
-	for(size_t j = 0; auto&& element_id : elements) {
+	size_t j = 0;
+	for(auto&& element_id : elements) {
 		auto&& a_j = constraints.at(j++).a_j;
-		for(size_t i = 0; auto&& substance_id : substances_id_order) {
+		size_t i = 0;
+		for(auto&& substance_id : substances_id_order) {
 			const auto& sub = subs_element_composition.at(substance_id);
 			auto element_it = sub.find(element_id);
 			a_j.at(i++) = (element_it == sub.cend()) ? 0.0 : element_it->second;
@@ -687,7 +695,8 @@ void OptimizationItem::MakeAmountsOfEquilibrium()
 		return lhs.id < rhs.id;
 	});
 	assert(vec_ec.size() == weights.size());
-	for(size_t i = 0; const auto& weight : weights) {
+	size_t i = 0;
+	for(auto&& weight : weights) {
 		auto [id, mol] = vec_ec.at(i++);
 		assert(id == weight.id);
 		auto w = weight.weight;

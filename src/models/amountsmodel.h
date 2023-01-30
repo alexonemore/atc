@@ -53,7 +53,11 @@ struct Amounts {
 	double sum_atpct{0.0};
 	double sum_wtpct{0.0};
 #ifndef NDEBUG
+#if __MINGW32__ && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
+#else
 	auto operator<=>(const Amounts&) const = default;
+#endif
 #endif
 	bool isZero() const {
 		// I'm not sure if group_1 and group_2 are always summed

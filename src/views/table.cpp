@@ -178,7 +178,8 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 	// Iterate over rows x cols checking if the index actually exists
 	// when needed, in order to support non-rectangular selections.
-	for(int ff = 0; const int row : rows_in_indexes) {
+	int ff = 0;
+	for(const int row : rows_in_indexes) {
 		if(with_headers) {
 			QByteArray headerText = model()->headerData(row,
 								Qt::Vertical, Qt::DisplayRole).toByteArray();
