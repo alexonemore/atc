@@ -25,7 +25,7 @@
 #include "utilities.h"
 
 namespace ResultViewGraph {
-constexpr auto axis_temperature = MakeQLatin1String("Tamperature, %1");
+constexpr auto axis_temperature = MakeQLatin1String("Temperature, %1");
 constexpr auto axis_composition = MakeQLatin1String("Composition, %1");
 constexpr auto y1_axis_name = MakeQLatin1String("T [%1], H [kJ/mol], c");
 constexpr auto y2_axis_name = MakeQLatin1String("Composition, %1");
