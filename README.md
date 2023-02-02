@@ -4,9 +4,11 @@
 
 ATC is a high quality, visual, open source tool for thermodynamic calculations and visualization of phase diagrams.
 
+The presentation with detailed description and examples is available at the [link](https://drive.google.com/file/d/1X3msoFNGsCIopT3qIVzpQNqci6pdvrWE/view?usp=share_link).
+
 ## __Requirements__
 
-Windows 10 and above or Linux.
+Windows 7 and above or Linux.
 
 ## __Features and detailed description__
 
