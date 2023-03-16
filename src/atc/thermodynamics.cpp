@@ -151,7 +151,8 @@ double TF_Cp_J(const double temperature_K, const TempRangeData& coef)
 	const double f5 = coef.f5;
 	const double f6 = coef.f6;
 	const double f7 = coef.f7;
-	return (f2 + 2 * (((2 * f7 * x + f6) * 3 * x + f5) * x + f3 / (x * x)));
+	double Cp = (f2 + 2 * (((2 * f7 * x + f6) * 3 * x + f5) * x + f3 / (x * x)));
+	return Cp < 0.0 ? 0.0 : Cp;
 }
 
 double TF_c(const double temperature_K, const TempRangeData& coef)
@@ -233,7 +234,7 @@ double IntegralOfCpByT_J(const double temperature_K, const TempRangeData& coef)
 }
 double TF_F_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
-	return ((1.0E3 * HSC::TF_G_kJ(temperature_K, coefs) -
+	return -((1.0E3 * HSC::TF_G_kJ(temperature_K, coefs) -
 			 HSC::TF_H_J(298.15, coefs)) / temperature_K);
 }
 double TF_G_kJ(const double temperature_K, const SubstanceTempRangeData& coefs)
@@ -388,8 +389,9 @@ double TF_Cp_J(const double temperature_K, const SubstanceTempRangeData& coefs)
 	const double T = temperature_K;
 	const double T2 = T*T;
 	const double T3 = T2*T;
-	return (A + (B * T * 1.0E-03) + (C * 1.0E05 / T2) + (D * T2 * 1.0E-06)
+	double Cp = (A + (B * T * 1.0E-03) + (C * 1.0E05 / T2) + (D * T2 * 1.0E-06)
 			+ (E * 1.0E08 / T3) + (F * T3 * 1.0E-9));
+	return Cp < 0.0 ? 0.0 : Cp;
 }
 double TF_c(const double temperature_K, const SubstanceTempRangeData& coefs)
 {
