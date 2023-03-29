@@ -216,36 +216,34 @@ double NumberOfCalculations(const ParametersNS::Parameters& parameters)
 void CalculationParameters::CalculateButtonHandler()
 {
 	auto parameters = GetCurrentParameters();
-
 	auto number_of_calculations = NumberOfCalculations(parameters);
+	auto number = QString::number(number_of_calculations, 'f', 100)
+			.replace(',', '.').split('.').first();
 	constexpr double max_number_of_calculations = 100'000;
-	constexpr auto max_capasity_of_vector_double = std::vector<double>().max_size();
-	constexpr auto max_size_of_OptimizationVector = Optimization::OptimizationVector().max_size();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	const
+#else
+	constexpr
+#endif
+	auto max_capasity = std::min(std::vector<double>().max_size(),
+								 Optimization::OptimizationVector().max_size()) ;
+	LOG(number_of_calculations)
+	LOG(max_capasity)
 
-	LOG("number_of_calculations =", number_of_calculations)
-	LOG("max_capasity_of_vector_double =", max_capasity_of_vector_double)
-	LOG("max_size_of_OptimizationVector =", max_size_of_OptimizationVector)
-
-	auto str = QString::number(number_of_calculations, 'f', 100);
-	auto number = str.replace(',', '.').split('.').first();
-
-	if(number_of_calculations >= static_cast<double>(max_capasity_of_vector_double) ||
-	   number_of_calculations >= static_cast<double>(max_size_of_OptimizationVector))
+	if(number_of_calculations >= static_cast<double>(max_capasity))
 	{
 		QMessageBox::critical(
-					0,
+					this,
 					tr("Error!"),
-					tr("You are going to count\n") +
+					tr("You are going to count\n\n") +
 					number +
-					tr("\ncombinations.\nThis cannot be done on this computer.\n"
-					   "Reduce the range parameters."),
-					QMessageBox::Ok,
-					QMessageBox::Ok);
+					tr("\n\ncombinations.\nThis cannot be done on this computer.\n"
+					   "Reduce the range parameters."));
 		return;
 	}
 	if (number_of_calculations >= max_number_of_calculations) {
 		int ret = QMessageBox::warning(
-					0,
+					this,
 					tr("Warning!"),
 					tr("You are going to count\n\n") +
 					number +

@@ -192,7 +192,6 @@ OptimizationItemsMaker::OptimizationItemsMaker(
 							   weights, new_amount, temperature,
 							   composition.at(i++));
 		}
-
 	}
 		break;
 	case ParametersNS::Workmode::TemperatureCompositionRange: {

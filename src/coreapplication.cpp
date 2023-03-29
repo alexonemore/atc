@@ -80,6 +80,8 @@ CoreApplication::CoreApplication(MainWindow *const gui, QObject *parent)
 			this, &CoreApplication::SlotStartCalculations);
 	connect(gui, &MainWindow::SignalSendResult,
 			this, &CoreApplication::SlotResieveResult);
+	connect(this, &CoreApplication::SignalError,
+			gui, &MainWindow::SlotShowError);
 
 	// model plot TF
 	connect(model_plot_tf, &PlotTFModel::AddGraph,
@@ -606,11 +608,30 @@ void CoreApplication::SlotStartCalculations()
 	auto subs_element_composition = db->GetSubstancesElementComposition(ids_str);
 
 	// 5. Prepare vector of calculation instances
-	Optimization::OptimizationItemsMaker oim(parameters_, elements, temp_ranges,
-		subs_element_composition, composition_data.weights, composition_data.amounts);
-	auto vec{std::move(oim.GetData())};
-	x_size = oim.GetXSize();
-	y_size = oim.GetYSize();
+	std::unique_ptr<Optimization::OptimizationItemsMaker> maker;
+	try {
+		maker = std::make_unique<Optimization::OptimizationItemsMaker>(parameters_, elements, temp_ranges,
+			subs_element_composition, composition_data.weights, composition_data.amounts);
+	} catch (std::bad_alloc &e) {
+		QString message = tr("The following error occurred:\n\n")
+				+ e.what()
+				+ tr("\n\nThis means that there is not enough memory on your computer.\n"
+					 "Reduce the range parameters.");
+		QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+		emit SignalError(message);
+		return;
+	} catch (std::exception &e) {
+		QString message = tr("Something went wrong. Here is the error message:\n\n")
+				+ e.what()
+				+ tr("\n\nPlease report this bug to the developers.\n"
+					 "And now it is recommended to restart the program.");
+		QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+		emit SignalError(message);
+		return;
+	}
+	auto vec{std::move(maker->GetData())};
+	x_size = maker->GetXSize();
+	y_size = maker->GetYSize();
 
 	// 6. emit vector
 	emit SignalStartCalculations(vec, parameters_.threads);

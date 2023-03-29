@@ -80,6 +80,8 @@ signals:
 	void SignalStartCalculations(Optimization::OptimizationVector& vec,
 								 int threads);
 
+	void SignalError(const QString& text);
+
 private slots:
 	void SlotUpdate(const ParametersNS::Parameters parameters);
 	void SlotUpdateButtonHandler(const ParametersNS::Parameters parameters);
