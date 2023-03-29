@@ -19,6 +19,9 @@
 
 #include "calculationparameters.h"
 #include "ui_calculationparameters.h"
+#include "utilities.h"
+#include "optimization.h"
+#include <QMessageBox>
 
 CalculationParameters::CalculationParameters(QWidget *parent) :
 	QWidget(parent),
@@ -184,8 +187,79 @@ void CalculationParameters::Clear()
 	emit UpdateParameters(ParametersNS::Parameters{});
 }
 
+namespace {
+double NumberOfCalculations(const ParametersNS::Parameters& parameters)
+{
+	double size_temperature = 1;
+	double size_composition = 1;
+	auto number = [](ParametersNS::Range range) -> double {
+		return 1 + std::ceil((range.stop - range.start) / range.step);
+	};
+	switch (parameters.workmode) {
+	case ParametersNS::Workmode::SinglePoint:
+		break;
+	case ParametersNS::Workmode::TemperatureRange:
+		size_temperature = number(parameters.temperature_range);
+		break;
+	case ParametersNS::Workmode::CompositionRange:
+		size_composition = number(parameters.composition_range);
+		break;
+	case ParametersNS::Workmode::TemperatureCompositionRange:
+		size_temperature = number(parameters.temperature_range);
+		size_composition = number(parameters.composition_range);
+		break;
+	}
+	return size_temperature * size_composition;
+}
+}
+
 void CalculationParameters::CalculateButtonHandler()
 {
-	UpdateSelectedElements();
+	auto parameters = GetCurrentParameters();
+
+	auto number_of_calculations = NumberOfCalculations(parameters);
+	constexpr double max_number_of_calculations = 100'000;
+	constexpr auto max_capasity_of_vector_double = std::vector<double>().max_size();
+	constexpr auto max_size_of_OptimizationVector = Optimization::OptimizationVector().max_size();
+
+	LOG("number_of_calculations =", number_of_calculations)
+	LOG("max_capasity_of_vector_double =", max_capasity_of_vector_double)
+	LOG("max_size_of_OptimizationVector =", max_size_of_OptimizationVector)
+
+	auto str = QString::number(number_of_calculations, 'f', 100);
+	auto number = str.replace(',', '.').split('.').first();
+
+	if(number_of_calculations >= static_cast<double>(max_capasity_of_vector_double) ||
+	   number_of_calculations >= static_cast<double>(max_size_of_OptimizationVector))
+	{
+		QMessageBox::critical(
+					0,
+					tr("Error!"),
+					tr("You are going to count\n") +
+					number +
+					tr("\ncombinations.\nThis cannot be done on this computer.\n"
+					   "Reduce the range parameters."),
+					QMessageBox::Ok,
+					QMessageBox::Ok);
+		return;
+	}
+	if (number_of_calculations >= max_number_of_calculations) {
+		int ret = QMessageBox::warning(
+					0,
+					tr("Warning!"),
+					tr("You are going to count\n\n") +
+					number +
+					tr("\n\ncombinations. this can take a long time\n"
+					   "and requires a lot of memory.\n"
+					   "Continue only if you are confident in your computer."
+					   "Or you can reduce the range parameters.\n\n"
+					   "Do you want to continue the calculation?"),
+					QMessageBox::Yes | QMessageBox::Cancel,
+					QMessageBox::Cancel);
+		if(ret != QMessageBox::Yes)
+			return;
+	}
+
+	emit UpdateParameters(parameters);
 	emit StartCalculate();
 }
