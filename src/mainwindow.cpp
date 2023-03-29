@@ -33,7 +33,7 @@ using namespace QtDataVisualization;
 #endif
 
 namespace win {
-const QString atc_version = QStringLiteral("1.2");
+const QString atc_version = QStringLiteral("1.3");
 const QString win_logo = QStringLiteral(":/images/logo_atc.svg");
 const QString win_title =
 #ifndef NDEBUG
