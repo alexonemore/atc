@@ -94,16 +94,16 @@ QVariant SubstancesTabulatedTFModel::data(const QModelIndex& index,
 	auto row = index.row();
 	if(col < SubstancesTabulatedTFFields::names_size) {
 		switch(static_cast<SubstancesTabulatedTFFields::Names>(col)) {
-		case SubstancesTabulatedTFFields::Names::T: return data_.temperatures.at(row);
+		case SubstancesTabulatedTFFields::Names::T: return QString::number(data_.temperatures.at(row), 'g', 10);
 		}
 	} else {
 		switch(static_cast<SubstancesTabulatedTFFields::TF>(col-1)) {
-		case SubstancesTabulatedTFFields::TF::G_kJ:	return data_.G_kJ.at(row);
-		case SubstancesTabulatedTFFields::TF::H_kJ:	return data_.H_kJ.at(row);
-		case SubstancesTabulatedTFFields::TF::F_J:	return data_.F_J.at(row);
-		case SubstancesTabulatedTFFields::TF::S_J:	return data_.S_J.at(row);
-		case SubstancesTabulatedTFFields::TF::Cp_J:	return data_.Cp_J.at(row);
-		case SubstancesTabulatedTFFields::TF::c:	return data_.c.at(row);
+		case SubstancesTabulatedTFFields::TF::G_kJ:	return QString::number(data_.G_kJ.at(row), 'g', 10);
+		case SubstancesTabulatedTFFields::TF::H_kJ:	return QString::number(data_.H_kJ.at(row), 'g', 10);
+		case SubstancesTabulatedTFFields::TF::F_J:	return QString::number(data_.F_J.at(row), 'g', 10);
+		case SubstancesTabulatedTFFields::TF::S_J:	return QString::number(data_.S_J.at(row), 'g', 10);
+		case SubstancesTabulatedTFFields::TF::Cp_J:	return QString::number(data_.Cp_J.at(row), 'g', 10);
+		case SubstancesTabulatedTFFields::TF::c:	return QString::number(data_.c.at(row), 'g', 10);
 		}
 	}
 	LOG("ERROR in SubstancesTabulatedTFModel::data, index:", index)

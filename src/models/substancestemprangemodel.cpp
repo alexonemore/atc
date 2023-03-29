@@ -93,17 +93,17 @@ QVariant SubstancesTempRangeModel::data(const QModelIndex& index, int role) cons
 	}
 	auto&& data_at = data_.at(col);
 	switch(static_cast<SubstanceTempRangeFields>(index.row())) {
-	case SubstanceTempRangeFields::T_min:	return data_at.T_min;
-	case SubstanceTempRangeFields::T_max:	return data_at.T_max;
-	case SubstanceTempRangeFields::H:		return data_at.H;
-	case SubstanceTempRangeFields::S:		return data_at.S;
-	case SubstanceTempRangeFields::f1:		return data_at.f1;
-	case SubstanceTempRangeFields::f2:		return data_at.f2;
-	case SubstanceTempRangeFields::f3:		return data_at.f3;
-	case SubstanceTempRangeFields::f4:		return data_at.f4;
-	case SubstanceTempRangeFields::f5:		return data_at.f5;
-	case SubstanceTempRangeFields::f6:		return data_at.f6;
-	case SubstanceTempRangeFields::f7:		return data_at.f7;
+	case SubstanceTempRangeFields::T_min:	return QString::number(data_at.T_min, 'g', 10);
+	case SubstanceTempRangeFields::T_max:	return QString::number(data_at.T_max, 'g', 10);
+	case SubstanceTempRangeFields::H:		return QString::number(data_at.H, 'g', 10);
+	case SubstanceTempRangeFields::S:		return QString::number(data_at.S, 'g', 10);
+	case SubstanceTempRangeFields::f1:		return QString::number(data_at.f1, 'g', 10);
+	case SubstanceTempRangeFields::f2:		return QString::number(data_at.f2, 'g', 10);
+	case SubstanceTempRangeFields::f3:		return QString::number(data_at.f3, 'g', 10);
+	case SubstanceTempRangeFields::f4:		return QString::number(data_at.f4, 'g', 10);
+	case SubstanceTempRangeFields::f5:		return QString::number(data_at.f5, 'g', 10);
+	case SubstanceTempRangeFields::f6:		return QString::number(data_at.f6, 'g', 10);
+	case SubstanceTempRangeFields::f7:		return QString::number(data_at.f7, 'g', 10);
 	case SubstanceTempRangeFields::phase:	return data_at.phase;
 	}
 	LOG("ERROR in SubstancesTempRangeModel::data")

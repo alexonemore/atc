@@ -151,21 +151,21 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 			case AmountsModelFields::Names::Weight:
 				break;
 			case AmountsModelFields::Names::Group_1_mol:
-				return sum.group_1_mol;
+				return QString::number(sum.group_1_mol, 'g', 10);
 			case AmountsModelFields::Names::Group_1_gram:
-				return sum.group_1_gram;
+				return QString::number(sum.group_1_gram, 'g', 10);
 			case AmountsModelFields::Names::Group_2_mol:
-				return sum.group_2_mol;
+				return QString::number(sum.group_2_mol, 'g', 10);
 			case AmountsModelFields::Names::Group_2_gram:
-				return sum.group_2_gram;
+				return QString::number(sum.group_2_gram, 'g', 10);
 			case AmountsModelFields::Names::Sum_mol:
-				return sum.sum_mol;
+				return QString::number(sum.sum_mol, 'g', 10);
 			case AmountsModelFields::Names::Sum_gram:
-				return sum.sum_gram;
+				return QString::number(sum.sum_gram, 'g', 10);
 			case AmountsModelFields::Names::Sum_atpct:
-				return sum.sum_atpct;
+				return QString::number(sum.sum_atpct, 'g', 10);
 			case AmountsModelFields::Names::Sum_wtpct:
-				return sum.sum_wtpct;
+				return QString::number(sum.sum_wtpct, 'g', 10);
 			case AmountsModelFields::Names::Included: {
 				auto all = amounts.size();
 				auto ex = excluded.size();
@@ -177,7 +177,7 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 	} else {
 		auto&& weight = weights.at(row-1); // -1 for Sum row
 		auto&& amount = amounts.at(weight.id);
-		auto zero = [](double d)->QVariant {return d > 0 ? d : QVariant{};};
+		auto zero = [](double d)->QVariant {return d > 0 ? QString::number(d, 'g', 10) : QVariant{};};
 		switch(col) {
 		case AmountsModelFields::Names::ID:
 			if(role == Qt::DisplayRole)
@@ -193,7 +193,7 @@ QVariant AmountsModel::data(const QModelIndex& index, int role) const
 			break;
 		case AmountsModelFields::Names::Weight:
 			if(role == Qt::DisplayRole)
-				return weight.weight;
+				return zero(weight.weight);
 			else if(role == Qt::BackgroundRole)
 				return QBrush{Qt::white};
 			break;

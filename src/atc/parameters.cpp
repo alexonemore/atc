@@ -96,11 +96,14 @@ const QStringList minimization_function{
 	QT_TR_NOOP("Gibbs energy"),
 	QT_TR_NOOP("Entropy")
 };
+constexpr double min_Kelvin = 0.0;
 constexpr double min_Celsius = -273.15;
 constexpr double min_Fahrenheit = -459.67;
 constexpr double max_temperature = 1E6;
 constexpr double max_composition = 1E10;
-constexpr double min_range_step = 1E-5;
+constexpr double min_pressure = 0.0;
+constexpr double max_pressure = 1E10;
+constexpr double min_range_step = 1E-4;
 
 Parameters::Parameters()
 	: threads{MaxThreadsCount()}
@@ -112,7 +115,7 @@ static double FixTemperature(const double temperature, const TemperatureUnit tu)
 {
 	switch(tu) {
 	case TemperatureUnit::Kelvin:
-		return std::clamp(temperature, 0.0, max_temperature);
+		return std::clamp(temperature, min_Kelvin, max_temperature);
 	case TemperatureUnit::Celsius:
 		return std::clamp(temperature, min_Celsius, max_temperature);
 	case TemperatureUnit::Fahrenheit:
@@ -144,7 +147,7 @@ static void FixRange(Range& range)
 void Parameters::FixInputParameters()
 {
 	temperature_initial = FixTemperature(temperature_initial, temperature_initial_unit);
-	pressure_initial = std::clamp(pressure_initial, 0.0, pressure_initial);
+	pressure_initial = std::clamp(pressure_initial, min_pressure, max_pressure);
 
 	temperature_range.start = FixTemperature(temperature_range.start, temperature_range_unit);
 	temperature_range.stop = FixTemperature(temperature_range.stop, temperature_range_unit);

@@ -61,6 +61,11 @@ CalculationParameters::~CalculationParameters()
 	delete ui;
 }
 
+static double FixDelimeter(const QString& str)
+{
+	return str.simplified().replace(",", ".").toDouble();
+}
+
 ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 {
 	ParametersNS::Parameters p;
@@ -78,20 +83,20 @@ ParametersNS::Parameters CalculationParameters::GetCurrentParameters()
 	p.temperature_range_unit = static_cast<ParametersNS::TemperatureUnit>(ui->temperature_units->currentIndex());
 	p.pressure_range_unit = static_cast<ParametersNS::PressureUnit>(ui->pressure_units->currentIndex());
 
-	p.temperature_initial = ui->temperature_initial->text().toDouble();
-	p.pressure_initial = ui->pressure_initial->text().toDouble();
+	p.temperature_initial = FixDelimeter(ui->temperature_initial->text());
+	p.pressure_initial = FixDelimeter(ui->pressure_initial->text());
 
-	p.composition_range.start = ui->composition_start->text().toDouble();
-	p.composition_range.stop = ui->composition_stop->text().toDouble();
-	p.composition_range.step = ui->composition_step->text().toDouble();
+	p.composition_range.start = FixDelimeter(ui->composition_start->text());
+	p.composition_range.stop = FixDelimeter(ui->composition_stop->text());
+	p.composition_range.step = FixDelimeter(ui->composition_step->text());
 
-	p.temperature_range.start = ui->temperature_start->text().toDouble();
-	p.temperature_range.stop = ui->temperature_stop->text().toDouble();
-	p.temperature_range.step = ui->temperature_step->text().toDouble();
+	p.temperature_range.start = FixDelimeter(ui->temperature_start->text());
+	p.temperature_range.stop = FixDelimeter(ui->temperature_stop->text());
+	p.temperature_range.step = FixDelimeter(ui->temperature_step->text());
 
-	p.pressure_range.start = ui->pressure_start->text().toDouble();
-	p.pressure_range.stop = ui->pressure_stop->text().toDouble();
-	p.pressure_range.step = ui->pressure_step->text().toDouble();
+	p.pressure_range.start = FixDelimeter(ui->pressure_start->text());
+	p.pressure_range.stop = FixDelimeter(ui->pressure_stop->text());
+	p.pressure_range.step = FixDelimeter(ui->pressure_step->text());
 
 	p.threads = ui->threads->value();
 	p.at_accuracy = ui->at_accuracy->value();
