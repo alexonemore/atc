@@ -79,6 +79,7 @@ void AmountsModel::Clear()
 	beginResetModel();
 	weights.clear();
 	amounts.clear();
+	excluded.clear();
 	row_count = 1;
 	Recalculate();
 	endResetModel();
