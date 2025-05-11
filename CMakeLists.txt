@@ -35,13 +35,17 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DataVisualization)
 
 message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 
-set(STATIC_BUILD OFF)
+set(STATIC_BUILD ON)
 
 if(STATIC_BUILD)
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+	# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
+
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffast-math")
 
 set(PROJECT_SOURCES
 	# core
@@ -156,7 +160,7 @@ if(${QT_VERSION_MAJOR} LESS 6)
 	file(WRITE ${IMAGES_QRC} "<!DOCTYPE RCC><RCC version=\"1.0\">\n<qresource>\n")
 	foreach(ICON_FILE ${ICON_FILES})
 	  file(APPEND ${IMAGES_QRC} "    <file alias=\"${ICON_FILE}\">${CMAKE_SOURCE_DIR}/${ICON_FILE}</file>\n")
-	endforeach()
+    endforeach()
 	file(APPEND ${IMAGES_QRC} "</qresource>\n</RCC>\n")
 	qt5_add_resources(PROJECT_SOURCES ${IMAGES_QRC})
 endif()
