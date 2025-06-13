@@ -35,17 +35,24 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS DataVisualization)
 
 message(STATUS "Qt version: Qt${QT_VERSION_MAJOR}")
 
-set(STATIC_BUILD ON)
-
+#set(STATIC_BUILD ON)
+option(STATIC_BUILD "Build project with static linking" OFF)
 if(STATIC_BUILD)
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-	# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+	message(STATUS "Static build is enabled")
+else()
+	message(STATUS "Dynamic (shared) build is enabled")
 endif()
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffast-math")
+if(MSVC)
+	add_compile_options(/fp:fast)
+    add_compile_options(/arch:AVX2)
+    add_compile_options(/MP)
+else()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffast-math")
+endif()
 
 set(PROJECT_SOURCES
 	# core
@@ -160,7 +167,7 @@ if(${QT_VERSION_MAJOR} LESS 6)
 	file(WRITE ${IMAGES_QRC} "<!DOCTYPE RCC><RCC version=\"1.0\">\n<qresource>\n")
 	foreach(ICON_FILE ${ICON_FILES})
 	  file(APPEND ${IMAGES_QRC} "    <file alias=\"${ICON_FILE}\">${CMAKE_SOURCE_DIR}/${ICON_FILE}</file>\n")
-    endforeach()
+	endforeach()
 	file(APPEND ${IMAGES_QRC} "</qresource>\n</RCC>\n")
 	qt5_add_resources(PROJECT_SOURCES ${IMAGES_QRC})
 endif()
@@ -247,11 +254,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
 # install
 install(FILES ${DATABASE_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/databases)
-install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
-	RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-	LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-)
+if(STATIC_BUILD)
+	install(TARGETS ${PROJECT_NAME}
+		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+	)
+else()
+	install(TARGETS ${PROJECT_NAME} qcustomplot nlopt
+		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+		LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+		ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+	)
+endif()
 
 # copy files while building by QtCreator
 if(DEFINED QT_QMAKE_EXECUTABLE)

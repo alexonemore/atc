@@ -16,7 +16,12 @@ if(NOT DEFINED QCUSTOMPLOT_BUILD_TYPE)
 	set(QCUSTOMPLOT_BUILD_TYPE SHARED)
 endif()
 
-add_library(qcustomplot ${QCUSTOMPLOT_BUILD_TYPE} ${QCUSTOMPLOT_SOURCES})
+#add_library(qcustomplot ${QCUSTOMPLOT_BUILD_TYPE} ${QCUSTOMPLOT_SOURCES})
+if(QCUSTOMPLOT_BUILD_TYPE STREQUAL "STATIC")
+	add_library(qcustomplot STATIC ${QCUSTOMPLOT_SOURCES})
+else()
+	add_library(qcustomplot SHARED ${QCUSTOMPLOT_SOURCES})
+endif()
 
 target_link_libraries(qcustomplot PRIVATE
 	Qt${QT_VERSION_MAJOR}::Widgets
