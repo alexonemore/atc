@@ -1,6 +1,6 @@
 # This file is part of ATC (Adiabatic Temperature Calculator).
-# Copyright (c) 2023 Alexandr Shchukin
-# Corresponding email: alexonemoreemail@gmail.com
+# Copyright (c) 2025 Alexandr Shchukin
+# Corresponding email: shchukin.aleksandr.sergeevich@gmail.com
 #
 # ATC (Adiabatic Temperature Calculator) is free software:
 # you can redistribute it and/or modify it under the terms of
@@ -47,8 +47,8 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 if(MSVC)
 	add_compile_options(/fp:fast)
-    add_compile_options(/arch:AVX2)
-    add_compile_options(/MP)
+	add_compile_options(/arch:AVX2)
+	add_compile_options(/MP)
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -ffast-math")
@@ -166,7 +166,7 @@ if(${QT_VERSION_MAJOR} LESS 6)
 	message(STATUS "images.qrc is ${IMAGES_QRC}")
 	file(WRITE ${IMAGES_QRC} "<!DOCTYPE RCC><RCC version=\"1.0\">\n<qresource>\n")
 	foreach(ICON_FILE ${ICON_FILES})
-	  file(APPEND ${IMAGES_QRC} "    <file alias=\"${ICON_FILE}\">${CMAKE_SOURCE_DIR}/${ICON_FILE}</file>\n")
+		file(APPEND ${IMAGES_QRC} "    <file alias=\"${ICON_FILE}\">${CMAKE_SOURCE_DIR}/${ICON_FILE}</file>\n")
 	endforeach()
 	file(APPEND ${IMAGES_QRC} "</qresource>\n</RCC>\n")
 	qt5_add_resources(PROJECT_SOURCES ${IMAGES_QRC})

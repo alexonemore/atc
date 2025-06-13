@@ -1,6 +1,6 @@
 /* This file is part of ATC (Adiabatic Temperature Calculator).
- * Copyright (c) 2023 Alexandr Shchukin
- * Corresponding email: alexonemoreemail@gmail.com
+ * Copyright (c) 2025 Alexandr Shchukin
+ * Corresponding email: shchukin.aleksandr.sergeevich@gmail.com
  *
  * ATC (Adiabatic Temperature Calculator) is free software:
  * you can redistribute it and/or modify it under the terms of
@@ -33,7 +33,7 @@ using namespace QtDataVisualization;
 #endif
 
 namespace win {
-const QString atc_version = QStringLiteral("1.3.1");
+const QString atc_version = QStringLiteral("1.3.2");
 const QString win_logo = QStringLiteral(":/images/logo_atc.svg");
 const QString win_title =
 #ifndef NDEBUG
@@ -318,9 +318,9 @@ void MainWindow::MenuShowAbout()
 #endif
 				).arg(win::atc_version
 					  , QStringLiteral("github.com/alexonemore/atc")
-					  , QStringLiteral("2022-2023")
+					  , QStringLiteral("2022-2025")
 					  , QStringLiteral("Alexandr Shchukin")
-					  , QStringLiteral("alexonemoreemail@gmail.com")
+					  , QStringLiteral("shchukin.aleksandr.sergeevich@gmail.com")
 #ifndef NDEBUG
 					  , QLatin1String(QT_VERSION_STR)
 					  , nlopt_version

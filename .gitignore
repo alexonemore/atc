@@ -9,6 +9,7 @@ Thumbs.db
 desktop.ini
 
 # Qt Related:
+Desktop_Qt_*
 build-*/
 *.pro.user*
 CMakeLists.txt.user*
