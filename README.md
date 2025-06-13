@@ -134,7 +134,7 @@ __3D plot example__
 ATC is licensed under the GNU General Public License Version 3.
 Modification or redistribution is permitted under the conditions of these license.
 
-Copyright © 2022-2023 Alexandr Shchukin
+Copyright © 2022-2025 Alexandr Shchukin
 
 See the subdirectories for the authors of the original libraries utilized by ATC.
 
