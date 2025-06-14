@@ -20,7 +20,6 @@
 #ifndef COREAPPLICATION_H
 #define COREAPPLICATION_H
 
-#include <QtConcurrent>
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QtDataVisualization>

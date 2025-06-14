@@ -47,6 +47,8 @@ int main(int argc, char *argv[]) try
 	return result;
 } catch(std::exception& e) {
 	qDebug() << e.what();
+	return 1;
 } catch(...) {
 	qDebug() << "Exception ...";
+	return 2;
 }

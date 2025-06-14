@@ -20,7 +20,8 @@
 #include "database.h"
 #include "utilities.h"
 #include <stdexcept>
-#include <QtSql>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 namespace SQL {
 const QString available_elements = QStringLiteral(

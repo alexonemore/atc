@@ -62,8 +62,8 @@ public:
 signals:
 	void SignalGraphRemoved();
 
-private slots:	
-	void SetColorGradient();	
+private slots:
+	void SetColorGradient();
 
 private: // Plot2DBase interface
 	void PrintGraphsToTextFile(QTextStream& stream, QString delimiter) const override;

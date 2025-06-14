@@ -28,21 +28,26 @@ struct Gradient {
 	QCPColorGradient::GradientPreset preset;
 	QIcon icon;
 };
-static std::array gradients{
-	Gradient{QStringLiteral("Grayscale"),	QCPColorGradient::GradientPreset::gpGrayscale,	QIcon{}},
-	Gradient{QStringLiteral("Hot"),			QCPColorGradient::GradientPreset::gpHot,		QIcon{}},
-	Gradient{QStringLiteral("Cold"),		QCPColorGradient::GradientPreset::gpCold,		QIcon{}},
-	Gradient{QStringLiteral("Night"),		QCPColorGradient::GradientPreset::gpNight,		QIcon{}},
-	Gradient{QStringLiteral("Candy"),		QCPColorGradient::GradientPreset::gpCandy,		QIcon{}},
-	Gradient{QStringLiteral("Geography"),	QCPColorGradient::GradientPreset::gpGeography,	QIcon{}},
-	Gradient{QStringLiteral("Ion"),			QCPColorGradient::GradientPreset::gpIon,		QIcon{}},
-	Gradient{QStringLiteral("Thermal"),		QCPColorGradient::GradientPreset::gpThermal,	QIcon{}},
-	Gradient{QStringLiteral("Polar"),		QCPColorGradient::GradientPreset::gpPolar,		QIcon{}},
-	Gradient{QStringLiteral("Spectrum"),	QCPColorGradient::GradientPreset::gpSpectrum,	QIcon{}},
-	Gradient{QStringLiteral("Jet"),			QCPColorGradient::GradientPreset::gpJet,		QIcon{}},
-	Gradient{QStringLiteral("Hues"),		QCPColorGradient::GradientPreset::gpHues,		QIcon{}}
-};
+auto& gradients()
+{
+	static std::array gradients{
+		Gradient{QStringLiteral("Grayscale"),	QCPColorGradient::GradientPreset::gpGrayscale,	QIcon{}},
+		Gradient{QStringLiteral("Hot"),			QCPColorGradient::GradientPreset::gpHot,		QIcon{}},
+		Gradient{QStringLiteral("Cold"),		QCPColorGradient::GradientPreset::gpCold,		QIcon{}},
+		Gradient{QStringLiteral("Night"),		QCPColorGradient::GradientPreset::gpNight,		QIcon{}},
+		Gradient{QStringLiteral("Candy"),		QCPColorGradient::GradientPreset::gpCandy,		QIcon{}},
+		Gradient{QStringLiteral("Geography"),	QCPColorGradient::GradientPreset::gpGeography,	QIcon{}},
+		Gradient{QStringLiteral("Ion"),			QCPColorGradient::GradientPreset::gpIon,		QIcon{}},
+		Gradient{QStringLiteral("Thermal"),		QCPColorGradient::GradientPreset::gpThermal,	QIcon{}},
+		Gradient{QStringLiteral("Polar"),		QCPColorGradient::GradientPreset::gpPolar,		QIcon{}},
+		Gradient{QStringLiteral("Spectrum"),	QCPColorGradient::GradientPreset::gpSpectrum,	QIcon{}},
+		Gradient{QStringLiteral("Jet"),			QCPColorGradient::GradientPreset::gpJet,		QIcon{}},
+		Gradient{QStringLiteral("Hues"),		QCPColorGradient::GradientPreset::gpHues,		QIcon{}}
+	};
+	return gradients;
+}
 static void MakeGradientIcons();
+
 }
 
 Plot2DHeatMap::Plot2DHeatMap(QWidget *parent)
@@ -282,7 +287,7 @@ void Plot2DHeatMap::SetupActions()
 
 	// gradients
 	Plot::MakeGradientIcons();
-	for(const auto& gradient : Plot::gradients) {
+	for(const auto& gradient : Plot::gradients()) {
 		auto action = new QAction(gradient.icon, gradient.name, this);
 		action->setData(static_cast<int>(gradient.preset));
 		a_gradients.push_back(action);
@@ -356,27 +361,28 @@ void Plot::MakeGradientIcons()
 	static std::atomic_bool ready{false};
 	if(ready) return;
 	constexpr int size = 16;
-	const QVector<QVector<double>> arr =
-	{{16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32},
-	 {15,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31},
-	 {14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30},
-	 {13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29},
-	 {12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28},
-	 {11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27},
-	 {10,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26},
-	 { 9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25},
-	 { 8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24},
-	 { 7, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23},
-	 { 6, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22},
-	 { 5, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21},
-	 { 4, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20},
-	 { 3, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19},
-	 { 2, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18},
-	 { 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16}};
-	const QCPRange range{1, 32};
+	constexpr static std::array<std::array<double, size>, size> arr {{
+		{{16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}},
+		{{15,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31}},
+		{{14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30}},
+		{{13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29}},
+		{{12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28}},
+		{{11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27}},
+		{{10,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26}},
+		{{ 9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}},
+		{{ 8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}},
+		{{ 7, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23}},
+		{{ 6, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22}},
+		{{ 5, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21}},
+		{{ 4, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20}},
+		{{ 3, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19}},
+		{{ 2, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18}},
+		{{ 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16}},
+	}};
+	const static QCPRange range{1, 32};
 	QImage img(size, size, QImage::Format::Format_ARGB32_Premultiplied);
 	QCPColorGradient gradient_tmp;
-	for(auto&& gradient : Plot::gradients) {
+	for(auto&& gradient : Plot::gradients()) {
 		gradient_tmp.loadPreset(gradient.preset);
 		for(int y = 0; y != size; ++y) {
 			QRgb* temp_line = reinterpret_cast<QRgb*>(img.scanLine(y));

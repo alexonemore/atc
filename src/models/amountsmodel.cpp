@@ -287,7 +287,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.group_1_mol;
 					sum.group_1_mol = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);
@@ -305,7 +305,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.group_1_gram;
 					sum.group_1_gram = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);
@@ -323,7 +323,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.group_2_mol;
 					sum.group_2_mol = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);
@@ -341,7 +341,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.group_2_gram;
 					sum.group_2_gram = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);
@@ -359,7 +359,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.sum_mol;
 					sum.sum_mol = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);
@@ -379,7 +379,7 @@ bool AmountsModel::setData(const QModelIndex& index, const QVariant& value,
 					auto val = std::abs(value.toDouble());
 					auto coef = val / sum.sum_gram;
 					sum.sum_gram = val;
-					for(const auto& weight : weights) {
+					for(const auto& weight : std::as_const(weights)) {
 						auto id = weight.id;
 						auto w = weight.weight;
 						auto&& amount = amounts.at(id);

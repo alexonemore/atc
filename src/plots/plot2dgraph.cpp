@@ -37,16 +37,20 @@ struct PositionIcon {
 	QString filename;
 	QIcon icon;
 };
-static std::array position_icons{
-	PositionIcon{(Qt::AlignTop | Qt::AlignLeft),		QStringLiteral("Top left"),			QStringLiteral(":/images/tl.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignTop | Qt::AlignHCenter),		QStringLiteral("Top center"),		QStringLiteral(":/images/tc.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignTop | Qt::AlignRight),		QStringLiteral("Top right"),		QStringLiteral(":/images/tr.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignLeft),	QStringLiteral("Middle left"),		QStringLiteral(":/images/ml.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignHCenter),	QStringLiteral("Middle center"),	QStringLiteral(":/images/mc.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignVCenter | Qt::AlignRight),	QStringLiteral("Middle right"),		QStringLiteral(":/images/mr.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignLeft),		QStringLiteral("Bottom left"),		QStringLiteral(":/images/bl.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignHCenter),	QStringLiteral("Bottom center"),	QStringLiteral(":/images/bc.svg"), QIcon{}},
-	PositionIcon{(Qt::AlignBottom | Qt::AlignRight),	QStringLiteral("Bottom right"),		QStringLiteral(":/images/br.svg"), QIcon{}}
+auto& position_icons()
+{
+	static std::array position_icons{
+		PositionIcon{(Qt::AlignTop | Qt::AlignLeft),		QStringLiteral("Top left"),			QStringLiteral(":/images/tl.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignTop | Qt::AlignHCenter),		QStringLiteral("Top center"),		QStringLiteral(":/images/tc.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignTop | Qt::AlignRight),		QStringLiteral("Top right"),		QStringLiteral(":/images/tr.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignVCenter | Qt::AlignLeft),	QStringLiteral("Middle left"),		QStringLiteral(":/images/ml.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignVCenter | Qt::AlignHCenter),	QStringLiteral("Middle center"),	QStringLiteral(":/images/mc.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignVCenter | Qt::AlignRight),	QStringLiteral("Middle right"),		QStringLiteral(":/images/mr.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignBottom | Qt::AlignLeft),		QStringLiteral("Bottom left"),		QStringLiteral(":/images/bl.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignBottom | Qt::AlignHCenter),	QStringLiteral("Bottom center"),	QStringLiteral(":/images/bc.svg"), QIcon{}},
+		PositionIcon{(Qt::AlignBottom | Qt::AlignRight),	QStringLiteral("Bottom right"),		QStringLiteral(":/images/br.svg"), QIcon{}}
+	};
+	return position_icons;
 };
 static void MakePositionIcons();
 }
@@ -120,7 +124,7 @@ void Plot2DGraph::SetupActions()
 			this, &Plot2DGraph::ChangeSelectedGraphsSettings);
 
 	Plot::MakePositionIcons();
-	for(const auto& position : Plot::position_icons) {
+	for(const auto& position : Plot::position_icons()) {
 		auto action = new QAction(position.icon, position.name, this);
 		action->setData(static_cast<int>(position.alignment));
 		connect(action, &QAction::triggered, this,
@@ -307,7 +311,7 @@ void Plot2DGraph::RemoveSelectedGraphs()
 			ids_to_remove.push_back(id);
 		}
 	}
-	for(const auto& pgraph : selected_graphs) {
+	for(const auto& pgraph : std::as_const(selected_graphs)) {
 		plot->removeGraph(pgraph);
 	}
 	for(const auto& id : ids_to_remove) {
@@ -531,7 +535,7 @@ QString Plot2DGraph::MakeTextForTracer(const QPoint& cursor_px) const
 
 void Plot::MakePositionIcons()
 {
-	for(auto&& position : Plot::position_icons) {
+	for(auto&& position : Plot::position_icons()) {
 		position.icon = QIcon{position.filename};
 	}
 }
@@ -539,13 +543,13 @@ void Plot::MakePositionIcons()
 const QIcon& Plot2DGraph::GetLegendPositionIcon() const
 {
 	auto alignment = plot->axisRect()->insetLayout()->insetAlignment(0);
-	auto it = std::find_if(Plot::position_icons.cbegin(),
-						   Plot::position_icons.cend(), [alignment](auto i){
+	auto it = std::find_if(Plot::position_icons().cbegin(),
+						   Plot::position_icons().cend(), [alignment](auto i){
 		return alignment == i.alignment; });
-	if(it != Plot::position_icons.end()) {
+	if(it != Plot::position_icons().end()) {
 		return it->icon;
 	} else {
-		return Plot::position_icons.cbegin()->icon;
+		return Plot::position_icons().cbegin()->icon;
 	}
 }
 

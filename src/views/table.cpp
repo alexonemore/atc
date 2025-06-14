@@ -145,7 +145,7 @@ void Table::CopyMimeData(const QModelIndexList& from_indices,
 
 	// Insert the columns in a set, since they could be non-contiguous.
 	std::set<int> cols_in_indexes, rows_in_indexes;
-	for(const QModelIndex & idx : qAsConst(indices)) {
+	for(const QModelIndex & idx : std::as_const(indices)) {
 		cols_in_indexes.insert(idx.column());
 		rows_in_indexes.insert(idx.row());
 	}

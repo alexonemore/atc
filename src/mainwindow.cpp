@@ -19,10 +19,9 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <vector>
 #include <QThread>
 #include <QMessageBox>
-#include <QtConcurrent>
+#include <QtConcurrent/QtConcurrentMap>
 #include <cassert>
 #include "utilities.h"
 #include "amountsmodel.h"
