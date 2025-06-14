@@ -9,6 +9,7 @@ Copyright (C) 2018 Sovrasov V. - All Rights Reserved
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 using namespace ags;
 
@@ -31,8 +32,8 @@ namespace
                       const std::vector<double>& leftBound, const std::vector<double>& rightBound)
       {
         mFunctions = functions;
-        mConstraintsNumber = static_cast<unsigned int>(mFunctions.size() - 1);
-        mDimension = static_cast<unsigned int>(leftBound.size());
+        mConstraintsNumber = mFunctions.size() - 1;
+        mDimension = leftBound.size();
         mLeftBound = leftBound;
         mRightBound = rightBound;
       }
@@ -299,6 +300,7 @@ void NLPSolver::CalculateNextPoints()
 
     if (mNextPoints[i].x >= mNextIntervals[i]->pr.x || mNextPoints[i].x <= mNextIntervals[i]->pl.x)
       mNeedStop = true;
+      //std::cout << "Warning: resolution of evolvent is not enough to continue the search";
 
     mEvolvent.GetImage(mNextPoints[i].x, mNextPoints[i].y);
   }

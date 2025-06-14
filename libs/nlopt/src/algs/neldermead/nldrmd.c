@@ -39,7 +39,7 @@ static int simplex_compare(double *k1, double *k2)
 {
      if (*k1 < *k2) return -1;
      if (*k1 > *k2) return +1;
-     return (int)(k1 - k2); /* tie-breaker */
+     return k1 - k2; /* tie-breaker */
 }
 
 /* return 1 if a and b are approximately equal relative to floating-point
@@ -202,10 +202,7 @@ nlopt_result nldrmd_minimize_(int n, nlopt_func f, void *f_data,
 	  for (i = 0; i < n; ++i) c[i] *= ninv;
 
 	  /* x convergence check: find xcur = max radius from centroid */
-		if (n > 0)
-		{
-	    memset(xcur, 0, sizeof(double)*n);
-		}
+	  memset(xcur, 0, sizeof(double)*n);
 	  for (i = 0; i < n + 1; ++i) {
                double *xi = pts + i*(n+1) + 1;
 	       for (j = 0; j < n; ++j) {
