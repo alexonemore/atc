@@ -242,13 +242,18 @@ message(STATUS "BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
 # qcustomplot
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-	add_subdirectory(libs/qcustomplot-qt6-fixed)
+	add_subdirectory(libs/qcustomplot-2.1.1)
 else()
 	add_subdirectory(libs/qcustomplot)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE qcustomplot)
 
 # nlopt
+set(NLOPT_PYTHON OFF CACHE BOOL "Disable Python bindings" FORCE)
+set(NLOPT_OCTAVE OFF CACHE BOOL "Disable Octave bindings" FORCE)
+set(NLOPT_MATLAB OFF CACHE BOOL "Disable Matlab bindings" FORCE)
+set(NLOPT_GUILE  OFF CACHE BOOL "Disable Guile bindings" FORCE)
+set(NLOPT_SWIG   OFF CACHE BOOL "Disable SWIG bindings" FORCE)
 add_subdirectory(libs/nlopt)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlopt)
 
