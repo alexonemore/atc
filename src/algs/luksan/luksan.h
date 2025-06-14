@@ -10,12 +10,11 @@ extern "C"
 #endif /* __cplusplus */
 
 nlopt_result luksan_plis(int n, nlopt_func f, void *f_data,
-			 const double *lb, const double *ub, /* bounds */
-			 double *x, /* in: initial guess, out: minimizer */
-			 double *minf,
-			 nlopt_stopping *stop,
-			 int mf,
-			 double tolg);
+                  const double *lb, const double *ub, /* bounds */
+                  double *x, /* in: initial guess, out: minimizer */
+                  double *minf,
+		  nlopt_stopping *stop,
+			 int mf);
 
 nlopt_result luksan_plip(int n, nlopt_func f, void *f_data,
 			 const double *lb, const double *ub, /* bounds */
@@ -23,8 +22,7 @@ nlopt_result luksan_plip(int n, nlopt_func f, void *f_data,
 			 double *minf,
 			 nlopt_stopping *stop,
 			 int mf,
-			 int method,
-			 double tolg);
+			 int method);
 
 nlopt_result luksan_pnet(int n, nlopt_func f, void *f_data,
 			 const double *lb, const double *ub, /* bounds */
@@ -32,8 +30,7 @@ nlopt_result luksan_pnet(int n, nlopt_func f, void *f_data,
 			 double *minf, 
 			 nlopt_stopping *stop,
 			 int mf,
-			 int mos1, int mos2,
-			 double tolg);
+			 int mos1, int mos2);
 
 typedef struct {
      double fl, fu, pl, rl, pu, ru;

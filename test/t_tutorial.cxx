@@ -31,9 +31,11 @@ double myvconstraint(const std::vector<double> &x, std::vector<double> &grad, vo
 }
 
 
-int main(int argc, char *argv[]) {
-  nlopt::opt opt(argc < 2 ? nlopt::LD_MMA : (nlopt::algorithm)atoi(argv[1]), 2);
-  const std::vector<double> lb = {-HUGE_VAL, 1e-6};
+int main() {
+
+  nlopt::opt opt("LD_MMA", 2);
+  std::vector<double> lb(2);
+  lb[0] = -HUGE_VAL; lb[1] = 0;
   opt.set_lower_bounds(lb);
   opt.set_min_objective(myvfunc, NULL);
   my_constraint_data data[2] = { {2,0}, {-1,1} };
@@ -53,8 +55,9 @@ int main(int argc, char *argv[]) {
   opt.set_param("rho_init", 0.5);
   opt.set_initial_step(0.1);
 
-  std::vector<double> x = {1.234, 5.678};
-  double minf = 0.0;
+  std::vector<double> x(2);
+  x[0] = 1.234; x[1] = 5.678;
+  double minf;
 
   try{
     opt.optimize(x, minf);

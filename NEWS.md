@@ -1,41 +1,5 @@
 # NLopt Release Notes
 
-## NLopt 2.10
-
-4 February 2025
-
-* New Java bindings ([#578]).
-
-* Allow disabling exceptions with `set_exceptions_enabled` ([#580]).
-
-* Configurable `tolg` tolerance parameter for Luksan gradient stopping condition ([#585]).
-
-* Restored `LD_LBFGS_NOCEDAL` enum value (dropped in 2.9) to ease backwards compatibility for wrappers in other languages (though this algorithm is currently unimplemented) ([#587]).
-
-## NLopt 2.9.1
-
-25 November 2024
-
-* Fixed PRAXIS box constraints ([#528])
-
-## NLopt 2.9
-
-10 November 2024
-
-* New `NLOPT_LUKSAN` cmake option to build without Luksan LGPL code ([#568]).
-
-* Dropped unused `LD_LBFGS_NOCEDAL` enum value.
-
-* Python 3.13 support ([#565]).
-
-* Fixed COBYLA not returning the optimum ([#57])
-
-* Fixed SLSQP returning infeasible optimum ([#368])
-
-* Fixed STOGO not registering new optimum ([#504])
-
-* Various minor bugfixes ([#570], [#563], [#379], [#511])
-
 ## NLopt 2.8
 
 9 August 2024
@@ -501,7 +465,6 @@
 [#13]: https://github.com/stevengj/nlopt/issues/13
 [#21]: https://github.com/stevengj/nlopt/issues/21
 [#49]: https://github.com/stevengj/nlopt/issues/49
-[#57]: https://github.com/stevengj/nlopt/issues/57
 [#160]: https://github.com/stevengj/nlopt/issues/160
 [#194]: https://github.com/stevengj/nlopt/issues/194
 [#197]: https://github.com/stevengj/nlopt/issues/197
@@ -524,30 +487,17 @@
 [#355]: https://github.com/stevengj/nlopt/issues/355
 [#361]: https://github.com/stevengj/nlopt/issues/361
 [#365]: https://github.com/stevengj/nlopt/issues/365
-[#368]: https://github.com/stevengj/nlopt/issues/368
-[#379]: https://github.com/stevengj/nlopt/issues/379
 [#409]: https://github.com/stevengj/nlopt/issues/409
 [#420]: https://github.com/stevengj/nlopt/issues/420
 [#445]: https://github.com/stevengj/nlopt/issues/445
 [#457]: https://github.com/stevengj/nlopt/issues/457
 [#465]: https://github.com/stevengj/nlopt/issues/465
 [#473]: https://github.com/stevengj/nlopt/issues/473
-[#504]: https://github.com/stevengj/nlopt/issues/504
 [#509]: https://github.com/stevengj/nlopt/issues/509
 [#510]: https://github.com/stevengj/nlopt/issues/510
-[#511]: https://github.com/stevengj/nlopt/issues/511
-[#528]: https://github.com/stevengj/nlopt/issues/528
 [#533]: https://github.com/stevengj/nlopt/issues/533
 [#534]: https://github.com/stevengj/nlopt/issues/534
 [#535]: https://github.com/stevengj/nlopt/issues/535
 [#551]: https://github.com/stevengj/nlopt/issues/551
 [#558]: https://github.com/stevengj/nlopt/issues/558
 [#561]: https://github.com/stevengj/nlopt/issues/561
-[#563]: https://github.com/stevengj/nlopt/issues/563
-[#565]: https://github.com/stevengj/nlopt/issues/565
-[#568]: https://github.com/stevengj/nlopt/issues/568
-[#570]: https://github.com/stevengj/nlopt/issues/570
-[#578]: https://github.com/stevengj/nlopt/issues/578
-[#580]: https://github.com/stevengj/nlopt/issues/580
-[#585]: https://github.com/stevengj/nlopt/issues/585
-[#587]: https://github.com/stevengj/nlopt/issues/587

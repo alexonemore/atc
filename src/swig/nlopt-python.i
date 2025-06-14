@@ -124,10 +124,8 @@ __version__ = str(_nlopt.version_major())+'.'+str(_nlopt.version_minor())+'.'+st
 {
   npy_intp sz = $1.size();
   $result = PyArray_SimpleNew(1, &sz, NPY_DOUBLE);
-  if (!$1.empty())
-  {
-    std::memcpy(array_data($result), &$1[0], sizeof(double) * sz);
-  }
+  std::memcpy(array_data($result), $1.empty() ? NULL : &$1[0],
+	      sizeof(double) * sz);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -153,7 +151,7 @@ static double func_python(unsigned n, const double *x, double *grad, void *f)
     : PyArray_SimpleNew(1, &sz0, NPY_DOUBLE);
   
   PyObject *arglist = Py_BuildValue("OO", xpy, gradpy);
-  PyObject *result = PyObject_Call((PyObject *) f, arglist, NULL);
+  PyObject *result = PyEval_CallObject((PyObject *) f, arglist);
   Py_DECREF(arglist);
 
   Py_DECREF(gradpy);
@@ -194,7 +192,7 @@ static void mfunc_python(unsigned m, double *result,
     : PyArray_SimpleNew(1, &sz0, NPY_DOUBLE);
   
   PyObject *arglist = Py_BuildValue("OOO", rpy, xpy, gradpy);
-  PyObject *res = PyObject_Call((PyObject *) f, arglist, NULL);
+  PyObject *res = PyEval_CallObject((PyObject *) f, arglist);
   Py_XDECREF(res);
   Py_DECREF(arglist);
 

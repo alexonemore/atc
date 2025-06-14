@@ -39,16 +39,16 @@ public:
   Pgrad Gradient ;
   long int numeval;
 
-  virtual double ObjectiveGradient(RCRVector xy, RVector&gradient, whichO which){
+  virtual double ObjectiveGradient(RCRVector xy, RVector&grad, whichO which){
        ++numeval;
        switch (which) {
 	   case OBJECTIVE_AND_GRADIENT:
-		Gradient(xy, gradient);
+		Gradient(xy, grad);
 		return Objective(xy);
 	   case OBJECTIVE_ONLY:
 		return Objective(xy);
 	   case GRADIENT_ONLY:
-		Gradient(xy, gradient);
+		Gradient(xy, grad);
        }
        return 0.0;
   }
@@ -61,8 +61,8 @@ public:
 
   void Search(int, RCRVector);
   void DispMinimizers();
-  virtual double OneMinimizer(RCRVector);
-  virtual bool NoMinimizers();
+  double OneMinimizer(RCRVector);
+  bool NoMinimizers();
   void SetDomain(RTBox);
   void GetDomain(RTBox);
   double GetMinValue();
@@ -73,7 +73,7 @@ public:
   double GetTime();
   bool InTime();
 
-protected:
+private:
   list<Trial> SolSet;
   list<Trial>::const_iterator titr;
   priority_queue<TBox> CandSet;

@@ -213,11 +213,11 @@ void Global::Search(int axis, RCRVector x_av){
       ReduceOrSubdivide(box, axis, x_av);
 
       if (!NoMinimizers() && OneMinimizer(x) < stop->minf_max) {
-        done = true;
+        done = TRUE;
         break;
       }
       if (!InTime()) {
-        done=true;
+        done=TRUE;
 	if (stogo_verbose)
 	  cout << "The program has run out of time or function evaluations\n";
         break;
