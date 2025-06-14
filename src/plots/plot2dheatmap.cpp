@@ -68,8 +68,8 @@ Plot2DHeatMap::Plot2DHeatMap(QWidget *parent)
 
 	heat_map->setTightBoundary(true);
 	heat_map->setColorScale(color_scale);
-	heat_map->setGradient(QCPColorGradient::gpPolar);
-	heat_map->setInterpolate(true);
+	heat_map->setGradient(QCPColorGradient::gpHot);
+	heat_map->setInterpolate(false);
 	heat_map->setVisible(true);
 	heat_map->data()->clear();
 	heat_map->removeFromLegend();
