@@ -3,6 +3,7 @@ setlocal
 
 rem === Vars ===
 set "QT_PATH=C:\Qt\6.9.1\llvm-mingw_64"
+set "LLVM_PATH=C:\Qt\Tools\llvm-mingw1706_64"
 set "BUILD_DIR=build-win-qt6_9_1-llvm-release"
 set "STATIC_BUILD=true"
 
@@ -14,7 +15,7 @@ if /i "%STATIC_BUILD%"=="true" (
     set "BUILD_DIR=%BUILD_DIR%-static"
 )
 
-set "PATH=%QT_PATH%\bin;%PATH%"
+set "PATH=%QT_PATH%\bin;%LLVM_PATH%\bin;%PATH%"
 
 if not exist "%BUILD_DIR%" (
     mkdir %BUILD_DIR%
