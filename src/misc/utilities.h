@@ -22,7 +22,6 @@
 
 #include <chrono>
 #include <QString>
-#include <QLatin1String>
 #include <QObject>
 #include <QThread>
 #include <QMetaEnum>
@@ -134,7 +133,7 @@ class IRandomNumber
 public:
 	using Type = typename Distribution::result_type;
 	explicit IRandomNumber(Type&& low, Type&& high,
-							  const unsigned int random_number = std::random_device{}())
+						   const unsigned int random_number = std::random_device{}())
 		: re{random_number}, dist{std::forward<Type>(low), std::forward<Type>(high)}
 	{}
 	Type operator()() { return dist(re); }
@@ -162,11 +161,12 @@ QStringList MetaEnumToQStringList() {
 	return list;
 }
 
-
+#if 0
 template<int size>
 constexpr QLatin1String MakeQLatin1String(const char (&str)[size])
 {
 	return QLatin1String(str, size);
 }
+#endif
 
 #endif // UTILITIES_H

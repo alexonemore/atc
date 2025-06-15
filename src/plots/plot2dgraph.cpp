@@ -543,13 +543,13 @@ void Plot::MakePositionIcons()
 const QIcon& Plot2DGraph::GetLegendPositionIcon() const
 {
 	auto alignment = plot->axisRect()->insetLayout()->insetAlignment(0);
-	auto it = std::find_if(Plot::position_icons().cbegin(),
-						   Plot::position_icons().cend(), [alignment](auto i){
+	const auto& icons = Plot::position_icons();
+	auto it = std::find_if(icons.cbegin(), icons.cend(), [alignment](auto i){
 		return alignment == i.alignment; });
-	if(it != Plot::position_icons().end()) {
+	if(it != icons.cend()) {
 		return it->icon;
 	} else {
-		return Plot::position_icons().cbegin()->icon;
+		return icons.cbegin()->icon;
 	}
 }
 

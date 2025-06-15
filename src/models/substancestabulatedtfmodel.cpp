@@ -19,17 +19,16 @@
 
 #include "substancestabulatedtfmodel.h"
 #include "utilities.h"
-#include <array>
 #include <QBrush>
 
 namespace SubstancesTabulatedTFFields {
-const QStringList names {
-	QStringLiteral("T [%1]")
-};
-constexpr std::array names_{
-	MakeQLatin1String("T [%1]")
-};
-static constexpr auto names_size = static_cast<int>(names_.size());
+static const auto& names() {
+	static const QStringList names {
+		QStringLiteral("T [%1]")
+	};
+	return names;
+}
+static const auto names_size { names().size() };
 }
 
 SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
@@ -37,7 +36,7 @@ SubstancesTabulatedTFModel::SubstancesTabulatedTFModel(QObject *parent)
 	, col_count{static_cast<int>(SubstancesTabulatedTFFields::names_size +
 				ParametersNS::thermodynamic_function_full.size())}
 {
-	substance_tabulated_tf_field_names = SubstancesTabulatedTFFields::names +
+	substance_tabulated_tf_field_names = SubstancesTabulatedTFFields::names() +
 			ParametersNS::thermodynamic_function_full;
 }
 

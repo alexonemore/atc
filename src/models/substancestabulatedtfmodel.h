@@ -27,7 +27,6 @@ namespace SubstancesTabulatedTFFields {
 enum class Names {
 	T
 };
-extern const QStringList names;
 using TF = ParametersNS::ThermodynamicFunction;
 }
 

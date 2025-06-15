@@ -25,147 +25,147 @@
 
 namespace SQL {
 const QString available_elements = QStringLiteral(
-"SELECT Elements.Symbol "
-"FROM Elements "
-"WHERE Elements.element_id IN ("
-"SELECT DISTINCT CompositionsOfSpecies.element_id "
-"FROM CompositionsOfSpecies);");
+R"(SELECT Elements.Symbol
+FROM Elements
+WHERE Elements.element_id IN (
+SELECT DISTINCT CompositionsOfSpecies.element_id
+FROM CompositionsOfSpecies);)");
 
 const QString available_elements_for_spesies = QStringLiteral(
-"SELECT CompositionsOfSpecies.element_id "
-"FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.species_id IN (%1) "
-"GROUP BY CompositionsOfSpecies.element_id;");
+R"(SELECT CompositionsOfSpecies.element_id
+FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.species_id IN (%1)
+GROUP BY CompositionsOfSpecies.element_id;)");
 
 const QString substances_element_composition = QStringLiteral(
-"SELECT CompositionsOfSpecies.species_id, "
-"CompositionsOfSpecies.element_id, "
-"CompositionsOfSpecies.Amount "
-"FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.species_id IN (%1);");
+R"(SELECT CompositionsOfSpecies.species_id,
+CompositionsOfSpecies.element_id,
+CompositionsOfSpecies.Amount
+FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.species_id IN (%1);)");
 
 const QString hsc_substances_template = QStringLiteral(
-"SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula', "
-"Species.Weight AS Weight, "
-"IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
-"IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '') "
-"AS 'Name', "
-"Species.T_min AS 'T min', Species.T_max AS 'T max' "
-"FROM ( "
-"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.element_id IN ( "
-"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
-"EXCEPT "
-"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.element_id NOT IN ( "
-"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
-") AS T "
-"JOIN Species ON Species.species_id = T.species_id "
-"WHERE Species.Suffix IN (%2);");
+R"(SELECT Species.species_id AS 'ID', Species.Formula AS 'Formula',
+Species.Weight AS Weight,
+IIF(length(Species.NameCh)>0, Species.NameCh, '') ||
+IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') ||
+IIF(length(Species.NameCo)>0, Species.NameCo, '') ||
+IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '')
+AS 'Name',
+Species.T_min AS 'T min', Species.T_max AS 'T max'
+FROM (
+SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.element_id IN (
+SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))
+EXCEPT
+SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.element_id NOT IN (
+SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))
+) AS T
+JOIN Species ON Species.species_id = T.species_id
+WHERE Species.Suffix IN (%2);)");
 
 const QString thermo_substances_template = QStringLiteral(
-"SELECT Species.species_id AS 'ID', "
-"Species.Formula || '(' || State.Symbol || ')' AS 'Formula', "
-"Species.Weight AS Weight, "
-"Species.Name AS 'Name', "
-"Species.T_min AS 'T min', "
-"Species.T_max AS 'T max' "
-"FROM ( "
-"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.element_id IN ( "
-"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
-"EXCEPT "
-"SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies "
-"WHERE CompositionsOfSpecies.element_id NOT IN ( "
-"SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1)) "
-") AS T "
-"JOIN Species ON Species.species_id = T.species_id "
-"JOIN State ON State.state_id = Species.state_id "
-"WHERE State.Symbol IN (%2);");
+R"(SELECT Species.species_id AS 'ID',
+Species.Formula || '(' || State.Symbol || ')' AS 'Formula',
+Species.Weight AS Weight,
+Species.Name AS 'Name',
+Species.T_min AS 'T min',
+Species.T_max AS 'T max'
+FROM (
+SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.element_id IN (
+SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))
+EXCEPT
+SELECT CompositionsOfSpecies.species_id FROM CompositionsOfSpecies
+WHERE CompositionsOfSpecies.element_id NOT IN (
+SELECT Elements.element_id FROM Elements WHERE Elements.Symbol IN (%1))
+) AS T
+JOIN Species ON Species.species_id = T.species_id
+JOIN State ON State.state_id = Species.state_id
+WHERE State.Symbol IN (%2);)");
 
 const QString hsc_substance_temprange_template = QStringLiteral(
-"SELECT TempRange.T1 AS 'T min', TempRange.T2 AS 'T max', "
-"TempRange.H AS 'H', "
-"TempRange.S AS 'S', "
-"TempRange.A AS 'f1', "
-"TempRange.B AS 'f2', "
-"TempRange.C AS 'f3', "
-"TempRange.D AS 'f4', "
-"TempRange.E AS 'f5', "
-"TempRange.F AS 'f6', "
-"0 AS 'f7', "
-"TempRange.Phase AS 'Phase' "
-"FROM TempRange "
-"WHERE TempRange.species_id = %1;");
+R"(SELECT TempRange.T1 AS 'T min', TempRange.T2 AS 'T max',
+TempRange.H AS 'H',
+TempRange.S AS 'S',
+TempRange.A AS 'f1',
+TempRange.B AS 'f2',
+TempRange.C AS 'f3',
+TempRange.D AS 'f4',
+TempRange.E AS 'f5',
+TempRange.F AS 'f6',
+0 AS 'f7',
+TempRange.Phase AS 'Phase'
+FROM TempRange
+WHERE TempRange.species_id = %1;)");
 
 const QString hsc_substances_temprange_template = QStringLiteral(
-"SELECT TempRange.species_id AS 'ID', "
-"TempRange.T1 AS 'T min', TempRange.T2 AS 'T max', "
-"TempRange.H AS 'H', "
-"TempRange.S AS 'S', "
-"TempRange.A AS 'f1', "
-"TempRange.B AS 'f2', "
-"TempRange.C AS 'f3', "
-"TempRange.D AS 'f4', "
-"TempRange.E AS 'f5', "
-"TempRange.F AS 'f6', "
-"0 AS 'f7', "
-"TempRange.Phase AS 'Phase' "
-"FROM TempRange "
-"WHERE TempRange.species_id IN (%1);");
+R"(SELECT TempRange.species_id AS 'ID',
+TempRange.T1 AS 'T min', TempRange.T2 AS 'T max',
+TempRange.H AS 'H',
+TempRange.S AS 'S',
+TempRange.A AS 'f1',
+TempRange.B AS 'f2',
+TempRange.C AS 'f3',
+TempRange.D AS 'f4',
+TempRange.E AS 'f5',
+TempRange.F AS 'f6',
+0 AS 'f7',
+TempRange.Phase AS 'Phase'
+FROM TempRange
+WHERE TempRange.species_id IN (%1);)");
 
 const QString thermo_substance_temprange_template = QStringLiteral(
-"SELECT TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
-"Species.H0 AS 'H', 0 AS 'S', "
-"TempRange.f1 AS 'f1', "
-"TempRange.f2 AS 'f2', "
-"TempRange.f3 AS 'f3', "
-"TempRange.f4 AS 'f4', "
-"TempRange.f5 AS 'f5', "
-"TempRange.f6 AS 'f6', "
-"TempRange.f7 AS 'f7', "
-"State.Symbol AS 'Phase' "
-"FROM TempRange "
-"JOIN Species ON Species.species_id = TempRange.species_id "
-"JOIN State ON State.state_id = Species.state_id "
-"WHERE TempRange.species_id = %1;");
+R"(SELECT TempRange.T_min AS 'T min', TempRange.T_max AS 'T max',
+Species.H0 AS 'H', 0 AS 'S',
+TempRange.f1 AS 'f1',
+TempRange.f2 AS 'f2',
+TempRange.f3 AS 'f3',
+TempRange.f4 AS 'f4',
+TempRange.f5 AS 'f5',
+TempRange.f6 AS 'f6',
+TempRange.f7 AS 'f7',
+State.Symbol AS 'Phase'
+FROM TempRange
+JOIN Species ON Species.species_id = TempRange.species_id
+JOIN State ON State.state_id = Species.state_id
+WHERE TempRange.species_id = %1;)");
 
 const QString thermo_substances_temprange_template = QStringLiteral(
-"SELECT TempRange.species_id AS 'ID', "
-"TempRange.T_min AS 'T min', TempRange.T_max AS 'T max', "
-"Species.H0 AS 'H', 0 AS 'S', "
-"TempRange.f1 AS 'f1', "
-"TempRange.f2 AS 'f2', "
-"TempRange.f3 AS 'f3', "
-"TempRange.f4 AS 'f4', "
-"TempRange.f5 AS 'f5', "
-"TempRange.f6 AS 'f6', "
-"TempRange.f7 AS 'f7', "
-"State.Symbol AS 'Phase' "
-"FROM TempRange "
-"JOIN Species ON Species.species_id = TempRange.species_id "
-"JOIN State ON State.state_id = Species.state_id "
-"WHERE TempRange.species_id IN (%1);");
+R"(SELECT TempRange.species_id AS 'ID',
+TempRange.T_min AS 'T min', TempRange.T_max AS 'T max',
+Species.H0 AS 'H', 0 AS 'S',
+TempRange.f1 AS 'f1',
+TempRange.f2 AS 'f2',
+TempRange.f3 AS 'f3',
+TempRange.f4 AS 'f4',
+TempRange.f5 AS 'f5',
+TempRange.f6 AS 'f6',
+TempRange.f7 AS 'f7',
+State.Symbol AS 'Phase'
+FROM TempRange
+JOIN Species ON Species.species_id = TempRange.species_id
+JOIN State ON State.state_id = Species.state_id
+WHERE TempRange.species_id IN (%1);)");
 
 const QString hsc_substance_name_template = QStringLiteral(
-"SELECT "
-"Species.Formula || ' ' || "
-"IIF(length(Species.NameCh)>0, Species.NameCh, '') || "
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') || "
-"IIF(length(Species.NameCo)>0, Species.NameCo, '') || "
-"IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '') "
-"AS 'Name' "
-"FROM Species "
-"WHERE Species.species_id = %1;");
+R"(SELECT
+Species.Formula || ' ' ||
+IIF(length(Species.NameCh)>0, Species.NameCh, '') ||
+IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ' (', '') ||
+IIF(length(Species.NameCo)>0, Species.NameCo, '') ||
+IIF(length(Species.NameCh)>0 AND length(Species.NameCo)>0, ')', '')
+AS 'Name'
+FROM Species
+WHERE Species.species_id = %1;)");
 
 const QString thermo_substance_name_template = QStringLiteral(
-"SELECT "
-"Species.Formula || '(' || State.Symbol || ') ' || Species.Name AS 'Name' "
-"FROM Species "
-"JOIN State ON State.state_id = Species.state_id "
-"WHERE Species.species_id = %1;");
+R"(SELECT
+Species.Formula || '(' || State.Symbol || ') ' || Species.Name AS 'Name'
+FROM Species
+JOIN State ON State.state_id = Species.state_id
+WHERE Species.species_id = %1;)");
 
 QSqlQuery Query(const QString& query, const QString& name)
 {
