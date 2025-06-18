@@ -358,8 +358,8 @@ void Plot2DHeatMap::MousePressHandler(QMouseEvent* event)
 
 void Plot::MakeGradientIcons()
 {
-	static std::atomic_bool ready{false};
-	if(ready) return;
+	static std::once_flag flag;
+	std::call_once(flag, [](){
 	constexpr int size = 16;
 	constexpr static std::array<std::array<double, size>, size> arr {{
 		{{16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}},
@@ -390,5 +390,5 @@ void Plot::MakeGradientIcons()
 		}
 		gradient.icon = QIcon{QPixmap::fromImage(img)};
 	}
-	ready = true;
+	});
 }
